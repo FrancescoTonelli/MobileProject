@@ -3,8 +3,6 @@ from db import get_db
 
 place_bp = Blueprint('place', __name__)
 
-# -------- PLACES -------- #
-
 @place_bp.route('/admin/places', methods=['GET'])
 def get_places():
     conn = get_db()
@@ -13,7 +11,6 @@ def get_places():
     places = cursor.fetchall()
     conn.close()
     return jsonify(places), 200
-
 
 @place_bp.route('/admin/places', methods=['POST'])
 def create_place():
@@ -36,122 +33,78 @@ def create_place():
     conn.close()
     return jsonify({'message': 'Place created'}), 201
 
-
 @place_bp.route('/admin/places/<int:place_id>', methods=['DELETE'])
 def delete_place(place_id):
     conn = get_db()
     cursor = conn.cursor()
 
-    # Check existence
     cursor.execute("SELECT id FROM place WHERE id = %s", (place_id,))
     if not cursor.fetchone():
         conn.close()
         return jsonify({'message': 'Place not found'}), 404
 
-    # Get sector ids
     cursor.execute("SELECT id FROM sector WHERE place_id = %s", (place_id,))
     sector_ids = [row[0] for row in cursor.fetchall()]
 
     if sector_ids:
         cursor.executemany("DELETE FROM seat WHERE sector_id = %s", [(sid,) for sid in sector_ids])
 
-    # Delete sectors
     cursor.execute("DELETE FROM sector WHERE place_id = %s", (place_id,))
-    # Delete place
     cursor.execute("DELETE FROM place WHERE id = %s", (place_id,))
+
     conn.commit()
     conn.close()
-    return jsonify({'message': 'Place deleted'}), 200
-
-# -------- SECTORS -------- #
+    return jsonify({'message': 'Place deleted successfully'}), 200
 
 @place_bp.route('/admin/places/<int:place_id>/sectors', methods=['GET'])
 def get_sectors(place_id):
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("""
-        SELECT id, name, x_sx, y_sx, x_dx, y_dx
+        SELECT id, name, x_sx, y_sx, x_dx, y_dx, is_stage
         FROM sector
         WHERE place_id = %s
     """, (place_id,))
     sectors = cursor.fetchall()
+
+    for sector in sectors:
+        cursor.execute("""
+            SELECT id, description, x, y
+            FROM seat
+            WHERE sector_id = %s
+        """, (sector['id'],))
+        sector['seats'] = cursor.fetchall()
+
     conn.close()
     return jsonify(sectors), 200
 
-
 @place_bp.route('/admin/places/<int:place_id>/sectors', methods=['POST'])
-def create_sector(place_id):
+def save_sectors(place_id):
     data = request.get_json()
-    name = data.get('name')
-    x_sx = data.get('x_sx')
-    y_sx = data.get('y_sx')
-    x_dx = data.get('x_dx')
-    y_dx = data.get('y_dx')
 
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("""
-        INSERT INTO sector (name, x_sx, y_sx, x_dx, y_dx, place_id)
-        VALUES (%s, %s, %s, %s, %s, %s)
-    """, (name, x_sx, y_sx, x_dx, y_dx, place_id))
+
+    cursor.execute("DELETE FROM seat WHERE sector_id IN (SELECT id FROM sector WHERE place_id = %s)", (place_id,))
+    cursor.execute("DELETE FROM sector WHERE place_id = %s", (place_id,))
+    
+    for sector_data in data['sectors']:
+        cursor.execute("""
+            INSERT INTO sector (name, x_sx, y_sx, x_dx, y_dx, place_id, is_stage)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, (sector_data['name'], sector_data['x_sx'], sector_data['y_sx'], sector_data['x_dx'], sector_data['y_dx'], place_id, sector_data['is_stage']))
+        
+        sector_id = cursor.lastrowid
+        
+        for seat_data in sector_data['seats']:
+            cursor.execute("""
+                INSERT INTO seat (description, x, y, sector_id)
+                VALUES (%s, %s, %s, %s)
+            """, (seat_data.get('description', ''), seat_data['x'], seat_data['y'], sector_id))
+    
     conn.commit()
     conn.close()
-    return jsonify({'message': 'Sector created'}), 201
-
-
-@place_bp.route('/admin/sectors/<int:sector_id>', methods=['DELETE'])
-def delete_sector(sector_id):
-    conn = get_db()
-    cursor = conn.cursor()
-
-    # Check existence
-    cursor.execute("SELECT id FROM sector WHERE id = %s", (sector_id,))
-    if not cursor.fetchone():
-        conn.close()
-        return jsonify({'message': 'Sector not found'}), 404
-
-    # Delete seats first
-    cursor.execute("DELETE FROM seat WHERE sector_id = %s", (sector_id,))
-    # Then delete sector
-    cursor.execute("DELETE FROM sector WHERE id = %s", (sector_id,))
-    conn.commit()
-    conn.close()
-    return jsonify({'message': 'Sector deleted'}), 200
-
-
-# -------- SEATS -------- #
-
-@place_bp.route('/admin/sectors/<int:sector_id>/seats', methods=['GET'])
-def get_seats(sector_id):
-    conn = get_db()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT id, description, x, y
-        FROM seat
-        WHERE sector_id = %s
-    """, (sector_id,))
-    seats = cursor.fetchall()
-    conn.close()
-    return jsonify(seats), 200
-
-
-@place_bp.route('/admin/sectors/<int:sector_id>/seats', methods=['POST'])
-def create_seat(sector_id):
-    data = request.get_json()
-    description = data.get('description')
-    x = data.get('x')
-    y = data.get('y')
-
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("""
-        INSERT INTO seat (description, x, y, sector_id)
-        VALUES (%s, %s, %s, %s)
-    """, (description, x, y, sector_id))
-    conn.commit()
-    conn.close()
-    return jsonify({'message': 'Seat created'}), 201
-
+    return jsonify({'message': 'Mappa aggiornata con successo'}), 200
 
 @place_bp.route('/admin/seats/<int:seat_id>', methods=['DELETE'])
 def delete_seat(seat_id):

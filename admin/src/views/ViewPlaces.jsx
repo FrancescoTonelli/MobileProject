@@ -12,6 +12,7 @@ const ViewPlaces = () => {
     telephone: '',
   });
   const [selectedPlace, setSelectedPlace] = useState(null); // Stato per il posto selezionato
+  const [placeName, setPlaceName] = useState(""); // Stato per il nome del posto selezionato
   const navigate = useNavigate();
 
   const fetchPlaces = () => {
@@ -33,14 +34,28 @@ const ViewPlaces = () => {
       fetch(`http://localhost:5000/admin/places/${id}`, {
         method: 'DELETE',
       })
-        .then((res) => res.json())
-        .then(() => fetchPlaces())
-        .catch((err) => console.error('Errore nella cancellazione:', err));
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error('Errore durante la cancellazione del posto');
+          }
+          return res.json();
+        })
+        .then(() => {
+          // Aggiorna la lista dei posti dopo la cancellazione
+          setPlaces((prevPlaces) => prevPlaces.filter((place) => place.id !== id));
+          alert('Place eliminato con successo!');
+        })
+        .catch((err) => {
+          console.error('Errore nella cancellazione:', err);
+          alert('Errore nella cancellazione del posto');
+        });
     }
   };
+  
 
-  const openEditor = (id) => {
+  const openEditor = (id, name) => {
     setSelectedPlace(id); // Settiamo l'ID del posto selezionato
+    setPlaceName(name); // Settiamo il nome del posto selezionato
   };
 
   const createPlace = () => {
@@ -123,7 +138,7 @@ const ViewPlaces = () => {
                 </button>
                 <button
                   className="btn btn-info my-button"
-                  onClick={() => openEditor(place.id)}
+                  onClick={() => openEditor(place.id, place.name)}
                 >
                   Edit Map
                 </button>
@@ -132,6 +147,8 @@ const ViewPlaces = () => {
           ))}
         </tbody>
       </table>
+
+      {selectedPlace && <EditorPlace placeId={selectedPlace} placeName={placeName} />}
 
       {/* Create new place form */}
       <div className="notification-form" style={{ marginTop: '30px' }}>
@@ -201,8 +218,7 @@ const ViewPlaces = () => {
         </form>
       </div>
 
-      {/* Selezioniamo ed eseguiamo il rendering di EditorPlace se un posto è selezionato */}
-      {selectedPlace && <EditorPlace placeId={selectedPlace} />}
+      
     </div>
   );
 };

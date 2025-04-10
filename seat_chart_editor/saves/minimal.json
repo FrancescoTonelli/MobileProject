@@ -1,0 +1,36 @@
+[
+    {
+        "name": "Stage",
+        "x_sx": 201,
+        "y_sx": 54,
+        "x_dx": 412,
+        "y_dx": 115,
+        "is_stage": true,
+        "seats": []
+    },
+    {
+        "name": "Sector 2",
+        "x_sx": 200,
+        "y_sx": 147,
+        "x_dx": 415,
+        "y_dx": 210,
+        "is_stage": false,
+        "seats": [
+            {
+                "description": "Unnumbered",
+                "x": 243,
+                "y": 177
+            },
+            {
+                "description": "Unnumbered",
+                "x": 304,
+                "y": 176
+            },
+            {
+                "description": "Unnumbered",
+                "x": 361,
+                "y": 177
+            }
+        ]
+    }
+]

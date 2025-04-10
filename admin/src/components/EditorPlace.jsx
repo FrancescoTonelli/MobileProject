@@ -1,132 +1,174 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Stage, Layer, Rect, Text } from 'react-konva';
+import React, { useRef, useState, useEffect } from 'react';
 
-const EditorPlace = ({ placeId }) => {
-  const [sectors, setSectors] = useState([]);
-  const [newSectorData, setNewSectorData] = useState(null); // Coordinate del nuovo settore
-  const [isSelecting, setIsSelecting] = useState(false); // Stato per selezionare il settore
-  const stageRef = useRef();
+const EditorPlace = ({ placeId, placeName }) => {
+  const [placeData, setPlaceData] = useState(null);
+  const canvasRef = useRef(null);
 
-  // Caricamento dei settori
+  const COLORS = {
+    stage: '#8c78f9',
+    sector: '#c0b6fc',
+    seat: '#8c78f9',
+    seatOutline: '#000000',
+    text: '#000000',
+    background: '#f0f0f0'
+  };
+
+  const drawCanvas = (context, placeData, translateX = 0, translateY = 0) => {
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    context.fillStyle = COLORS.background;
+    context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+
+    context.textAlign = 'center';
+    context.textBaseline = 'bottom';
+    context.font = '14px sans-serif';
+
+    placeData.forEach((sector) => {
+      context.fillStyle = sector.is_stage ? COLORS.stage : COLORS.sector;
+
+      const x = sector.x_sx + translateX;
+      const y = sector.y_sx + translateY;
+      const width = sector.x_dx - sector.x_sx;
+      const height = sector.y_dx - sector.y_sx;
+
+      context.fillRect(x, y, width, height);
+
+      context.fillStyle = COLORS.text;
+      context.fillText(sector.name, x + width / 2, y - 6);
+
+      if (sector.seats && Array.isArray(sector.seats)) {
+        sector.seats.forEach((seat) => {
+          context.beginPath();
+          context.arc(seat.x + translateX, seat.y + translateY, 5, 0, Math.PI * 2);
+          context.fillStyle = COLORS.seat;
+          context.fill();
+          context.lineWidth = 2;
+          context.strokeStyle = COLORS.seatOutline;
+          context.stroke();
+        });
+      }
+    });
+  };
+
+  const calculateCanvasDimensions = (placeData) => {
+    let minX = Infinity, maxX = -Infinity;
+    let minY = Infinity, maxY = -Infinity;
+
+    placeData.forEach((sector) => {
+      minX = Math.min(minX, sector.x_sx);
+      maxX = Math.max(maxX, sector.x_dx);
+      minY = Math.min(minY, sector.y_sx);
+      maxY = Math.max(maxY, sector.y_dx);
+
+      if (sector.seats) {
+        sector.seats.forEach((seat) => {
+          minX = Math.min(minX, seat.x);
+          maxX = Math.max(maxX, seat.x);
+          minY = Math.min(minY, seat.y);
+          maxY = Math.max(maxY, seat.y);
+        });
+      }
+    });
+
+    const padding = 50;
+    const width = maxX - minX + padding * 2;
+    const height = maxY - minY + padding * 2;
+
+    return {
+      width,
+      height,
+      translateX: -minX + padding,
+      translateY: -minY + padding
+    };
+  };
+
+  const fetchPlaceData = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/admin/places/${placeId}/sectors`);
+      const data = await response.json();
+      setPlaceData(data);
+    } catch (error) {
+      console.error('Errore nel recupero dei dati:', error);
+    }
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const json = JSON.parse(reader.result);
+          setPlaceData(json);
+          await updatePlaceData(json);
+        } catch (error) {
+          alert('Errore nel parsing del file JSON');
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  const updatePlaceData = async (data) => {
+    try {
+      await fetch(`http://localhost:5000/admin/places/${placeId}/sectors`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sectors: data })
+      });
+      alert('Mappa aggiornata con successo!');
+    } catch (error) {
+      alert('Errore nell\'aggiornamento dei dati nel database');
+    }
+  };
+
   useEffect(() => {
-    if (!placeId) return;
-
-    fetch(`http://localhost:5000/admin/sectors?place_id=${placeId}`)
-      .then((res) => res.json())
-      .then((data) => setSectors(data));
+    if (placeId) {
+      fetchPlaceData();
+    }
   }, [placeId]);
 
-  // Gestione dei click sulla canvas per creare un nuovo settore
-  const handleStageClick = (e) => {
-    if (isSelecting) {
-      if (!newSectorData) {
-        // Primo clic: imposta la posizione di partenza
-        setNewSectorData({
-          x: e.evt.offsetX,
-          y: e.evt.offsetY,
-        });
-        setIsSelecting(false); // Aspetta il secondo clic
-      } else {
-        // Secondo clic: crea un nuovo settore
-        const width = e.evt.offsetX - newSectorData.x;
-        const height = e.evt.offsetY - newSectorData.y;
-        const newSector = {
-          place_id: placeId,
-          name: `Sector ${sectors.length + 1}`,
-          x_sx: newSectorData.x,
-          y_sx: newSectorData.y,
-          x_dx: e.evt.offsetX,
-          y_dx: e.evt.offsetY,
-        };
+  useEffect(() => {
+    if (placeData && canvasRef.current) {
+      const canvas = canvasRef.current;
+      const context = canvas.getContext('2d');
 
-        // Salvataggio del nuovo settore nel database
-        fetch('http://localhost:5000/admin/sectors', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newSector),
-        })
-          .then((res) => res.json())
-          .then((created) => {
-            setSectors((prev) => [...prev, created]); // Aggiungi il settore alla lista
-            setNewSectorData(null); // Reset per il nuovo settore
-          });
-      }
+      const { width, height, translateX, translateY } = calculateCanvasDimensions(placeData);
+      canvas.width = width;
+      canvas.height = height;
+
+      drawCanvas(context, placeData, translateX, translateY);
     }
-  };
-
-  // Gestire il click destro per eliminare un settore
-  const handleRightClick = (e) => {
-    e.evt.preventDefault();
-    const mousePos = { x: e.evt.offsetX, y: e.evt.offsetY };
-
-    // Trova il settore più vicino al click
-    const closestSector = sectors.reduce((closest, sector) => {
-      const sectorCenter = {
-        x: (sector.x_sx + sector.x_dx) / 2,
-        y: (sector.y_sx + sector.y_dx) / 2,
-      };
-      const distance = Math.hypot(sectorCenter.x - mousePos.x, sectorCenter.y - mousePos.y);
-      if (!closest || distance < closest.distance) {
-        return { sector, distance };
-      }
-      return closest;
-    }, null);
-
-    // Se il settore è abbastanza vicino, chiedi conferma per eliminarlo
-    if (closestSector && closestSector.distance < 20) {
-      if (window.confirm(`Vuoi eliminare il settore "${closestSector.sector.name}"?`)) {
-        // Elimina il settore dal database
-        fetch(`http://localhost:5000/admin/sectors/${closestSector.sector.id}`, {
-          method: 'DELETE',
-        })
-          .then(() => setSectors((prev) => prev.filter((s) => s.id !== closestSector.sector.id)));
-      }
-    }
-  };
+  }, [placeData]);
 
   return (
-    <div className="body white-text" style={{ marginBottom: '30px' }}>
-      <h2>Editor Mappa - {placeId}</h2>
+    <div className="notification-form" style={{ marginTop: '30px' }}>
+      <h4>Seat Chart - {placeName}</h4>
 
-      <Stage
-        width={1000}
-        height={600}
-        ref={stageRef}
-        style={{ background: '#f0f0f0', marginTop: '20px' }}
-        onClick={handleStageClick}
-        onContextMenu={handleRightClick}
-      >
-        <Layer>
-          {/* Disegna i settori */}
-          {sectors.map((sector) => (
-            <React.Fragment key={sector.id}>
-              <Rect
-                x={sector.x_sx}
-                y={sector.y_sx}
-                width={sector.x_dx - sector.x_sx}
-                height={sector.y_dx - sector.y_sx}
-                fill="lightblue"
-                stroke="black"
-                strokeWidth={1}
-              />
-              <Text
-                x={sector.x_sx + 5}
-                y={sector.y_sx + 5}
-                text={sector.name}
-                fontSize={14}
-                fill="black"
-              />
-            </React.Fragment>
-          ))}
-        </Layer>
-      </Stage>
+      <div style={{ marginBottom: '20px' }}>
+        <label htmlFor="fileUpload" className="my-file-input">
+          Carica JSON
+        </label>
+        <input
+          id="fileUpload"
+          type="file"
+          accept=".json"
+          onChange={handleFileUpload}
+          style={{ display: 'none' }}
+        />
+      </div>
 
-      <button
-        className="btn btn-success my-button"
-        onClick={() => setIsSelecting(!isSelecting)}
-      >
-        {isSelecting ? 'Annulla Creazione Settore' : 'Crea Settore'}
-      </button>
+      {placeData ? (
+        <canvas
+          ref={canvasRef}
+          style={{
+            border: '1px solid #000',
+            marginTop: '20px',
+            marginBottom: '40px'
+          }}
+        ></canvas>
+      ) : (
+        <p>Carica un file JSON per visualizzare la mappa dei posti.</p>
+      )}
     </div>
   );
 };
