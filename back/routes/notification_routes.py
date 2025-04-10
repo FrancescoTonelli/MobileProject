@@ -33,9 +33,9 @@ def admin_send_notification_record():
     cursor = conn.cursor()
     cursor.execute("""
         INSERT INTO NOTIFICATION (title, description, user_id, record_company_id)
-        VALUES (%s, %s, %s, %s)
+        VALUES (%s, %s, NULL, %s)
     """, (
-        data['title'], data['description'], data['user_id'], data.get('record_company_id')
+        data['title'], data['description'], data.get('record_company_id')
     ))
     conn.commit()
     conn.close()

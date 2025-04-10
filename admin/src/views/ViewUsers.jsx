@@ -133,14 +133,14 @@ const UsersPage = () => {
               <td>
                 <button
                   onClick={() => deleteUser(user.id)}
-                  className="btn btn-danger"
+                  className="btn btn-danger my-button"
                   title="Delete User"
                 >
                   Delete
                 </button>
                 <button
                   onClick={() => setSelectedUserId(user.id)}
-                  className="btn btn-info"
+                  className="btn btn-info my-button"
                   title="Prepare Notification"
                 >
                   Select User
@@ -187,7 +187,7 @@ const UsersPage = () => {
             />
           </label>
           <br />
-          <button type="submit" className="btn btn-success" disabled={!selectedUserId}>
+          <button type="submit" className="btn btn-success my-button" disabled={!selectedUserId}>
             Send Notification
           </button>
         </form>

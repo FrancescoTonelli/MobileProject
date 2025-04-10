@@ -17,19 +17,48 @@
   -moz-osx-font-smoothing: grayscale !important;
 }
 
+/* * {
+  outline: 1px solid red;
+} */
+
 body {
   margin: 0 !important;
-  display: flex !important;
-  place-items: bottom !important;
+  padding: 0 !important;
   min-width: 320px !important;
   min-height: 100vh !important;
+  max-width: 100% !important;
   background-color: var(--bg) !important;
+}
+
+html, body {
+  overflow-x: hidden !important;
+  width: 100% !important;
 }
 
 h1 {
   font-size: 3.2em !important;
   line-height: 1.1 !important;
   color: var(--secondary) !important;
+}
+
+.my-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 5px 10px !important;
+  background-color: var(--primary) !important;
+  color: var(--fg) !important;
+  font-size: 1.1em !important;
+  font-weight: bold !important;
+  margin: 5px;
+  border-color: var(--fg) !important;
+  border-radius: 10px !important;
+}
+
+.my-button:hover {
+  background-color: var(--fg) !important;
+  color: var(--primary) !important;
+  border-color: var(--primary) !important;
 }
 
 .nav-button {
@@ -110,17 +139,20 @@ h1 {
   font-size: 1.5rem !important;
 }
 
+.over-body {
+  width: 100% !important;
+  margin-top: 80px !important;
+}
+
 .body {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  justify-content: center !important;
   flex: 1 !important; 
   width: 100% !important;
   height: 100% !important;
   box-sizing: border-box !important;
-  overflow: auto !important;
-  margin-top: 80px !important;
+  margin-top: 20px !important;
 }
 
 .table-nav {
@@ -233,13 +265,14 @@ h1 {
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 100% !important;
+  width: 90% !important;
   height: 100% !important;
   background-color: var(--bg) !important;
+  margin-bottom: 10px !important;
 }
 
 .notification-label {
-  font-size: 1.2em !important;
+  font-size: 1.1em !important;
   color: var(--secondary) !important;
   margin-bottom: 10px !important;
   font-family: 'Rubik', sans-serif !important;
@@ -247,5 +280,12 @@ h1 {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  width: 40% !important;
+  width: 50% !important;
+}
+
+.artist-img {
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
 }
