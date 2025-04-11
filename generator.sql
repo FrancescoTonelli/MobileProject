@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Apr 07, 2025 alle 14:58
+-- Creato il: Apr 11, 2025 alle 11:21
 -- Versione del server: 10.4.32-MariaDB
 -- Versione PHP: 8.2.12
 
@@ -33,6 +33,13 @@ CREATE TABLE `admin` (
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dump dei dati per la tabella `admin`
+--
+
+INSERT INTO `admin` (`id`, `email`, `password`) VALUES
+(1, 'admin@example.com', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9');
+
 -- --------------------------------------------------------
 
 --
@@ -45,6 +52,13 @@ CREATE TABLE `artist` (
   `image` varchar(255) DEFAULT NULL,
   `record_company_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `artist`
+--
+
+INSERT INTO `artist` (`id`, `name`, `image`, `record_company_id`) VALUES
+(1, 'Nayt', 'nayt.jpeg', 3);
 
 -- --------------------------------------------------------
 
@@ -115,6 +129,13 @@ CREATE TABLE `place` (
   `telephone` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dump dei dati per la tabella `place`
+--
+
+INSERT INTO `place` (`id`, `name`, `address`, `email`, `telephone`) VALUES
+(5, 'Zona A', 'Lecce', 'zonaA@gmail.com', '3703131311');
+
 -- --------------------------------------------------------
 
 --
@@ -127,6 +148,13 @@ CREATE TABLE `record_company` (
   `password` varchar(255) NOT NULL,
   `session_token` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `record_company`
+--
+
+INSERT INTO `record_company` (`id`, `email`, `password`, `session_token`) VALUES
+(3, 'ciao@gmail.com', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', NULL);
 
 -- --------------------------------------------------------
 
@@ -151,10 +179,19 @@ CREATE TABLE `review` (
 CREATE TABLE `seat` (
   `id` int(11) NOT NULL,
   `description` varchar(255) NOT NULL DEFAULT 'Unnumbered',
-  `x` int(11) DEFAULT NULL,
-  `y` int(11) DEFAULT NULL,
+  `x` float DEFAULT NULL,
+  `y` float DEFAULT NULL,
   `sector_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `seat`
+--
+
+INSERT INTO `seat` (`id`, `description`, `x`, `y`, `sector_id`) VALUES
+(1, 'Unnumbered', 243, 177, 2),
+(2, 'Unnumbered', 304, 176, 2),
+(3, 'Unnumbered', 361, 177, 2);
 
 -- --------------------------------------------------------
 
@@ -165,12 +202,21 @@ CREATE TABLE `seat` (
 CREATE TABLE `sector` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `x_sx` int(11) DEFAULT NULL,
-  `y_sx` int(11) DEFAULT NULL,
-  `x_dx` int(11) DEFAULT NULL,
-  `y_dx` int(11) DEFAULT NULL,
-  `place_id` int(11) DEFAULT NULL
+  `x_sx` float DEFAULT NULL,
+  `y_sx` float DEFAULT NULL,
+  `x_dx` float DEFAULT NULL,
+  `y_dx` float DEFAULT NULL,
+  `place_id` int(11) DEFAULT NULL,
+  `is_stage` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `sector`
+--
+
+INSERT INTO `sector` (`id`, `name`, `x_sx`, `y_sx`, `x_dx`, `y_dx`, `place_id`, `is_stage`) VALUES
+(1, 'Stage', 201, 54, 412, 115, 5, 1),
+(2, 'Sector 2', 200, 147, 415, 210, 5, 0);
 
 -- --------------------------------------------------------
 
@@ -217,6 +263,13 @@ CREATE TABLE `user` (
   `refunds` decimal(10,2) NOT NULL,
   `session_token` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `user`
+--
+
+INSERT INTO `user` (`id`, `username`, `email`, `password`, `name`, `surname`, `birthdate`, `refunds`, `session_token`) VALUES
+(1, 'hellyeah', 'prova@gmail.com', 'password', 'Ciccio', 'Panzo', '2003-09-05', 100.00, NULL);
 
 --
 -- Indici per le tabelle scaricate
@@ -337,13 +390,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT per la tabella `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT per la tabella `artist`
 --
 ALTER TABLE `artist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT per la tabella `artist_concert`
@@ -367,19 +420,19 @@ ALTER TABLE `likes`
 -- AUTO_INCREMENT per la tabella `notification`
 --
 ALTER TABLE `notification`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT per la tabella `place`
 --
 ALTER TABLE `place`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT per la tabella `record_company`
 --
 ALTER TABLE `record_company`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT per la tabella `review`
@@ -391,13 +444,13 @@ ALTER TABLE `review`
 -- AUTO_INCREMENT per la tabella `seat`
 --
 ALTER TABLE `seat`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT per la tabella `sector`
 --
 ALTER TABLE `sector`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT per la tabella `ticket`
@@ -415,7 +468,7 @@ ALTER TABLE `tour`
 -- AUTO_INCREMENT per la tabella `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Limiti per le tabelle scaricate

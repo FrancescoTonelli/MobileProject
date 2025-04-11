@@ -1,7 +1,5 @@
 # HitWaves
 
-And did (Hit) my (Wa)y[ves]
-
 # Argomento
 
 Lo scopo di HitWaves è quello di fornire a case discografiche la possibilità di pubblicare concerti e/o eventi relativi agli artisti che curano, mettendo a disposizione una serie di locali convenzionati. La casa discografica potrà pubblicizzare i suoi artisti e vendere i relativi biglietti.
@@ -52,3 +50,12 @@ Case discografiche e utenti avranno anche a disposizione un sistema di notifiche
 # Funzionalità aggiuntive
 
 - effettiva funzionalità dei qr
+
+# Istruzioni per l'uso
+
+## Montare il Database (Solo primo avvio)
+1. Tramite XAMPP, avviare Apache e MySQL (quest'ultimo sulla porta 3306, che dovrebbe essere di default)
+2. Cliccare sul pulsante "Admin" sulla riga di MySQL: si aprirà phpmyadmin
+3. Caricare il database utilizzando il codice SQL contenuto in "generator.sql"
+
+
