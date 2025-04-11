@@ -87,7 +87,7 @@ const EditorPlace = ({ placeId, placeName }) => {
       const data = await response.json();
       setPlaceData(data);
     } catch (error) {
-      console.error('Errore nel recupero dei dati:', error);
+      console.error('Error fetching data:', error);
     }
   };
 
@@ -101,7 +101,7 @@ const EditorPlace = ({ placeId, placeName }) => {
           setPlaceData(json);
           await updatePlaceData(json);
         } catch (error) {
-          alert('Errore nel parsing del file JSON');
+          alert('Error parsing JSON file');
         }
       };
       reader.readAsText(file);

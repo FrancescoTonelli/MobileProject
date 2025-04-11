@@ -10,11 +10,11 @@ const ViewTours = () => {
     fetch('http://localhost:5000/admin/tours')
       .then((res) => res.json())
       .then(setTours)
-      .catch(() => alert('Errore nel recupero dei tour.'));
+      .catch(() => alert('Error fetching tours.'));
   };
 
   const deleteTour = (id) => {
-    if (window.confirm('Vuoi davvero eliminare questo tour e i relativi concerti?')) {
+    if (window.confirm('Do you really want to delete this tour and its concerts?')) {
       fetch(`http://localhost:5000/admin/tours/${id}`, { method: 'DELETE' })
         .then((res) => {
           if (!res.ok) throw new Error();
@@ -24,9 +24,9 @@ const ViewTours = () => {
             setConcerts([]);
             setSelectedConcert(null);
           }
-          alert('Tour eliminato con successo!');
+          alert('Tour successfully deleted!');
         })
-        .catch(() => alert('Errore nella cancellazione del tour.'));
+        .catch(() => alert('Error deleting the tour.'));
     }
   };
 
@@ -35,18 +35,18 @@ const ViewTours = () => {
     fetch(`http://localhost:5000/admin/tours/${tour.id}/concerts`)
       .then((res) => res.json())
       .then(setConcerts)
-      .catch(() => alert('Errore nel recupero delle tappe.'));
+      .catch(() => alert('Error fetching concerts.'));
   };
 
   const deleteConcert = (id) => {
-    if (window.confirm('Vuoi davvero eliminare questa tappa?')) {
+    if (window.confirm('Do you really want to delete this concert?')) {
       fetch(`http://localhost:5000/admin/concerts/${id}`, { method: 'DELETE' })
         .then(() => {
           setConcerts((prev) => prev.filter((c) => c.id !== id));
           setSelectedConcert(null);
-          alert('Tappa eliminata con successo!');
+          alert('Concert successfully deleted!');
         })
-        .catch(() => alert('Errore nella cancellazione della tappa.'));
+        .catch(() => alert('Error deleting the concert.'));
     }
   };
 
@@ -54,7 +54,7 @@ const ViewTours = () => {
     fetch(`http://localhost:5000/admin/concerts/${id}`)
       .then((res) => res.json())
       .then(setSelectedConcert)
-      .catch(() => alert('Errore nel recupero dei dettagli del concerto.'));
+      .catch(() => alert('Error fetching concert details.'));
   };
 
   useEffect(() => {
@@ -64,9 +64,9 @@ const ViewTours = () => {
   return (
     <div className="body white-text">
       <div className="header-content">
-        <h3>Tour</h3>
+        <h3>Tours</h3>
         <button onClick={fetchTours} className="btn btn-primary nav-button">
-        <svg
+          <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
             height="24px"
@@ -98,20 +98,20 @@ const ViewTours = () => {
                 <td>{tour.id}</td>
                 <td>{tour.title}</td>
                 <td>
-                  <button className="btn btn-danger my-button" onClick={() => deleteTour(tour.id)}>Elimina</button>
-                  <button className="btn btn-info my-button" onClick={() => fetchConcerts(tour)}>Visualizza Tappe</button>
+                  <button className="btn btn-danger my-button" onClick={() => deleteTour(tour.id)}>Delete</button>
+                  <button className="btn btn-info my-button" onClick={() => fetchConcerts(tour)}>View Concerts</button>
                 </td>
               </tr>
             ))
           ) : (
-            <tr><td colSpan="3">Nessun tour trovato</td></tr>
+            <tr><td colSpan="3">No tours found</td></tr>
           )}
         </tbody>
       </table>
 
       {selectedTour && (
         <>
-          <h4 style={{ marginTop: '30px' }}>Tappe di: {selectedTour.name}</h4>
+          <h4 style={{ marginTop: '30px' }}>Concerts of: {selectedTour.name}</h4>
           <table className="view-table" border="1">
             <thead className="bold-text">
               <tr>
@@ -131,13 +131,13 @@ const ViewTours = () => {
                     <td>{concert.date}</td>
                     <td>{concert.time}</td>
                     <td>
-                      <button className="btn btn-danger my-button" onClick={() => deleteConcert(concert.id)}>Elimina</button>
-                      <button className="btn btn-info my-button" onClick={() => fetchConcertDetails(concert.id)}>Dettagli</button>
+                      <button className="btn btn-danger my-button" onClick={() => deleteConcert(concert.id)}>Delete</button>
+                      <button className="btn btn-info my-button" onClick={() => fetchConcertDetails(concert.id)}>Details</button>
                     </td>
                   </tr>
                 ))
               ) : (
-                <tr><td colSpan="5">Nessuna tappa trovata</td></tr>
+                <tr><td colSpan="5">No concerts found</td></tr>
               )}
             </tbody>
           </table>
@@ -146,22 +146,22 @@ const ViewTours = () => {
 
       {selectedConcert && (
         <div className="notification-form" style={{ marginTop: '30px' }}>
-          <h4>Dettagli Tappa</h4>
+          <h4>Concert Details</h4>
           <form className="notification-form">
             <label className="notification-label">
-              Immagine Tour:
+              Tour Image:
               <img className="concert-img" src={`http://localhost:5000/static/images/tours/${selectedTour.image}`} alt={selectedTour.name} width="200" />
             </label>
             <label className="notification-label">
-              Luogo:
+              Location:
               <input type="text" className="login-input" value={`${selectedConcert.place_name || ''} - ${selectedConcert.address || ''}`} readOnly />
             </label>
             <label className="notification-label">
-              Email Etichetta:
+              Record Company Email:
               <input type="text" className="login-input" value={selectedConcert.record_company_email || ''} readOnly />
             </label>
             <label className="notification-label">
-              Artisti:
+              Artists:
               <ul>
                 {selectedConcert.artists.length > 0 ? (
                   selectedConcert.artists.map((artist) => (
@@ -170,7 +170,7 @@ const ViewTours = () => {
                     </li>
                   ))
                 ) : (
-                  <li>Nessun artista associato</li>
+                  <li>No associated artists</li>
                 )}
               </ul>
             </label>

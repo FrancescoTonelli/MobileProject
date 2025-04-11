@@ -14,7 +14,6 @@ function Navbar( {setView} ) {
 
     const offcanvasRef = useRef(null);
 
-    // Funzione per chiudere il menu
     const closeOffcanvas = () => {
         const offcanvasElement = offcanvasRef.current;
         if (offcanvasElement) {
@@ -38,7 +37,6 @@ function Navbar( {setView} ) {
                 data-bs-target="#offcanvasWithBothOptions"
                 aria-controls="offcanvasWithBothOptions"
             >
-                {/* SVG dentro al bottone */}
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"

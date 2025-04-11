@@ -144,7 +144,6 @@ const ViewRecords = () => {
         </tbody>
       </table>
 
-      {/* Create new company */}
       <div className="notification-form" style={{ marginTop: '30px' }}>
         <h4>Create Record Company</h4>
         <form
@@ -182,7 +181,6 @@ const ViewRecords = () => {
         </form>
       </div>
 
-      {/* Notification Form */}
       <div className='notification-form' style={{ marginTop: '30px' }}>
         <h4>Send Notification</h4>
         <form

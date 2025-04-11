@@ -14,7 +14,7 @@ const ViewConcerts = () => {
         setLoading(false);
       })
       .catch(() => {
-        alert('Errore nel recupero dei concerti.');
+        alert('Error fetching concerts.');
         setLoading(false);
       });
   };
@@ -26,12 +26,12 @@ const ViewConcerts = () => {
         setSelectedConcert(data);
       })
       .catch(() => {
-        alert('Errore nel recupero dei dettagli del concerto.');
+        alert('Error fetching concert details.');
       });
   };
 
   const deleteConcert = (id) => {
-    if (window.confirm('Sei sicuro di voler eliminare questo concerto?')) {
+    if (window.confirm('Are you sure you want to delete this concert?')) {
       fetch(`http://localhost:5000/admin/concerts/${id}`, { method: 'DELETE' })
         .then((res) => {
           if (!res.ok) throw new Error();
@@ -39,11 +39,11 @@ const ViewConcerts = () => {
         })
         .then(() => {
           setConcerts((prev) => prev.filter((c) => c.id !== id));
-          alert('Concerto eliminato con successo!');
+          alert('Concert successfully deleted!');
           setSelectedConcert(null);
         })
         .catch(() => {
-          alert('Errore nella cancellazione del concerto');
+          alert('Error deleting the concert.');
         });
     }
   };
@@ -52,20 +52,20 @@ const ViewConcerts = () => {
     fetchConcerts();
   }, []);
 
-  if (loading) return <p>Caricamento concerti...</p>;
+  if (loading) return <p>Loading concerts...</p>;
 
   return (
     <div className="body white-text">
       <div className="header-content">
         <h3>Concerts (No Tour)</h3>
         <button onClick={fetchConcerts} className="btn btn-primary nav-button">
-            <svg
+          <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
             height="24px"
             width="24px"
             viewBox="0 0 489.533 489.533"
-            >
+          >
             <path
               d="M268.175,488.161c98.2-11,176.9-89.5,188.1-187.7c14.7-128.4-85.1-237.7-210.2-239.1v-57.6c0-3.2-4-4.9-6.7-2.9
               l-118.6,87.1c-2,1.5-2,4.4,0,5.9l118.6,87.1c2.7,2,6.7,0.2,6.7-2.9v-57.5c87.9,1.4,158.3,76.2,152.3,165.6
@@ -101,7 +101,7 @@ const ViewConcerts = () => {
               </tr>
             ))
           ) : (
-            <tr><td colSpan="5">Nessun concerto trovato</td></tr>
+            <tr><td colSpan="5">No concerts found</td></tr>
           )}
         </tbody>
       </table>
@@ -111,7 +111,7 @@ const ViewConcerts = () => {
           <h4>Concert Details</h4>
           <form className="notification-form">
             <label className="notification-label">
-                Image:
+              Image:
               <img className='concert-img' src={`http://localhost:5000/static/images/concerts/${selectedConcert.image}`} alt={selectedConcert.title} width="200" />
             </label>
             <label className="notification-label">

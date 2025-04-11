@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import EditorPlace from '../components/EditorPlace'; // Importiamo il componente EditorPlace
+import EditorPlace from '../components/EditorPlace';
 
 const ViewPlaces = () => {
   const [places, setPlaces] = useState([]);
@@ -10,8 +10,8 @@ const ViewPlaces = () => {
     email: '',
     telephone: '',
   });
-  const [selectedPlace, setSelectedPlace] = useState(null); // Stato per il posto selezionato
-  const [placeName, setPlaceName] = useState(""); // Stato per il nome del posto selezionato
+  const [selectedPlace, setSelectedPlace] = useState(null);
+  const [placeName, setPlaceName] = useState("");
 
   const fetchPlaces = () => {
     setLoading(true);
@@ -22,44 +22,42 @@ const ViewPlaces = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.error('Errore nel caricamento dei posti:', err);
+        console.error('Error loading places:', err);
         setLoading(false);
       });
   };
 
   const deletePlace = (id) => {
-    if (window.confirm('Sei sicuro di voler eliminare questo posto?')) {
+    if (window.confirm('Are you sure you want to delete this place?')) {
       fetch(`http://localhost:5000/admin/places/${id}`, {
         method: 'DELETE',
       })
         .then((res) => {
           if (!res.ok) {
-            throw new Error('Errore durante la cancellazione del posto');
+            throw new Error('Error deleting the place');
           }
           return res.json();
         })
         .then(() => {
-          // Aggiorna la lista dei posti dopo la cancellazione
           setPlaces((prevPlaces) => prevPlaces.filter((place) => place.id !== id));
-          alert('Place eliminato con successo!');
+          alert('Place successfully deleted!');
         })
         .catch((err) => {
-          console.error('Errore nella cancellazione:', err);
-          alert('Errore nella cancellazione del posto');
+          console.error('Error deleting:', err);
+          alert('Error deleting the place');
         });
     }
   };
-  
 
   const openEditor = (id, name) => {
-    setSelectedPlace(id); // Settiamo l'ID del posto selezionato
-    setPlaceName(name); // Settiamo il nome del posto selezionato
+    setSelectedPlace(id);
+    setPlaceName(name);
   };
 
   const createPlace = () => {
     const { name, address, email, telephone } = newPlace;
     if (!name || !address || !email || !telephone) {
-      alert('Compila tutti i campi');
+      alert('Fill in all fields');
       return;
     }
 
@@ -69,14 +67,14 @@ const ViewPlaces = () => {
       body: JSON.stringify(newPlace),
     })
       .then((res) => {
-        if (!res.ok) throw new Error('Creazione fallita');
-        alert('Place creato con successo!');
+        if (!res.ok) throw new Error('Creation failed');
+        alert('Place successfully created!');
         setNewPlace({ name: '', address: '', email: '', telephone: '' });
         fetchPlaces();
       })
       .catch((err) => {
         console.error(err);
-        alert('Errore durante la creazione');
+        alert('Error during creation');
       });
   };
 
@@ -84,7 +82,7 @@ const ViewPlaces = () => {
     fetchPlaces();
   }, []);
 
-  if (loading) return <p>Caricamento places...</p>;
+  if (loading) return <p>Loading places...</p>;
 
   return (
     <div className="body white-text">
@@ -148,7 +146,6 @@ const ViewPlaces = () => {
 
       {selectedPlace && <EditorPlace placeId={selectedPlace} placeName={placeName} />}
 
-      {/* Create new place form */}
       <div className="notification-form" style={{ marginTop: '30px' }}>
         <h4>Create Place</h4>
         <form
@@ -215,8 +212,6 @@ const ViewPlaces = () => {
           </button>
         </form>
       </div>
-
-      
     </div>
   );
 };

@@ -151,7 +151,6 @@ const UsersPage = () => {
         </tbody>
       </table>
 
-      {/* Notification Form */}
       <div className="notification-form" style={{ marginTop: '30px' }}>
         <h4>Send Notification to Selected User</h4>
         <form
