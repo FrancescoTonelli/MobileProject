@@ -23,9 +23,6 @@ def update_button_state():
         else:
             button.config(bg="lightgray")
 
-def clear_form():
-    pass  # Nothing to clear since form is now in the popup
-
 def on_canvas_click(event):
     global click_points, selected_item
 
@@ -57,7 +54,7 @@ def on_canvas_click(event):
                                         y - SEAT_CIRCLE_RANGE,
                                           x + SEAT_CIRCLE_RANGE,
                                             y + SEAT_CIRCLE_RANGE, fill="red")
-                    seat = Seat(description="Unnumbered", x=x, y=y)  # Default to "Unnumbered"
+                    seat = Seat(description="Unnumbered", x=x, y=y)
                     sector.seats.append(seat)
                     selected_item = seat
                     show_item_details(selected_item)
@@ -88,14 +85,12 @@ def on_canvas_right_click(event):
                     break
 
 def show_item_details(item):
-    # Crea un popup per la modifica
     popup = tk.Toplevel(root)
     popup.title("Modify Item")
 
     form_frame = tk.Frame(popup, bg="lightblue")
     form_frame.pack(side="top", fill="x", padx=10, pady=10)
 
-    # Frame per il nome del settore
     name_frame = tk.Frame(form_frame)
     name_frame.pack(side="top", fill="x", padx=5, pady=5)
 
@@ -109,7 +104,6 @@ def show_item_details(item):
         update_button = tk.Button(name_frame, text="Update Sector", command=lambda: update_sector(item, name_entry.get(), popup))
         update_button.pack(side="left", padx=10)
 
-        # Se il settore non è uno stage, aggiungi la sezione per i posti
         if not item.is_stage:
             seat_frame = tk.Frame(form_frame)
             seat_frame.pack(side="top", fill="x", padx=5, pady=5)
@@ -122,18 +116,15 @@ def show_item_details(item):
             add_seats_button = tk.Button(seat_frame, text="Add Seats", command=lambda: add_seats_to_sector(item, num_seats_entry.get()))
             add_seats_button.pack(side="left", padx=10)
 
-            # Checkbox per numerare i posti
             numbering_var = tk.BooleanVar()
             numbering_checkbox = tk.Checkbutton(seat_frame, text="Number Seats Automatically", variable=numbering_var)
             numbering_checkbox.pack(side="left", padx=10)
 
-            # Modifica il comando per includere la numerazione automatica
             def add_seats_with_numbering():
                 add_seats_to_sector(item, num_seats_entry.get(), numbering_var.get())
             
             add_seats_button.config(command=add_seats_with_numbering)
 
-        # Bottone per la cancellazione del settore
         delete_button = tk.Button(popup, text="Delete Sector", command=lambda: delete_sector(item, popup), bg="red", fg="white")
         delete_button.pack(pady=10)
 
@@ -150,7 +141,6 @@ def show_item_details(item):
         delete_button = tk.Button(popup, text="Delete Sector", command=lambda: delete_seat(item, popup), bg="red", fg="white")
         delete_button.pack(pady=10)
 
-
 def update_sector(sector, new_name, popup):
     sector.name = new_name
     selected_item = sector
@@ -164,10 +154,8 @@ def update_seat(seat, new_description, popup):
     show_item_details(selected_item)
 
 def delete_sector(sector, popup):
-    """Delete the sector from the list and the canvas."""
     sectors.remove(sector)
     canvas.delete("all")
-    # Redraw the sectors and seats
     for sector in sectors:
         if sector.is_stage:
             canvas.create_rectangle(sector.x_sx, sector.y_sx, sector.x_dx, sector.y_dx, 
@@ -183,12 +171,10 @@ def delete_sector(sector, popup):
     popup.destroy()
 
 def delete_seat(seat, popup):
-    """Delete the seat from the sector and the canvas."""
     for sector in sectors:
         if seat in sector.seats:
             sector.seats.remove(seat)
             canvas.delete("all")
-            # Redraw the sectors and seats
             for sector in sectors:
                 if sector.is_stage:
                     canvas.create_rectangle(sector.x_sx, sector.y_sx, sector.x_dx, sector.y_dx, 
@@ -224,10 +210,9 @@ def save_map():
             json.dump(map_data, f, indent=4)
 
 def load_map():
-    # Clear existing sectors and canvas
     global sectors
     sectors = []
-    canvas.delete("all")  # Clear the canvas
+    canvas.delete("all")
 
     filename = filedialog.askopenfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
     if filename:
@@ -242,13 +227,12 @@ def load_map():
                     seat = Seat(seat_data["description"], seat_data["x"], seat_data["y"])
                     sector.seats.append(seat)
                 sectors.append(sector)
-                # Drawing the sectors and seats
                 if sector.is_stage:
                     canvas.create_rectangle(sector.x_sx, sector.y_sx, sector.x_dx, sector.y_dx, 
-                                            fill="gray", outline="", width=2)  # No red border for stage
+                                            fill="gray", outline="", width=2)
                 else:
                     canvas.create_rectangle(sector.x_sx, sector.y_sx, sector.x_dx, sector.y_dx, 
-                                            fill="", outline="red", width=2)  # Red border for non-stage sectors
+                                            fill="", outline="red", width=2)
                 for seat in sector.seats:
                     canvas.create_oval(seat.x - SEAT_CIRCLE_RANGE,
                                         seat.y - SEAT_CIRCLE_RANGE,
@@ -256,43 +240,36 @@ def load_map():
                                             seat.y + SEAT_CIRCLE_RANGE, fill="red")
 
 def add_seats_to_sector(sector, num_seats_str, numbering=False):
-    """Automatically add a number of seats to the given sector with optional numbering."""
     try:
         sector.seats = []
-        num_seats = int(num_seats_str)  # Convert input to an integer
+        num_seats = int(num_seats_str)
         if num_seats <= 0:
             raise ValueError("Number of seats must be greater than 0.")
         
-        # Calculate available width and height of the sector for placing seats
         available_width = sector.x_dx - sector.x_sx
         available_height = sector.y_dx - sector.y_sx
         
-        # Add a smaller margin to avoid seats touching the borders of the sector
-        margin = 10  # Reduced margin to 10 to bring seats closer to the borders
+        margin = 10
         available_width -= 2 * margin
         available_height -= 2 * margin
         
-        # Calculate the number of seats that can fit based on the available space
-        seats_per_row = available_width // (2 * SEAT_CIRCLE_RANGE)  # Horizontal seats per row
-        max_rows = available_height // (2 * SEAT_CIRCLE_RANGE)  # Vertical rows of seats
+        seats_per_row = available_width // (2 * SEAT_CIRCLE_RANGE)
+        max_rows = available_height // (2 * SEAT_CIRCLE_RANGE)
         
         total_seats_that_fit = seats_per_row * max_rows
         
         if num_seats > total_seats_that_fit:
             raise ValueError(f"Not enough space to add {num_seats} seats. Only {total_seats_that_fit} can fit in this sector.")
         
-        # Calculate the spacing for each seat
-        x_spacing = available_width // seats_per_row  # Horizontal spacing between seats
-        y_spacing = available_height // max_rows  # Vertical spacing between seats
+        x_spacing = available_width // seats_per_row
+        y_spacing = available_height // max_rows
 
-        # Adjust spacing to make sure the seats don't overflow
         remaining_space_x = available_width - (seats_per_row * x_spacing)
         remaining_space_y = available_height - (max_rows * y_spacing)
         
         x_spacing += remaining_space_x // seats_per_row
         y_spacing += remaining_space_y // max_rows
 
-        # Add the seats in a grid-like fashion
         for i in range(num_seats):
             row = i // seats_per_row
             col = i % seats_per_row
@@ -300,11 +277,10 @@ def add_seats_to_sector(sector, num_seats_str, numbering=False):
             y = sector.y_sx + margin + row * y_spacing + SEAT_CIRCLE_RANGE
             seat = Seat(description="Unnumbered", x=x, y=y)
             if numbering:
-                seat.description = "Seat " + str(i + 1)  # Number seats sequentially starting from 1
+                seat.description = "Seat " + str(i + 1)
             sector.seats.append(seat)
         
         canvas.delete("all")
-        # Redraw the sectors and seats
         for sector in sectors:
             if sector.is_stage:
                 canvas.create_rectangle(sector.x_sx, sector.y_sx, sector.x_dx, sector.y_dx, 
