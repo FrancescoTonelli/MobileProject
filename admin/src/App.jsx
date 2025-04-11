@@ -8,6 +8,8 @@ import ViewUsers from "./views/ViewUsers";
 import ViewRecords from "./views/ViewRecords";
 import ViewArtists from "./views/ViewArtists";
 import ViewPlaces from "./views/ViewPlaces";
+import ViewConcerts from "./views/ViewConcerts";
+import ViewTours from "./views/ViewTours";
 import {
   USER,
   CONCERTS,
@@ -31,9 +33,9 @@ function App() {
       case USER:
         return <ViewUsers />;
       case CONCERTS:
-        return <div className="body white-text">Concerts View</div>;
+        return <ViewConcerts/>;
       case TOURS:
-        return <div className="body white-text">Tours View</div>;
+        return <ViewTours/>;
       case RECORD_COMPANIES:
         return <ViewRecords />;
       case PLACES:

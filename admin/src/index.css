@@ -311,3 +311,13 @@ h1 {
   border-radius: 50% !important;
   object-fit: cover !important;
 }
+
+.concert-img {
+  width: 400px !important;
+  height: auto !important;
+  object-fit: fill !important;
+}
+
+.li-no-dot {
+  list-style-type: none !important;
+}
