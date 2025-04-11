@@ -12,7 +12,6 @@ from routes.tours_routes import tour_bp
 app = Flask(__name__)
 CORS(app)
 
-# Register blueprints
 app.register_blueprint(admin_bp)
 app.register_blueprint(user_bp)
 app.register_blueprint(notification_bp)

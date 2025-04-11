@@ -3,7 +3,6 @@ from db import get_db
 
 artist_bp = Blueprint('artist', __name__)
 
-# Endpoint per ottenere tutti gli artisti con le informazioni richieste
 @artist_bp.route('/admin/artists', methods=['GET'])
 def admin_get_artists():
     conn = get_db()
@@ -17,7 +16,6 @@ def admin_get_artists():
     conn.close()
     return jsonify(artists), 200
 
-# Endpoint per cancellare un artista
 @artist_bp.route('/admin/artists/<int:artist_id>', methods=['DELETE'])
 def admin_delete_artist(artist_id):
     conn = get_db()

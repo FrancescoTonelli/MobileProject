@@ -31,13 +31,11 @@ def get_concerts_by_tour(tour_id):
         conn = get_db()
         cursor = conn.cursor(dictionary=True)
 
-        # Verifica che il tour esista
         cursor.execute("SELECT id FROM tour WHERE id = %s", (tour_id,))
         if not cursor.fetchone():
             conn.close()
             return jsonify({'message': 'Tour not found'}), 404
 
-        # Prende i concerti associati
         cursor.execute("""
             SELECT id, title, date, time, image
             FROM concert
@@ -58,24 +56,19 @@ def delete_tour(tour_id):
         conn = get_db()
         cursor = conn.cursor()
 
-        # Verifica se il tour esiste
         cursor.execute("SELECT id FROM tour WHERE id = %s", (tour_id,))
         if not cursor.fetchone():
             conn.close()
             return jsonify({'message': 'Tour not found'}), 404
 
-        # Recupera tutti i concerti associati
         cursor.execute("SELECT id FROM concert WHERE tour_id = %s", (tour_id,))
         concert_ids = [row[0] for row in cursor.fetchall()]
 
-        # Elimina le associazioni degli artisti per ogni concerto
         for concert_id in concert_ids:
             cursor.execute("DELETE FROM artist_concert WHERE concert_id = %s", (concert_id,))
 
-        # Elimina i concerti associati
         cursor.execute("DELETE FROM concert WHERE tour_id = %s", (tour_id,))
 
-        # Elimina il tour
         cursor.execute("DELETE FROM tour WHERE id = %s", (tour_id,))
 
         conn.commit()
