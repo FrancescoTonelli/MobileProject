@@ -58,4 +58,23 @@ Case discografiche e utenti avranno anche a disposizione un sistema di notifiche
 2. Cliccare sul pulsante "Admin" sulla riga di MySQL: si aprirà phpmyadmin
 3. Caricare il database utilizzando il codice SQL contenuto in "generator.sql"
 
+## Avviare il backend
+1. Entrare nella cartella "back"
+2. Installare le librerie:
+    - Flask - `pip install Flask`
+    - flask-cors - `pip install flask-cors`
+3. Lanciare su terminale il comando `python.exe .\app.py`
+
+## Avviare il pannello Admin
+1. Entrare nella cartella "admin"
+2. Se non presente, installare Node.js
+3. Lanciare il comando `npm install` (solo al primo avvio)
+4. Lanciare il comando `npm run dev`
+5. Il terminale indicherà a che porta del localhost è esposto il pannello per l'admin
+
+## Avviare l'editor per la creazione delle piantine
+1. Entrare nella cartella "seat_chart_editor"
+2. Doppio click su "start.bat"
+ 
+
 
