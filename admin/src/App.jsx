@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Routes, Route } from 'react-router-dom';
 import Navbar from "./components/Navbar";
 import logo from './assets/logo.svg'; 
 import Login from "./components/Login";
@@ -8,7 +8,6 @@ import ViewUsers from "./views/ViewUsers";
 import ViewRecords from "./views/ViewRecords";
 import ViewArtists from "./views/ViewArtists";
 import ViewPlaces from "./views/ViewPlaces";
-import EditorPlace from './components/EditorPlace';  // Importa il componente EditorPlace
 import {
   USER,
   CONCERTS,

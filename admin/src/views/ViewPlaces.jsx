@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import EditorPlace from '../components/EditorPlace'; // Importiamo il componente EditorPlace
 
 const ViewPlaces = () => {
@@ -13,7 +12,6 @@ const ViewPlaces = () => {
   });
   const [selectedPlace, setSelectedPlace] = useState(null); // Stato per il posto selezionato
   const [placeName, setPlaceName] = useState(""); // Stato per il nome del posto selezionato
-  const navigate = useNavigate();
 
   const fetchPlaces = () => {
     setLoading(true);
