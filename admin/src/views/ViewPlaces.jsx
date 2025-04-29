@@ -112,6 +112,8 @@ const ViewPlaces = () => {
             <th>ID</th>
             <th>Name</th>
             <th>Address</th>
+            <th>Latitude</th> {/* Aggiunto */}
+            <th>Longitude</th> {/* Aggiunto */}
             <th>Email</th>
             <th>Telephone</th>
             <th>Actions</th>
@@ -123,6 +125,8 @@ const ViewPlaces = () => {
               <td>{place.id}</td>
               <td>{place.name}</td>
               <td>{place.address}</td>
+              <td>{place.latitude ?? '-'}</td> {/* Aggiunto */}
+              <td>{place.longitude ?? '-'}</td> {/* Aggiunto */}
               <td>{place.email}</td>
               <td>{place.telephone}</td>
               <td>

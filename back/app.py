@@ -1,13 +1,14 @@
 from flask import Flask
 from flask_cors import CORS
-from routes.admin_routes import admin_bp
-from routes.user_routes import user_bp
-from routes.notification_routes import notification_bp
-from routes.record_routes import record_bp
-from routes.artists_routes import artist_bp
-from routes.places_routes import place_bp
-from routes.concerts_routes import concert_bp
-from routes.tours_routes import tour_bp
+from routes.admin.admin_routes import admin_bp
+from routes.admin.user_routes import user_bp
+from routes.admin.notification_routes import notification_bp
+from routes.admin.record_routes import record_bp
+from routes.admin.artists_routes import artist_bp
+from routes.admin.places_routes import place_bp
+from routes.admin.concerts_routes import concert_bp
+from routes.admin.tours_routes import tour_bp
+from routes.protected_user import protected_user_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -20,6 +21,7 @@ app.register_blueprint(artist_bp)
 app.register_blueprint(place_bp)
 app.register_blueprint(concert_bp)
 app.register_blueprint(tour_bp)
+app.register_blueprint(protected_user_bp)
 
 if __name__ == '__main__':
     app.run(debug=True)

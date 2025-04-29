@@ -67,7 +67,7 @@ Case discografiche e utenti avranno anche a disposizione un sistema di notifiche
 
 ## Avviare il pannello Admin
 1. Entrare nella cartella "admin"
-2. Se non presente, installare Node.js
+2. Se non presenti, installare Node.js (versione 22.x) e vite
 3. Lanciare il comando `npm install` (solo al primo avvio)
 4. Lanciare il comando `npm run dev`
 5. Il terminale indicherà a che porta del localhost è esposto il pannello per l'admin

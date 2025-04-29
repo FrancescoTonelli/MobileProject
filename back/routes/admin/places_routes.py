@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from db import get_db
+import requests
 
 place_bp = Blueprint('place', __name__)
 
@@ -7,10 +8,27 @@ place_bp = Blueprint('place', __name__)
 def get_places():
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT id, name, address, email, telephone FROM place")
+    cursor.execute("SELECT id, name, address, latitude, longitude, email, telephone FROM place")
     places = cursor.fetchall()
     conn.close()
     return jsonify(places), 200
+
+def geocode_address(address):
+    url = 'https://nominatim.openstreetmap.org/search'
+    params = {
+        'q': address,
+        'format': 'json'
+    }
+    headers = {
+        'User-Agent': 'Admin Panel'  
+    }
+    response = requests.get(url, params=params, headers=headers)
+    data = response.json()
+    if data:
+        latitude = float(data[0]['lat'])
+        longitude = float(data[0]['lon'])
+        return latitude, longitude
+    return None, None
 
 @place_bp.route('/admin/places', methods=['POST'])
 def create_place():
@@ -23,15 +41,20 @@ def create_place():
     if not all([name, address, email, telephone]):
         return jsonify({'message': 'Missing required fields'}), 400
 
+    latitude, longitude = geocode_address(address)
+    if latitude is None or longitude is None:
+        return jsonify({'message': 'Failed to geocode address'}), 400
+
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("""
-        INSERT INTO place (name, address, email, telephone)
-        VALUES (%s, %s, %s, %s)
-    """, (name, address, email, telephone))
+        INSERT INTO place (name, address, latitude, longitude, email, telephone)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (name, address, latitude, longitude, email, telephone))
     conn.commit()
     conn.close()
-    return jsonify({'message': 'Place created'}), 201
+
+    return jsonify({'message': 'Place created', 'latitude': latitude, 'longitude': longitude}), 201
 
 @place_bp.route('/admin/places/<int:place_id>', methods=['DELETE'])
 def delete_place(place_id):

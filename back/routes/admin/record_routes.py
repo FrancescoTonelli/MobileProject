@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-import hashlib
+import bcrypt
 from db import get_db
 
 record_bp = Blueprint('record', __name__)
@@ -20,7 +20,7 @@ def admin_create_record():
     if not all(k in data for k in required):
         return jsonify({'message': 'Missing fields'}), 400
 
-    hashed_password = hashlib.sha256(data['password'].encode()).hexdigest()
+    hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
     conn = get_db()
     cursor = conn.cursor()

@@ -34,7 +34,7 @@ def get_concerts_without_tour():
 @concert_bp.route('/admin/concerts/<int:concert_id>', methods=['GET'])
 def get_concert_details(concert_id):
     try:
-        conn = get_db()
+        conn = get_db()     
         cursor = conn.cursor(dictionary=True)
         cursor.execute("""
             SELECT c.id, c.title, c.date, c.time, c.image,
