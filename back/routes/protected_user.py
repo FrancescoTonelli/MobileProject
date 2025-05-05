@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from db import get_db
 import bcrypt
 import jwt
@@ -6,6 +6,9 @@ import datetime
 from config import SECRET_FOR_TOKEN
 import math
 import json
+import os
+from werkzeug.utils import secure_filename
+from PIL import Image
 
 protected_user_bp = Blueprint('protected_user', __name__)
 
@@ -125,6 +128,76 @@ def protected_user_register():
     token = create_token(user_id)
 
     return jsonify({'token': token}), 201
+
+# Logout (token deletion)
+@protected_user_bp.route('/protected_user/logout', methods=['POST'])
+def protected_user_logout():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    try:
+        user_id = verify_token()[0]
+    except Exception as e:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("""
+            UPDATE user 
+            SET session_token = NULL 
+            WHERE id = %s
+        """, (user_id,))
+        conn.commit()
+
+        return jsonify({'message': 'Logout successful'}), 200
+
+    except Exception as e:
+        conn.rollback()
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+# Delete User
+@protected_user_bp.route('/protected_user/delete', methods=['DELETE'])
+def protected_user_delete_account():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+
+    try:
+        user_id = verify_token()[0]
+    except Exception:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("SELECT image FROM user WHERE id = %s", (user_id,))
+        result = cursor.fetchone()
+        if result and result[0]:
+            image_path = result[0]
+            full_image_path = os.path.join(current_app.root_path, 'static', 'images', 'users', image_path)
+            if os.path.exists(full_image_path):
+                os.remove(full_image_path)
+
+        cursor.execute("DELETE FROM notification WHERE user_id = %s", (user_id,))
+        cursor.execute("DELETE FROM likes WHERE user_id = %s", (user_id,))
+        cursor.execute("DELETE FROM review WHERE user_id = %s", (user_id,))
+        cursor.execute("UPDATE ticket SET user_id = NULL WHERE user_id = %s", (user_id,))
+        cursor.execute("DELETE FROM user WHERE id = %s", (user_id,))
+
+        conn.commit()
+        return jsonify({'message': 'Account and image deleted successfully'}), 200
+
+    except Exception as e:
+        conn.rollback()
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()
 
 # Automatic Login via token
 @protected_user_bp.route('/protected_user/automatic_login', methods=['POST'])
@@ -346,7 +419,7 @@ def protected_user_concerts_no_tour():
             concert.id AS concert_id,
             concert.title AS concert_title,
             concert.image AS concert_image,
-            concert.date AS concert_date,
+            DATE_FORMAT(concert.date, '%Y-%m-%d') AS concert_date,
             place.name AS place_name,
             artist.name AS artist_name,
             artist.image AS artist_image
@@ -506,18 +579,26 @@ def protected_user_concert_details(concert_id):
                 TIME_FORMAT(c.time, '%H:%i') AS concert_time,
                 p.name AS place_name,
                 p.address AS place_address,
-                p.id AS place_id
+                p.id AS place_id,
+                t.id AS tour_id,
+                t.title AS tour_title,
+                t.image AS tour_image
             FROM 
                 concert c
             JOIN 
                 place p ON c.place_id = p.id
+            LEFT JOIN  -- Usiamo LEFT JOIN per includere concerti senza tour
+                tour t ON c.tour_id = t.id
             WHERE 
                 c.id = %s
         """, (concert_id,))
         
         concert_data = cursor.fetchone()
         if not concert_data:
-            jsonify({'message': 'Concert not found'}), 404
+            return jsonify({'message': 'Concert not found'}), 404
+
+        if concert_data['tour_id'] and not concert_data['concert_image']:
+            concert_data['concert_image'] = concert_data['tour_image']
 
         cursor.execute("""
             SELECT 
@@ -531,7 +612,6 @@ def protected_user_concert_details(concert_id):
             WHERE 
                 ac.concert_id = %s
         """, (concert_id,))
-        
         artists = cursor.fetchall()
 
         cursor.execute("""
@@ -539,7 +619,7 @@ def protected_user_concert_details(concert_id):
                 t.id AS ticket_id,
                 t.price AS ticket_price,
                 s.id AS sector_id,
-                s.name AS sector_name,
+                s.name AS tour_name,  -- Corretto da sector_name a tour_name
                 s.is_stage AS sector_is_stage,
                 s.x_sx, s.y_sx, s.x_dx, s.y_dx,
                 se.id AS seat_id,
@@ -557,7 +637,6 @@ def protected_user_concert_details(concert_id):
                 AND t.user_id IS NULL
                 AND t.validated = 0
         """, (concert_id,))
-        
         available_tickets = cursor.fetchall()
 
         cursor.execute("""
@@ -574,15 +653,25 @@ def protected_user_concert_details(concert_id):
             WHERE 
                 place_id = %s
         """, (concert_data['place_id'],))
-        
         sectors = cursor.fetchall()
 
         response = {
-            'concert_info': concert_data,
+            'concert_info': {
+                **concert_data,  
+                'effective_image': concert_data['concert_image'] or concert_data.get('tour_image'), 
+                'is_part_of_tour': concert_data['tour_id'] is not None
+            },
             'artists': artists,
             'available_tickets': available_tickets,
             'sectors': sectors
         }
+
+        if concert_data['tour_id']:
+            response['tour_info'] = {
+                'id': concert_data['tour_id'],
+                'title': concert_data['tour_title'],
+                'image': concert_data['tour_image']
+            }
 
         return jsonify(response), 200
 
@@ -748,3 +837,609 @@ def protected_user_purchase_ticket(ticket_id):
         conn.close()
 
 # Get Liked Artists
+@protected_user_bp.route('/protected_user/liked_artists', methods=['GET'])
+def protected_user_liked_artists():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    try:
+        user_id = verify_token()[0]
+    except Exception as e:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        cursor.execute("""
+            SELECT 
+                a.id,
+                a.name,
+                a.image,
+                (SELECT COUNT(*) FROM likes WHERE artist_id = a.id) AS likes_count,
+                (SELECT COALESCE(AVG(r.rate), 0) 
+                 FROM review r
+                 JOIN concert c ON r.concert_id = c.id
+                 JOIN artist_concert ac ON c.id = ac.concert_id
+                 WHERE ac.artist_id = a.id) AS average_rating
+            FROM artist a
+            JOIN likes l ON a.id = l.artist_id
+            WHERE l.user_id = %s
+            ORDER BY a.name
+        """, (user_id,))
+        
+        artists = cursor.fetchall()
+
+        for artist in artists:
+            artist['average_rating'] = float(artist['average_rating'])
+
+        return jsonify(artists), 200
+
+    except Exception as e:
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+# Add or remove likes
+@protected_user_bp.route('/protected_user/like/<int:artist_id>', methods=['POST'])
+def protected_user_like_artist(artist_id):
+
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    try:
+        user_id = verify_token()[0]
+    except Exception as e:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        cursor.execute("""
+            SELECT * FROM likes 
+            WHERE artist_id = %s AND user_id = %s
+        """, (artist_id, user_id))
+        
+        if cursor.fetchone():
+            cursor.execute("""
+                DELETE FROM likes 
+                WHERE artist_id = %s AND user_id = %s
+            """, (artist_id, user_id))
+            conn.commit()
+            return jsonify({'message': 'Artist unliked'}), 200
+        else:
+            cursor.execute("""
+                INSERT INTO likes (user_id, artist_id) 
+                VALUES (%s, %s)
+            """, (user_id, artist_id))
+            conn.commit()
+            return jsonify({'message': 'Artist liked'}), 200
+
+    except Exception as e:
+        conn.rollback()
+        return jsonify({'message': f'Error liking artist: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+# Get User Tickets
+@protected_user_bp.route('/protected_user/tickets', methods=['GET'])
+def protected_user_tickets():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    try:
+        user_id = verify_token()[0]
+    except Exception as e:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("""
+            SELECT 
+                t.id AS ticket_id,
+                c.id AS concert_id,
+                c.title AS concert_title,
+                c.image AS concert_image,
+                DATE_FORMAT(c.date, '%Y-%m-%d') AS concert_date,
+                c.time AS concert_time,
+                tour.id AS tour_id,
+                tour.title AS tour_title,
+                tour.image AS tour_image,
+                place.name AS place_name,
+                (
+                    SELECT a.image 
+                    FROM artist a
+                    JOIN artist_concert ac ON a.id = ac.artist_id
+                    WHERE ac.concert_id = c.id
+                    LIMIT 1
+                ) AS artist_image,
+                (
+                    SELECT a.id
+                    FROM artist a
+                    JOIN artist_concert ac ON a.id = ac.artist_id
+                    WHERE ac.concert_id = c.id
+                    LIMIT 1
+                ) AS artist_id,
+                (
+                    SELECT a.name
+                    FROM artist a
+                    JOIN artist_concert ac ON a.id = ac.artist_id
+                    WHERE ac.concert_id = c.id
+                    LIMIT 1
+                ) AS artist_name
+            FROM 
+                ticket t
+            JOIN 
+                concert c ON t.concert_id = c.id
+            LEFT JOIN 
+                tour ON c.tour_id = tour.id
+            JOIN 
+                place ON c.place_id = place.id
+            WHERE 
+                t.user_id = %s
+            ORDER BY 
+                c.date DESC, c.time DESC
+        """, (user_id,))
+        
+        tickets = cursor.fetchall()
+
+        formatted_tickets = []
+        for ticket in tickets:
+            formatted_ticket = {
+                'ticket_id': ticket['ticket_id'],
+                'concert': {
+                    'id': ticket['concert_id'],
+                    'title': ticket['concert_title'],
+                    'image': ticket['concert_image'] or ticket.get('tour_image'),
+                    'date': ticket['concert_date'],
+                    'time': str(ticket['concert_time']),
+                    'place_name': ticket['place_name'],
+                    'artist': {
+                        'id': ticket['artist_id'],
+                        'name': ticket['artist_name'],
+                        'image': ticket['artist_image']
+                    }
+                }
+            }
+            
+            if ticket['tour_id']:
+                formatted_ticket['tour'] = {
+                    'id': ticket['tour_id'],
+                    'title': ticket['tour_title'],
+                    'image': ticket['tour_image']
+                }
+            
+            formatted_tickets.append(formatted_ticket)
+
+        return jsonify({'tickets': formatted_tickets}), 200
+
+    except Exception as e:
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+# Check and get existing review on a concert
+@protected_user_bp.route('/protected_user/review/check/<int:concert_id>', methods=['GET'])
+def protected_user_check_review(concert_id):
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    try:
+        user_id = verify_token()[0]
+    except Exception as e:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("""
+            SELECT id, rate, description 
+            FROM review 
+            WHERE user_id = %s AND concert_id = %s
+            LIMIT 1
+        """, (user_id, concert_id))
+        
+        review = cursor.fetchone()
+
+        if review:
+            return jsonify({
+                'has_reviewed': True,
+                'review': {
+                    'id': review['id'],
+                    'rate': review['rate'],
+                    'description': review['description']
+                }
+            }), 200
+        else:
+            return jsonify({
+                'has_reviewed': False
+            }), 200
+
+    except Exception as e:
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+# Post Review (ticket validated and concert passed)
+@protected_user_bp.route('/protected_user/review', methods=['POST'])
+def protected_user_add_review():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    try:
+        user_id = verify_token()[0]
+    except Exception as e:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    data = request.get_json()
+    if not data or 'ticket_id' not in data or 'rate' not in data:
+        return jsonify({'message': 'Missing required fields (ticket_id and rate are required)'}), 400
+
+    ticket_id = data['ticket_id']
+    rate = data['rate']
+    description = data.get('description', '')
+
+    if not isinstance(rate, int) or rate < 1 or rate > 5:
+        return jsonify({'message': 'Rating must be an integer between 1 and 5'}), 400
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("""
+            SELECT t.id, t.concert_id, c.date 
+            FROM ticket t
+            JOIN concert c ON t.concert_id = c.id
+            WHERE t.id = %s 
+            AND t.user_id = %s
+            AND t.validated = 1
+            LIMIT 1
+        """, (ticket_id, user_id))
+        
+        ticket = cursor.fetchone()
+        
+        if not ticket:
+            return jsonify({'message': 'Ticket not found, not validated or not owned by user'}), 403
+
+        concert_id = ticket['concert_id']
+        
+        if ticket['date'] >= datetime.date.today():
+            return jsonify({'message': 'Cannot review future concerts'}), 403
+
+        cursor.execute("""
+            SELECT id FROM review 
+            WHERE user_id = %s AND concert_id = %s
+            LIMIT 1
+        """, (user_id, concert_id))
+        
+        if cursor.fetchone():
+            return jsonify({'message': 'You already reviewed this concert'}), 409
+
+        cursor.execute("""
+            INSERT INTO review (rate, description, user_id, concert_id)
+            VALUES (%s, %s, %s, %s)
+        """, (rate, description, user_id, concert_id))
+        
+        conn.commit()
+
+        return jsonify({
+            'message': 'Review added successfully',
+        }), 201
+
+    except Exception as e:
+        conn.rollback()
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+# Get User Details
+@protected_user_bp.route('/protected_user/details', methods=['GET'])
+def protected_user_get_details():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    try:
+        user_id = verify_token()[0]
+    except Exception as e:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("""
+            SELECT 
+                id,
+                username,
+                email,
+                name,
+                surname,
+                DATE_FORMAT(birthdate, '%Y-%m-%d') AS birthdate,
+                refunds,
+                image
+            FROM user
+            WHERE id = %s
+        """, (user_id,))
+        
+        user_data = cursor.fetchone()
+
+        if not user_data:
+            return jsonify({'message': 'User not found'}), 404
+
+        return jsonify(user_data), 200
+
+    except Exception as e:
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+# Update User Details
+@protected_user_bp.route('/protected_user/update', methods=['PUT'])
+def protected_user_update():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+
+    try:
+        user_id = verify_token()[0]
+    except Exception:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    data = request.get_json()
+    allowed_fields = ['name', 'surname', 'birthdate', 'username', 'email', 'password']
+
+    updates = {k: data[k] for k in allowed_fields if k in data}
+    if not updates:
+        return jsonify({'message': 'No valid fields provided'}), 400
+
+    if 'birthdate' in updates:
+        try:
+            birthdate = datetime.datetime.strptime(updates['birthdate'], '%Y-%m-%d').date()
+            today = datetime.date.today()
+            age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+            if age < 18:
+                return jsonify({'message': 'You must be at least 18 years old'}), 403
+        except ValueError:
+            return jsonify({'message': 'Invalid birthdate format. Use YYYY-MM-DD'}), 400
+
+    if 'password' in updates:
+        updates['password'] = bcrypt.hashpw(updates['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+    set_clause = ', '.join(f"{key} = %s" for key in updates)
+    values = list(updates.values())
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute(f"""
+            UPDATE USER SET {set_clause} WHERE id = %s
+        """, values + [user_id])
+        conn.commit()
+        return jsonify({'message': 'User updated successfully'}), 200
+    except Exception as e:
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+# Update User Image
+@protected_user_bp.route('/protected_user/update_image', methods=['PUT'])
+def protected_user_update_image():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    try:
+        user_id = verify_token()[0]
+    except Exception as e:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    if 'image' not in request.files:
+        return jsonify({'message': 'No image provided'}), 400
+
+    file = request.files['image']
+    if file.filename == '':
+        return jsonify({'message': 'No selected file'}), 400
+
+    try:
+        Image.open(file.stream).verify()
+        file.stream.seek(0)
+    except Exception as e:
+        return jsonify({'message': 'File is not a valid image'}), 400
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("SELECT username, image FROM user WHERE id = %s", (user_id,))
+        user_data = cursor.fetchone()
+        
+        if not user_data:
+            return jsonify({'message': 'User not found'}), 404
+
+        username = user_data['username']
+        current_image = user_data['image']
+
+        if current_image:
+            old_image_path = os.path.join(current_app.root_path, 'static', 'images', 'users', current_image)
+            if os.path.exists(old_image_path):
+                os.remove(old_image_path)
+
+        file_ext = os.path.splitext(file.filename)[1].lower()
+        if not file_ext:
+            file_ext = '.jpg'
+        
+        new_filename = f"{username}{file_ext}"
+        save_path = os.path.join(current_app.root_path, 'static', 'images', 'users', new_filename)
+        
+        try:
+            img = Image.open(file.stream)
+            img.save(save_path)
+        except Exception as e:
+            return jsonify({'message': f'Error saving image: {str(e)}'}), 500
+
+        cursor.execute("UPDATE user SET image = %s WHERE id = %s", (new_filename, user_id))
+        conn.commit()
+
+        return jsonify({
+            'message': 'User image updated successfully',
+            'image_path': new_filename
+        }), 200
+
+    except Exception as e:
+        conn.rollback()
+        current_app.logger.error(f"Error updating user image: {str(e)}")
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+# Get User Reviews
+@protected_user_bp.route('/protected_user/reviews', methods=['GET'])
+def protected_user_get_reviews():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    try:
+        user_id = verify_token()[0]
+    except Exception as e:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("""
+            SELECT 
+                r.id AS review_id,
+                r.rate AS rating,
+                r.description AS comment,
+                c.title AS concert_title,
+                DATE_FORMAT(c.date, '%Y-%m-%d') AS concert_date,
+                a.name AS artist_name
+            FROM 
+                review r
+            JOIN 
+                concert c ON r.concert_id = c.id
+            JOIN 
+                artist_concert ac ON c.id = ac.concert_id
+            JOIN 
+                artist a ON ac.artist_id = a.id
+            WHERE 
+                r.user_id = %s
+            GROUP BY 
+                r.id
+            ORDER BY 
+                c.date DESC
+        """, (user_id,))
+        
+        reviews = cursor.fetchall()
+
+        return jsonify({'reviews': reviews}), 200
+
+    except Exception as e:
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+# Delete User Review
+@protected_user_bp.route('/protected_user/review/delete/<int:review_id>', methods=['DELETE'])
+def protected_user_delete_review(review_id):
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    try:
+        user_id = verify_token()[0]
+    except Exception as e:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("""
+            SELECT id FROM review 
+            WHERE id = %s AND user_id = %s
+            LIMIT 1
+        """, (review_id, user_id))
+        
+        if not cursor.fetchone():
+            return jsonify({'message': 'Review not found or not owned by user'}), 404
+
+        cursor.execute("DELETE FROM review WHERE id = %s", (review_id,))
+        conn.commit()
+
+        return jsonify({'message': 'Review deleted successfully'}), 200
+
+    except Exception as e:
+        conn.rollback()
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+# Get all notifications
+@protected_user_bp.route('/protected_user/notifications', methods=['GET'])
+def protected_user_get_notifications():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    try:
+        user_id = verify_token()[0]
+    except Exception:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT 
+            id,
+            title,
+            description,
+            is_read
+        FROM 
+            notification
+        WHERE
+            user_id = %s
+    """, (user_id,))
+
+    notifications = cursor.fetchall()
+    conn.close()
+
+    return jsonify(notifications), 200
+
+# Read notification
+@protected_user_bp.route('/protected_user/notification/read/<int:notification_id>', methods=['POST'])
+def protected_user_read_notification(notification_id):
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    try:
+        user_id = verify_token()[0]
+    except Exception:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        UPDATE notification 
+        SET is_read = 1 
+        WHERE id = %s AND user_id = %s
+    """, (notification_id, user_id))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({'message': 'Notification marked as read'}), 200
