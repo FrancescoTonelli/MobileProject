@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Apr 30, 2025 alle 14:53
+-- Creato il: Mag 07, 2025 alle 15:13
 -- Versione del server: 10.4.32-MariaDB
 -- Versione PHP: 8.2.12
 
@@ -82,7 +82,9 @@ INSERT INTO `artist_concert` (`id`, `artist_id`, `concert_id`) VALUES
 (3, 2, 4),
 (4, 2, 5),
 (5, 1, 7),
-(6, 1, 6);
+(6, 1, 6),
+(23, 1, 20),
+(24, 2, 20);
 
 -- --------------------------------------------------------
 
@@ -110,7 +112,8 @@ INSERT INTO `concert` (`id`, `title`, `image`, `date`, `time`, `place_id`, `reco
 (4, 'Ciao1', NULL, '2025-04-30', '15:50:41', 6, 3, 2),
 (5, 'CIAO2', NULL, '2025-04-30', '15:51:11', 6, 3, 2),
 (6, 'PASSATO', 'p.png', '2025-04-01', '18:06:39', 5, 3, 3),
-(7, 'prova', NULL, '2025-05-31', '16:17:41', 5, 4, 4);
+(7, 'prova', NULL, '2025-05-31', '16:17:41', 5, 4, 4),
+(20, 'Concerto di prova', '20.jpg', '2025-06-15', '21:00:00', 6, 3, NULL);
 
 -- --------------------------------------------------------
 
@@ -146,6 +149,13 @@ CREATE TABLE `notification` (
   `user_id` int(11) DEFAULT NULL,
   `record_company_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `notification`
+--
+
+INSERT INTO `notification` (`id`, `title`, `description`, `is_read`, `user_id`, `record_company_id`) VALUES
+(22, 'New Concert!', 'A new concert has been created that might interest you: Concerto di prova', 0, 6, NULL);
 
 -- --------------------------------------------------------
 
@@ -189,7 +199,7 @@ CREATE TABLE `record_company` (
 --
 
 INSERT INTO `record_company` (`id`, `email`, `password`, `session_token`) VALUES
-(3, 'ciao@gmail.com', '$2b$12$rM2awtCM8c/tYYWOYezTMuXvncW48Lvv88RVO6e3kt5EkYf6zCuXS', NULL),
+(3, 'ciao@gmail.com', '$2b$12$rM2awtCM8c/tYYWOYezTMuXvncW48Lvv88RVO6e3kt5EkYf6zCuXS', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb21wYW55X2lkIjozfQ.jlRGPVO42Qe1julQuud8ocTndzKeF6ZDU8vFX7jwnfA'),
 (4, 'esp@ex.com', '$2b$12$rM2awtCM8c/tYYWOYezTMuXvncW48Lvv88RVO6e3kt5EkYf6zCuXS', NULL);
 
 -- --------------------------------------------------------
@@ -289,7 +299,10 @@ INSERT INTO `ticket` (`id`, `price`, `validated`, `user_id`, `concert_id`, `seat
 (1, 20.00, 0, 6, 1, 1),
 (2, 20.00, 0, NULL, 1, 2),
 (3, 20.00, 0, NULL, 1, 3),
-(4, 10.00, 1, 6, 6, 1);
+(4, 10.00, 1, 6, 6, 1),
+(29, 30.00, 0, 6, 20, 4),
+(30, 30.00, 0, NULL, 20, 5),
+(31, 30.00, 0, NULL, 20, 6);
 
 -- --------------------------------------------------------
 
@@ -337,7 +350,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `email`, `password`, `name`, `surname`, `birthdate`, `image`, `refunds`, `session_token`) VALUES
-(6, 'ciccio1', 'ciccio@example.com', '$2b$12$3MV6ExEzNs18LqmATkhnYu8HZS26FiViItol8358PnHb5jsBEJxTS', 'Ciccio', 'Pippo', '2000-01-01', 'ciccio.png', 0.00, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2fQ.aR2HUmYnDNH0JP0s1touqOiMEv5D7YN6Re9LTzpEalU');
+(6, 'ciccio1', 'ciccio@example.com', '$2b$12$3MV6ExEzNs18LqmATkhnYu8HZS26FiViItol8358PnHb5jsBEJxTS', 'Ciccio', 'Pippo', '2000-01-01', 'ciccio1.jpeg', 90.00, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2fQ.aR2HUmYnDNH0JP0s1touqOiMEv5D7YN6Re9LTzpEalU');
 
 --
 -- Indici per le tabelle scaricate
@@ -470,13 +483,13 @@ ALTER TABLE `artist`
 -- AUTO_INCREMENT per la tabella `artist_concert`
 --
 ALTER TABLE `artist_concert`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT per la tabella `concert`
 --
 ALTER TABLE `concert`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT per la tabella `likes`
@@ -488,7 +501,7 @@ ALTER TABLE `likes`
 -- AUTO_INCREMENT per la tabella `notification`
 --
 ALTER TABLE `notification`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT per la tabella `place`
@@ -524,7 +537,7 @@ ALTER TABLE `sector`
 -- AUTO_INCREMENT per la tabella `ticket`
 --
 ALTER TABLE `ticket`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT per la tabella `tour`
@@ -536,7 +549,7 @@ ALTER TABLE `tour`
 -- AUTO_INCREMENT per la tabella `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Limiti per le tabelle scaricate
