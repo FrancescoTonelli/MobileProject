@@ -1126,17 +1126,29 @@ def protected_record_delete_artist(artist_id):
     finally:
         conn.close()
 
-# Get all places
-@protected_record_bp.route('/protected_record/places', methods=['GET'])
-def protected_record_get_places():
+# Get free places for concert creation
+@protected_record_bp.route('/protected_record/places_for_creation', methods=['POST'])
+def protected_record_get_places_for_creation():
+    data = request.get_json()
+
+    if not data or 'date' not in data:
+        return jsonify({'error': 'Missing "date" in request body'}), 400
+
+    concert_date = data['date']
+
     try:
         conn = get_db()
         cursor = conn.cursor(dictionary=True)
 
         cursor.execute("""
-            SELECT id, name, address
-            FROM place
-        """)
+            SELECT p.id, p.name, p.address
+            FROM place p
+            WHERE p.id NOT IN (
+                SELECT DISTINCT place_id
+                FROM concert
+                WHERE date = %s
+            )
+        """, (concert_date,))
 
         places = cursor.fetchall()
         conn.close()
@@ -1144,7 +1156,7 @@ def protected_record_get_places():
         return jsonify(places), 200
 
     except Exception as e:
-        current_app.logger.error(f"Error fetching places: {str(e)}")
+        current_app.logger.error(f"Error fetching available places: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 # Get place details
