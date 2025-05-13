@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val appDebug = false
+        val appDebug = true
 
         if (appDebug) {
             val intent = Intent(this@MainActivity, AppActivity::class.java)
