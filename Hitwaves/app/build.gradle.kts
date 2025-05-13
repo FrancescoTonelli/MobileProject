@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.serialization)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -51,6 +53,11 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.gson)
     implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.coil.compose)
+    implementation(libs.material3)
+    implementation(libs.androidx.navigation.compose.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
