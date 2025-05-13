@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.hitwaves.component.NavItem
+import com.hitwaves.component.IconData
 import com.hitwaves.component.getBottomNavItems
 import com.hitwaves.model.NavGraph
 import com.hitwaves.ui.theme.*
@@ -50,7 +50,7 @@ class AppActivity : ComponentActivity() {
             HitwavesTheme {
                 val navController = rememberNavController()
                 val bottomNavItems = getBottomNavItems()
-                val notificationItem = NavItem(
+                val notificationItem = IconData(
                     route = "notifications",
                     label = "Notifications",
                     icon = ImageVector.vectorResource(id = R.drawable.notification_line),
@@ -110,7 +110,7 @@ class AppActivity : ComponentActivity() {
 }
 
 @Composable
-fun BottomNavigationBar(navController: NavHostController, items: List<NavItem>) {
+fun BottomNavigationBar(navController: NavHostController, items: List<IconData>) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -136,7 +136,7 @@ fun BottomNavigationBar(navController: NavHostController, items: List<NavItem>) 
                 },
                 icon = {
                     Icon(
-                        imageVector = if (isSelected) item.selectedIcon else item.icon,
+                        imageVector = if (isSelected && item.selectedIcon != null) item.selectedIcon else item.icon,
                         contentDescription = item.label,
                         tint = if (isSelected) Primary else Secondary
                     )
@@ -165,7 +165,7 @@ fun BottomNavigationBar(navController: NavHostController, items: List<NavItem>) 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotificationTopBar(navController: NavHostController, item: NavItem){
+fun NotificationTopBar(navController: NavHostController, item: IconData){
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val isSelected = currentRoute == item.route
@@ -202,7 +202,7 @@ fun NotificationTopBar(navController: NavHostController, item: NavItem){
                     }
                 ) {
                     Icon(
-                        imageVector = if (isSelected) item.selectedIcon else item.icon,
+                        imageVector = if (isSelected && item.selectedIcon != null) item.selectedIcon else item.icon,
                         contentDescription = item.label,
                         tint = if (isSelected) Primary else Secondary
                     )

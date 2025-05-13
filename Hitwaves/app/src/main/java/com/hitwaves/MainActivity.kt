@@ -17,26 +17,37 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val token = TokenManager.getToken()
+        val appDebug = false
 
-        if (token != null) {
-            lifecycleScope.launch {
-                val (success, response) = automaticLogin()
-                if (success) {
-                    val intent = Intent(this@MainActivity, AppActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    val intent = Intent(this@MainActivity, LoginActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
-            }
-        } else {
-            val intent = Intent(this@MainActivity, LoginActivity::class.java)
+        if (appDebug) {
+            val intent = Intent(this@MainActivity, AppActivity::class.java)
             startActivity(intent)
             finish()
         }
+        else {
+            val token = TokenManager.getToken()
+
+            if (token != null) {
+                lifecycleScope.launch {
+                    val (success, response) = automaticLogin()
+                    if (success) {
+                        val intent = Intent(this@MainActivity, AppActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+            } else {
+                val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+
+
     }
 
 }

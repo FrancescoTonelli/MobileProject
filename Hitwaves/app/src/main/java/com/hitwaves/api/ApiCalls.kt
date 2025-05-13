@@ -45,11 +45,10 @@ suspend fun automaticLogin(): Pair<Boolean, Any?> {
     )
 }
 
-suspend fun getNearestConcerts(latitude: Double, longitude: Double): Pair<Boolean, Any?> {
+suspend fun getNearestConcerts(positionRequest: PositionRequest): Pair<Boolean, Any?> {
     val url = "nearest_concerts"
-    val request = PositionRequest(latitude, longitude)
     return HttpHelper.postRequestAsync<List<NearestConcert>>(
-        requestData = request,
+        requestData = positionRequest,
         endpoint = url,
         withAuth = true
     )
@@ -167,9 +166,8 @@ suspend fun checkUserReview(concertId: Int): Pair<Boolean, Any?> {
     )
 }
 
-suspend fun addReview(ticketId: Int, rate: Int, description: String? = ""): Pair<Boolean, Any?> {
+suspend fun addReview(reviewRequest: ReviewRequest): Pair<Boolean, Any?> {
     val url = "review"
-    val reviewRequest = ReviewRequest(ticketId = ticketId, rate = rate, description = description)
 
     return HttpHelper.postRequestAsync<MessageResponse>(
         endpoint = url,
@@ -206,7 +204,7 @@ suspend fun updateUserDetails(userUpdateRequest: UserUpdateRequest): Pair<Boolea
     )
 }
 
-suspend fun updateUserImage(imageData: List<Byte>, withAuth: Boolean = true): Pair<Boolean, Any?> {
+suspend fun updateUserImage(imageData: List<Byte>): Pair<Boolean, Any?> {
     val endpoint = "update_image"
     val request = UpdateUserImageRequest(imageData)
 

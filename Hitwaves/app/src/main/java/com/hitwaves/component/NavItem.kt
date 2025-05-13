@@ -4,36 +4,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import com.hitwaves.R
-
-data class NavItem(
-    val route : String,
-    val label : String,
-    val icon : ImageVector,
-    val selectedIcon: ImageVector
-)
+import com.hitwaves.component.IconData
 
 @Composable
-fun getBottomNavItems(): List<NavItem> {
+fun getBottomNavItems(): List<IconData> {
     return listOf(
-        NavItem(
+        IconData(
             route = "home",
             label = "Home",
             icon = ImageVector.vectorResource(id = R.drawable.home_line),
             selectedIcon = ImageVector.vectorResource(id = R.drawable.home_fill)
         ),
-        NavItem(
+        IconData(
             route = "likes",
             label = "Likes",
             icon = ImageVector.vectorResource(id = R.drawable.like_line),
             selectedIcon = ImageVector.vectorResource(id = R.drawable.like_fill)
         ),
-        NavItem(
+        IconData(
             route = "tickets",
             label = "Tickets",
             icon = ImageVector.vectorResource(id = R.drawable.ticket_line),
             selectedIcon = ImageVector.vectorResource(id = R.drawable.ticket_fill)
         ),
-        NavItem(
+        IconData(
             route = "account",
             label = "Account",
             icon = ImageVector.vectorResource(id = R.drawable.account_line),

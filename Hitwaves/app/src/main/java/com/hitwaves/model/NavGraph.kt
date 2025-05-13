@@ -13,6 +13,7 @@ import com.hitwaves.ui.screens.ConcertMap
 import com.hitwaves.ui.screens.EventDetails
 import com.hitwaves.ui.screens.Home
 import com.hitwaves.ui.screens.Likes
+import com.hitwaves.ui.screens.Login
 import com.hitwaves.ui.screens.Notification
 import com.hitwaves.ui.screens.Tickets
 
@@ -22,6 +23,9 @@ fun NavGraph(navController: NavHostController) {
         navController = navController,
         startDestination = "home"
     ) {
+        composable("login") {
+            Login(navController)
+        }
         composable("home") {
             Home(navController)
         }
