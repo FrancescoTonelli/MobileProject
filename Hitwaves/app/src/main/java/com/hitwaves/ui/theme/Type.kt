@@ -18,7 +18,7 @@ val Typography = Typography(
     titleLarge = TextStyle(
         fontFamily = Rubik,
         fontWeight = FontWeight.Bold,
-        fontSize = 22.sp
+        fontSize = 40.sp
     ),
     labelSmall = TextStyle(
         fontFamily = Rubik,
