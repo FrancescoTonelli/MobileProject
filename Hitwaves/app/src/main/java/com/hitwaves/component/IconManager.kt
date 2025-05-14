@@ -6,5 +6,5 @@ data class IconData(
     val route : String,
     val label : String,
     val icon : ImageVector,
-    val selectedIcon: ImageVector?
+    val selectedIcon: ImageVector? = null
 )

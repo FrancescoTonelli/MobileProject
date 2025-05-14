@@ -23,7 +23,7 @@ val Typography = Typography(
     labelSmall = TextStyle(
         fontFamily = Rubik,
         fontWeight = FontWeight.Normal,
-        fontSize = 11.sp
+        fontSize = 14.sp
     )
 
     /* Other default text styles to override

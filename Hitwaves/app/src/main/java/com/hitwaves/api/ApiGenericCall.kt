@@ -77,7 +77,7 @@ object HttpHelper {
 
             val requestBuilder = Request.Builder()
                 .url(fullUrl)
-                .get() // Usando la richiesta GET
+                .get()
 
             if (withAuth) {
                 val token = TokenManager.getToken()

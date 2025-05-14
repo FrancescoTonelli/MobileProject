@@ -6,6 +6,6 @@ import androidx.compose.ui.text.font.FontWeight
 import com.hitwaves.R
 
 val Rubik = FontFamily(
-    Font(R.font.rubik_regular, FontWeight.Normal),
+    Font(R.font.rubik_medium, FontWeight.Normal),
     Font(R.font.rubik_bold, FontWeight.Bold)
 )

@@ -3,11 +3,7 @@ package com.hitwaves.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,21 +11,27 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.hitwaves.R
+import com.hitwaves.component.ButtonWithIcons
 import com.hitwaves.component.EventCard
 import com.hitwaves.component.SimpleSearchBar
 import com.hitwaves.component.Title
 import com.hitwaves.model.Artist
 import com.hitwaves.model.Event
-import com.hitwaves.ui.theme.*
+
+fun onClick(navController: NavHostController) {
+    navController.navigate("map"){
+        popUpTo(navController.graph.startDestinationId) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +66,12 @@ fun Home(navController: NavHostController) {
             }
 
             item {
-                ButtonWithIcons(ImageVector.vectorResource(R.drawable.map), "Open map", ImageVector.vectorResource(R.drawable.arrow), navController)
+                ButtonWithIcons(
+                    startIcon = ImageVector.vectorResource(R.drawable.map),
+                    textBtn = "Open map",
+                    endIcon = ImageVector.vectorResource(R.drawable.arrow),
+                    onClickAction = { onClick(navController) }
+                )
             }
 
             items(eventList) { event ->
@@ -75,15 +82,7 @@ fun Home(navController: NavHostController) {
 }
 
 
-fun onClick(navController: NavHostController) {
-    navController.navigate("map"){
-        popUpTo(navController.graph.startDestinationId) {
-            saveState = true
-        }
-        launchSingleTop = true
-        restoreState = true
-    }
-}
+
 
 fun getSampleEvents(): List<Event> {
     return listOf(
@@ -161,44 +160,3 @@ fun getSampleArtist(): List<Artist>{
     )
 }
 
-@Composable
-fun ButtonWithIcons(startIcon: ImageVector?, textBtn: String, endIcon: ImageVector?, navController: NavHostController){
-    Button(
-        onClick = { onClick(navController) },
-        colors = ButtonColors(
-            containerColor = Primary,
-            contentColor = Primary,
-            disabledContentColor = Color.Transparent,
-            disabledContainerColor = Color.Transparent
-        ),
-        modifier = Modifier
-            .padding(vertical = 8.dp)
-    ) {
-        Row (
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            if (startIcon != null) {
-                Icon(
-                    imageVector = startIcon,
-                    contentDescription = null,
-                    tint = FgDark,
-                )
-            }
-            Text(
-                text = textBtn,
-                fontSize = 16.sp,
-                color = FgDark,
-                modifier = Modifier.padding(horizontal = 8.dp),
-                fontWeight = FontWeight.Bold
-            )
-            if (endIcon != null) {
-                Icon(
-                    imageVector = endIcon,
-                    contentDescription = null,
-                    tint = FgDark
-                )
-            }
-        }
-    }
-}
