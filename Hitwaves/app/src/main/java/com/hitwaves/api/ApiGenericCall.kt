@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 
-const val baseUrl = "http://192.168.187.162:5000/protected_user/"
+const val baseUrl = "http://192.168.238.69:5000/protected_user/"
 
 fun parseErrorMessage(body: String?): String {
     return try {

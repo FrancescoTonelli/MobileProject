@@ -60,6 +60,9 @@ dependencies {
     implementation(libs.androidx.navigation.compose.android)
     implementation(libs.accompanist.navigation.animation)
 
+    implementation("com.mapbox.maps:android:11.12.0")
+    implementation("com.mapbox.extension:maps-compose:11.12.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -56,14 +56,12 @@ Case discografiche e utenti avranno anche a disposizione un sistema di notifiche
 ## Montare il Database (Solo primo avvio)
 1. Tramite XAMPP, avviare Apache e MySQL (quest'ultimo sulla porta 3306, che dovrebbe essere di default)
 2. Cliccare sul pulsante "Admin" sulla riga di MySQL: si aprirà phpmyadmin
-3. Caricare il database utilizzando il codice SQL contenuto in "generator.sql"
+3. Creare un database vuoto chiamandolo "hitwaves", e popolarlo utilizzando il codice SQL contenuto in "generator.sql"
 
 ## Avviare il backend
 1. Entrare nella cartella "back"
-2. Installare le librerie:
-    - Flask - `pip install Flask`
-    - flask-cors - `pip install flask-cors`
-3. Lanciare su terminale il comando `python.exe .\app.py`
+2. Lanciare `start.bat`
+3. Memorizzare per il frontend Kotlin l'indirizzo IP su cui il server è in esecuzione
 
 ## Avviare il pannello Admin
 1. Entrare nella cartella "admin"
@@ -76,5 +74,6 @@ Case discografiche e utenti avranno anche a disposizione un sistema di notifiche
 1. Entrare nella cartella "seat_chart_editor"
 2. Doppio click su "start.bat"
  
+## Avviare l'applicazione in Kotlin
 
 
