@@ -17,40 +17,31 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val appDebug = true
-
         setContent {
             HitwavesTheme {
                 SplashScreen()
             }
         }
 
-        if (appDebug) {
-            val intent = Intent(this@MainActivity, AppActivity::class.java)
+        val token = TokenManager.getToken()
+
+        if (token != null) {
+            lifecycleScope.launch {
+                val (success, response) = apiAutomaticLogin()
+                if (success) {
+                    val intent = Intent(this@MainActivity, AppActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }
+        } else {
+            val intent = Intent(this@MainActivity, LoginActivity::class.java)
             startActivity(intent)
             finish()
-        }
-        else {
-            val token = TokenManager.getToken()
-
-            if (token != null) {
-                lifecycleScope.launch {
-                    val (success, response) = apiAutomaticLogin()
-                    if (success) {
-                        val intent = Intent(this@MainActivity, AppActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        val intent = Intent(this@MainActivity, LoginActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    }
-                }
-            } else {
-                val intent = Intent(this@MainActivity, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
         }
 
 
