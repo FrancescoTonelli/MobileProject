@@ -23,7 +23,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        TokenManager.clearToken()
 
         val token = TokenManager.getToken()
 
