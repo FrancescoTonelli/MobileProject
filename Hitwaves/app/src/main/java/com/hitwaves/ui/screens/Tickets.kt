@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import com.hitwaves.ui.theme.*
-import com.hitwaves.component.SecondaryTextTabs
+import com.hitwaves.ui.component.SecondaryTextTabs
 
 
 @Composable

@@ -1,10 +1,9 @@
-package com.hitwaves.component
+package com.hitwaves.ui.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import com.hitwaves.R
-import com.hitwaves.component.IconData
 
 @Composable
 fun getBottomNavItems(): List<IconData> {

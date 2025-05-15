@@ -12,43 +12,49 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.hitwaves.AppActivity
 import com.hitwaves.R
 import com.hitwaves.api.ApiResult
-import com.hitwaves.api.LoginRequest
 import com.hitwaves.api.TokenManager
 import com.hitwaves.api.TokenResponse
-import com.hitwaves.api.apiLoginUser
-import com.hitwaves.component.CustomSnackbar
-import com.hitwaves.component.IconData
-import com.hitwaves.component.LoginButton
-import com.hitwaves.component.LoginInputField
-import com.hitwaves.component.LoginPasswordField
-import com.hitwaves.component.SecondaryLoginButton
+import com.hitwaves.ui.component.CustomSnackbar
+import com.hitwaves.ui.component.IconData
+import com.hitwaves.ui.component.LoginButton
+import com.hitwaves.ui.component.LoginInputField
+import com.hitwaves.ui.component.LoginPasswordField
+import com.hitwaves.ui.component.SecondaryLoginButton
+import com.hitwaves.ui.component.loadingIndicator
 import com.hitwaves.ui.theme.*
+import com.hitwaves.ui.viewModel.LoginViewModel
 import kotlinx.coroutines.launch
 
-suspend fun handleLogin(emailUsername: String, password: String): ApiResult<TokenResponse> {
-    val loginRequest = if (emailUsername.contains("@")) {
-        LoginRequest(email = emailUsername, password = password)
-    } else {
-        LoginRequest(username = emailUsername, password = password)
-    }
-    return apiLoginUser(loginRequest)
+private fun init() : LoginViewModel {
+    return LoginViewModel()
 }
 
 @Composable
 fun Login(navController: NavHostController) {
-    var emailUsername by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val emailUsername = remember { mutableStateOf("") }
+    val password = remember { mutableStateOf("") }
 
-    var errorMsg by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
+    val loginViewModel = remember { init() }
+    val result: ApiResult<TokenResponse> by loginViewModel.loginState
+    val isLoading by loginViewModel.isLoading
     val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+
+    LaunchedEffect(result) {
+        if (result.success && result.data != null) {
+            TokenManager.saveToken(result.data!!.token)
+            val intent = Intent(context, AppActivity::class.java)
+            context.startActivity(intent)
+        } else if (!result.success && result.errorMessage != null) {
+            password.value = ""
+            snackbarHostState.showSnackbar(result.errorMessage!!)
+        }
+    }
+
 
     Box(
         modifier = Modifier
@@ -77,16 +83,16 @@ fun Login(navController: NavHostController) {
             Spacer(modifier = Modifier.height(35.dp))
 
             LoginInputField(
-                value = emailUsername,
-                onValueChange = { emailUsername = it },
+                value = emailUsername.value,
+                onValueChange = { emailUsername.value = it },
                 label = "Email or Username"
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             LoginPasswordField(
-                value = password,
-                onValueChange = { password = it },
+                value = password.value,
+                onValueChange = { password.value = it },
                 label = "Password"
             )
 
@@ -95,28 +101,9 @@ fun Login(navController: NavHostController) {
             LoginButton(
                 textBtn = "Sign in",
                 onClickAction = {
-                    coroutineScope.launch {
-                        isLoading = true
-                        try {
-                            val response = handleLogin(emailUsername, password)
-                            if (!response.success) {
-                                password = ""
-                                isLoading = false
-                                snackbarHostState.showSnackbar(response.errorMessage.toString())
-                            }
-                            else {
-                                isLoading = false
-                                TokenManager.saveToken(response.data?.token.toString())
-                                val intent = Intent(context, AppActivity::class.java)
-                                context.startActivity(intent)
-                            }
+                    loginViewModel.handleLogin(emailUsername.value, password.value)
 
-                        } catch (e: Exception) {
-                            password = ""
-                            isLoading = false
-                            snackbarHostState.showSnackbar(e.message.toString())
-                        }
-                    }
+
                 }
             )
 
@@ -136,28 +123,10 @@ fun Login(navController: NavHostController) {
         }
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-            .padding(bottom = 40.dp),
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        SnackbarHost(
-            hostState = snackbarHostState,
-            snackbar = { snackbarData ->
-                CustomSnackbar(snackbarData)
-            }
-        )
-    }
+    CustomSnackbar(snackbarHostState)
 
     if (isLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f)),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(color = Color.White)
-        }
+        loadingIndicator()
     }
 
 }

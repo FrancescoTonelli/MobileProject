@@ -1,4 +1,4 @@
-package com.hitwaves.component
+package com.hitwaves.ui.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.SecondaryTabRow

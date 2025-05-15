@@ -1,4 +1,4 @@
-package com.hitwaves.model
+package com.hitwaves.utils
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -6,7 +6,8 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.hitwaves.component.EventCard
+import com.hitwaves.model.Artist
+import com.hitwaves.model.Event
 import com.hitwaves.ui.screens.Account
 import com.hitwaves.ui.screens.ArtistDetails
 import com.hitwaves.ui.screens.ConcertMap

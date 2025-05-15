@@ -1,4 +1,4 @@
-package com.hitwaves.component
+package com.hitwaves.ui.component
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar

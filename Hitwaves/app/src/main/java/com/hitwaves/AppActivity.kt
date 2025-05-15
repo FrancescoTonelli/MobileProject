@@ -18,12 +18,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.hitwaves.component.IconData
-import com.hitwaves.component.getBottomNavItems
-import com.hitwaves.model.NavGraph
+import com.hitwaves.ui.component.IconData
+import com.hitwaves.ui.component.getBottomNavItems
+import com.hitwaves.utils.NavGraph
 import com.hitwaves.ui.theme.*
-import com.hitwaves.component.NotificationTopBar
-import com.hitwaves.component.BottomNavigationBar
+import com.hitwaves.ui.component.NotificationTopBar
+import com.hitwaves.ui.component.BottomNavigationBar
 
 class AppActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

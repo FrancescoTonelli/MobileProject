@@ -1,4 +1,4 @@
-package com.hitwaves.component
+package com.hitwaves.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

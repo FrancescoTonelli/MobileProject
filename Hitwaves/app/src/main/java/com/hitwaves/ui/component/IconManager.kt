@@ -1,4 +1,4 @@
-package com.hitwaves.component
+package com.hitwaves.ui.component
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

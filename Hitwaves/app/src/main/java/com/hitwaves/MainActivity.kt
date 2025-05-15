@@ -23,7 +23,10 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        TokenManager.clearToken()
+
         val token = TokenManager.getToken()
+
 
         if (token != null) {
             lifecycleScope.launch {

@@ -1,4 +1,4 @@
-package com.hitwaves.component
+package com.hitwaves.ui.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
