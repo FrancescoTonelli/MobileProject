@@ -14,11 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.hitwaves.R
 import com.hitwaves.component.ButtonWithIcons
 import com.hitwaves.component.EventCard
-import com.hitwaves.component.SimpleSearchBar
+import com.hitwaves.component.SearchWave
 import com.hitwaves.component.Title
 import com.hitwaves.model.Artist
 import com.hitwaves.model.Event
@@ -33,7 +34,7 @@ fun onClick(navController: NavHostController) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun Home(navController: NavHostController) {
     val eventList = getSampleEvents()
@@ -42,11 +43,11 @@ fun Home(navController: NavHostController) {
     val onQueryChange: (String) -> Unit = { query = it }
 
     Column (
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Top,
+        modifier = Modifier
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        SimpleSearchBar(
+        SearchWave(
             query = query,
             onQueryChange = onQueryChange,
             searchResultsArtists = getSampleArtist(),

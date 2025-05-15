@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val appDebug = false
+        val appDebug = true
 
         setContent {
             HitwavesTheme {

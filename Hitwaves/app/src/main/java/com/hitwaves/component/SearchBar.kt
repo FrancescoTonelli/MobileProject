@@ -2,12 +2,14 @@ package com.hitwaves.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -15,14 +17,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,7 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
@@ -43,23 +43,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.hitwaves.R
-import com.hitwaves.component.EventCard
 import com.hitwaves.model.Artist
 import com.hitwaves.model.Event
 import com.hitwaves.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SimpleSearchBar(
+fun SearchWave(
     query: String,
     onQueryChange: (String) -> Unit,
     searchResultsArtists: List<Artist>,
     searchResultsEvents: List<Event>,
-    colors: TextFieldColors = TextFieldDefaults.colors(),
-    shape: Shape = RoundedCornerShape(30.dp),
     navController: NavController
 ){
-
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     val filteredArtists = remember(query, searchResultsArtists) {
@@ -70,85 +66,63 @@ fun SimpleSearchBar(
         searchResultsEvents.filter { it.title.contains(query, ignoreCase = true) }
     }
 
+    SearchBar(
+        inputField = {
+            SearchBarDefaults.InputField(
+                query = query,
+                onQueryChange = {
+                    onQueryChange(it)
+                    expanded = it.isNotBlank()
+                },
+                onSearch = { expanded = false },
+                leadingIcon = {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.search),
+                        tint = Secondary,
+                        contentDescription = null
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = "Search your wave...",
+                        color = Secondary.copy(alpha = 0.5f)
+                    )
+                },
+                expanded = expanded,
+                onExpandedChange = { expanded = it },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .border(1.dp, Secondary, CircleShape),
+                colors = TextFieldDefaults.colors(BgDark)
+            )
+        },
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = Modifier
+            .width(rememberScreenDimensions().screenWidth * 0.9f)
+            .border(1.dp, Secondary, RectangleShape),
+        colors = SearchBarDefaults.colors(
+            containerColor = BgDark,
+            dividerColor = Color.Transparent,
+            inputFieldColors = TextFieldDefaults.colors(Secondary.copy(alpha = 0.5f)),
+        )
 
-    Column (
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-//        SearchBar(
-//            query = query,
-//            onQueryChange = {
-//                onQueryChange(it)
-//                expanded = it.isNotBlank()
-//            },
-//            onSearch = { expanded = false },
-//            active = expanded,
-//            onActiveChange = { expanded = it },
-//            placeholder = {
-//                Text(
-//                    text = "Search your wave...",
-//                    color = Secondary.copy(alpha = 0.5f)
-//                ) },
-//            leadingIcon = {
-//                Icon(
-//                    ImageVector.vectorResource(R.drawable.search),
-//                    tint = Secondary,
-//                    contentDescription = null
-//                )
-//            },
-//            colors = colors,
-//            shape = shape,
-//            modifier = Modifier
-//                .width(rememberScreenDimensions().screenWidth * 0.9f)
-//        )
-        SearchBar(
-            inputField = {
-                SearchBarDefaults.InputField(
-                    query = query,
-                    onQueryChange = {
-                        onQueryChange(it)
-                        expanded = it.isNotBlank()
-                    },
-                    onSearch = { expanded = false },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.search),
-                            tint = Secondary,
-                            contentDescription = null
-                        )
-                    },
-                    placeholder = {
-                        Text(
-                            text = "Search your wave...",
-                            color = Secondary.copy(alpha = 0.5f)
-                        )
-                    },
-                    colors = colors,
-                    expanded = expanded,
-                    onExpandedChange = { expanded = it },
-                )
-            },
-            expanded = expanded,
-            onExpandedChange = { expanded = it },
-            modifier = Modifier
-                .width(rememberScreenDimensions().screenWidth * 0.9f)
-        ) {
-            if(expanded){
-                ShowArtistList(filteredArtists, navController)
+        if(expanded){
+            ShowArtistList(filteredArtists, navController)
 
-                HorizontalDivider(
-                    modifier = Modifier
-                        .width(rememberScreenDimensions().screenWidth * 0.85f)
-                        .align(Alignment.CenterHorizontally)
-                        .padding(16.dp),
-                    thickness = 1.dp,
-                    color = Secondary.copy(alpha = 0.5f),
+            HorizontalDivider(
+                modifier = Modifier
+                    .width(rememberScreenDimensions().screenWidth * 0.85f)
+                    .align(Alignment.CenterHorizontally)
+                    .padding(16.dp),
+                thickness = 1.dp,
+                color = Secondary.copy(alpha = 0.5f),
 
-                )
-                ShowEventList(filteredEvents, navController)
-            }
-
+            )
+            ShowEventList(filteredEvents, navController)
         }
+
     }
 }
 
