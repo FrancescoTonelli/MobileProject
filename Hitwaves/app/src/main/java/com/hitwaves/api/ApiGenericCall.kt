@@ -8,17 +8,15 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import android.app.AlertDialog
-import android.content.Context
 
 const val baseUrl = "http://192.168.187.162:5000/protected_user/"
 
-fun errorDisplay(context: Context, msg: String) {
-    AlertDialog.Builder(context)
-        .setTitle("Error")
-        .setMessage(msg)
-        .setPositiveButton("OK", null)
-        .show()
+fun parseErrorMessage(body: String?): String {
+    return try {
+        Gson().fromJson(body, Map::class.java)["message"]?.toString() ?: "Unknown error"
+    } catch (e: Exception) {
+        body ?: "Unknown error"
+    }
 }
 
 object HttpHelper {
@@ -29,7 +27,7 @@ object HttpHelper {
         requestData: Any,
         endpoint: String,
         withAuth: Boolean = false
-    ): Pair<Boolean, Any?> = withContext(Dispatchers.IO) {
+    ): ApiResult<T> = withContext(Dispatchers.IO) {
         try {
             val json = gson.toJson(requestData)
             val mediaType = "application/json".toMediaType()
@@ -43,9 +41,8 @@ object HttpHelper {
                 .addHeader("Content-Type", "application/json")
 
             if (withAuth) {
-                val token = TokenManager.getToken()
-                if (token != null) {
-                    requestBuilder.addHeader("Authorization", "Bearer $token")
+                TokenManager.getToken()?.let {
+                    requestBuilder.addHeader("Authorization", "Bearer $it")
                 }
             }
 
@@ -56,22 +53,23 @@ object HttpHelper {
             if (response.isSuccessful && body != null) {
                 try {
                     val result = gson.fromJson(body, T::class.java)
-                    return@withContext Pair(true, result)
+                    ApiResult(success = true, data = result)
                 } catch (e: JsonSyntaxException) {
-                    return@withContext Pair(false, "Response parsing error: ${e.message}")
+                    ApiResult(success = false, errorMessage = "Parsing error: ${e.message}")
                 }
             } else {
-                return@withContext Pair(false, "HTTP error ${response.code}: ${body ?: "No response"}")
+                val errorMsg = parseErrorMessage(body)
+                ApiResult(success = false, errorMessage = errorMsg)
             }
         } catch (e: Exception) {
-            return@withContext Pair(false, "Net error: ${e.message}")
+            ApiResult(success = false, errorMessage = "Network error: ${e.message}")
         }
     }
 
     suspend inline fun <reified T : Any> getRequestAsync(
         endpoint: String,
         withAuth: Boolean = false
-    ): Pair<Boolean, Any?> = withContext(Dispatchers.IO) {
+    ): ApiResult<T> = withContext(Dispatchers.IO) {
         try {
             val fullUrl = baseUrl.trimEnd('/') + "/" + endpoint.trimStart('/')
 
@@ -80,9 +78,8 @@ object HttpHelper {
                 .get()
 
             if (withAuth) {
-                val token = TokenManager.getToken()
-                if (token != null) {
-                    requestBuilder.addHeader("Authorization", "Bearer $token")
+                TokenManager.getToken()?.let {
+                    requestBuilder.addHeader("Authorization", "Bearer $it")
                 }
             }
 
@@ -93,15 +90,16 @@ object HttpHelper {
             if (response.isSuccessful && body != null) {
                 try {
                     val result = gson.fromJson(body, T::class.java)
-                    return@withContext Pair(true, result)
+                    ApiResult(success = true, data = result)
                 } catch (e: JsonSyntaxException) {
-                    return@withContext Pair(false, "Response parsing error: ${e.message}")
+                    ApiResult(success = false, errorMessage = "Parsing error: ${e.message}")
                 }
             } else {
-                return@withContext Pair(false, "HTTP error ${response.code}: ${body ?: "No response"}")
+                val errorMsg = parseErrorMessage(body)
+                ApiResult(success = false, errorMessage = errorMsg)
             }
         } catch (e: Exception) {
-            return@withContext Pair(false, "Net error: ${e.message}")
+            ApiResult(success = false, errorMessage = "Network error: ${e.message}")
         }
     }
 
@@ -109,7 +107,7 @@ object HttpHelper {
         requestData: Any,
         endpoint: String,
         withAuth: Boolean = false
-    ): Pair<Boolean, Any?> = withContext(Dispatchers.IO) {
+    ): ApiResult<T> = withContext(Dispatchers.IO) {
         try {
             val json = gson.toJson(requestData)
             val mediaType = "application/json".toMediaType()
@@ -119,13 +117,12 @@ object HttpHelper {
 
             val requestBuilder = Request.Builder()
                 .url(fullUrl)
-                .put(requestBody)  // Usa il metodo PUT
+                .put(requestBody)
                 .addHeader("Content-Type", "application/json")
 
             if (withAuth) {
-                val token = TokenManager.getToken()
-                if (token != null) {
-                    requestBuilder.addHeader("Authorization", "Bearer $token")
+                TokenManager.getToken()?.let {
+                    requestBuilder.addHeader("Authorization", "Bearer $it")
                 }
             }
 
@@ -136,22 +133,23 @@ object HttpHelper {
             if (response.isSuccessful && body != null) {
                 try {
                     val result = gson.fromJson(body, T::class.java)
-                    return@withContext Pair(true, result)
+                    ApiResult(success = true, data = result)
                 } catch (e: JsonSyntaxException) {
-                    return@withContext Pair(false, "Response parsing error: ${e.message}")
+                    ApiResult(success = false, errorMessage = "Parsing error: ${e.message}")
                 }
             } else {
-                return@withContext Pair(false, "HTTP error ${response.code}: ${body ?: "No response"}")
+                val errorMsg = parseErrorMessage(body)
+                ApiResult(success = false, errorMessage = errorMsg)
             }
         } catch (e: Exception) {
-            return@withContext Pair(false, "Net error: ${e.message}")
+            ApiResult(success = false, errorMessage = "Network error: ${e.message}")
         }
     }
 
     suspend inline fun <reified T : Any> deleteRequestAsync(
         endpoint: String,
         withAuth: Boolean = false
-    ): Pair<Boolean, Any?> = withContext(Dispatchers.IO) {
+    ): ApiResult<T> = withContext(Dispatchers.IO) {
         try {
             val fullUrl = baseUrl.trimEnd('/') + "/" + endpoint.trimStart('/')
 
@@ -160,9 +158,8 @@ object HttpHelper {
                 .delete()
 
             if (withAuth) {
-                val token = TokenManager.getToken()
-                if (token != null) {
-                    requestBuilder.addHeader("Authorization", "Bearer $token")
+                TokenManager.getToken()?.let {
+                    requestBuilder.addHeader("Authorization", "Bearer $it")
                 }
             }
 
@@ -173,16 +170,16 @@ object HttpHelper {
             if (response.isSuccessful && body != null) {
                 try {
                     val result = gson.fromJson(body, T::class.java)
-                    return@withContext Pair(true, result)
+                    ApiResult(success = true, data = result)
                 } catch (e: JsonSyntaxException) {
-                    return@withContext Pair(false, "Response parsing error: ${e.message}")
+                    ApiResult(success = false, errorMessage = "Parsing error: ${e.message}")
                 }
             } else {
-                return@withContext Pair(false, "HTTP error ${response.code}: ${body ?: "No response"}")
+                val errorMsg = parseErrorMessage(body)
+                ApiResult(success = false, errorMessage = errorMsg)
             }
         } catch (e: Exception) {
-            return@withContext Pair(false, "Net error: ${e.message}")
+            ApiResult(success = false, errorMessage = "Network error: ${e.message}")
         }
     }
-
 }

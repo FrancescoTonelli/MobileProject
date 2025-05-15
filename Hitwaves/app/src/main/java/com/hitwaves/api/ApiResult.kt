@@ -1,4 +1,7 @@
 package com.hitwaves.api
 
-class ApiResult {
-}
+data class ApiResult<T>(
+    val success: Boolean,
+    val data: T? = null,
+    val errorMessage: String? = null
+)

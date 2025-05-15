@@ -56,7 +56,7 @@ def verify_token():
 def protected_user_login():
     data = request.get_json()
     required = ['password']
-    if not all(k in data for k in required) or not ('email' in data or 'username' in data):
+    if not all(k in data for k in required) or not ('email' in data or 'username' in data) or data['password'] == '':
         return jsonify({'message': 'Missing fields'}), 400
 
     conn = get_db()
