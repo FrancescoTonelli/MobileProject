@@ -81,7 +81,8 @@ class AppActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     Box(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier
+                            .padding(innerPadding)
                             .background(BgDark)
                     ) {
                         NavGraph(navController = navController)

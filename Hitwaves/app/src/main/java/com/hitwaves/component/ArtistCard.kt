@@ -98,7 +98,7 @@ fun ArtistCard(artist: Artist){
                     )
 
                     Icon(
-                        ImageVector.vectorResource(R.drawable.favourites),
+                        ImageVector.vectorResource(R.drawable.star_fill),
                         tint = Secondary,
                         contentDescription = null
                     )

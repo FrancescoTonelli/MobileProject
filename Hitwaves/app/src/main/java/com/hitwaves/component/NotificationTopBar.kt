@@ -75,6 +75,5 @@ fun NotificationTopBar(navController: NavHostController, item: IconData){
             navigationIconContentColor = Secondary,
             titleContentColor = Secondary
         )
-
     )
 }

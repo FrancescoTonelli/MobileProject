@@ -20,6 +20,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -135,7 +140,13 @@ fun EventDetails(event: Event, navController: NavController){
                     }
                 }
             }
+
+            item {
+                Rating()
+            }
         }
+
+
     }
 }
 
@@ -158,5 +169,44 @@ fun InformationRow(title: String, description: String){
             color = Secondary,
             fontSize = 18.sp
         )
+    }
+}
+
+@Composable
+fun Rating(){
+    var isSelected by remember { mutableIntStateOf(0) }
+
+    Row {
+        Text(
+            text = "Rating",
+            color = Secondary,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp
+        )
+
+        Spacer(Modifier.width(16.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            repeat(5) { index ->
+                Icon(
+                    imageVector = if (index < isSelected)
+                        ImageVector.vectorResource(R.drawable.star_fill)
+                    else
+                        ImageVector.vectorResource(R.drawable.star_line),
+                    contentDescription = "Star",
+                    tint = Secondary,
+                    modifier = Modifier
+                        .size(23.dp)
+                        .clickable {
+                            isSelected = index + 1
+                        }
+                )
+            }
+        }
+
     }
 }
