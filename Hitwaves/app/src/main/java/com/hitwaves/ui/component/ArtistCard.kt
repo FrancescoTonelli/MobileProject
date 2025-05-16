@@ -1,6 +1,9 @@
 package com.hitwaves.ui.component
 
+import android.service.autofill.OnClickAction
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,10 +38,15 @@ import com.hitwaves.model.Artist
 import com.hitwaves.ui.theme.Secondary
 import com.hitwaves.ui.theme.rememberScreenDimensions
 import com.hitwaves.R
+import com.hitwaves.api.artistImageUrl
+import com.hitwaves.ui.theme.Typography
 
 @Composable
-fun ArtistCard(artist: Artist){
-    var isLiked by remember { mutableStateOf(false) }
+fun ArtistCard(
+    artist: Artist,
+    onLikeClick: (Int) -> Unit
+) {
+    var isLiked by remember { mutableStateOf(artist.isLiked) }
 
     Column(
         modifier = Modifier
@@ -48,74 +56,97 @@ fun ArtistCard(artist: Artist){
         Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(15.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(15.dp)
+                .clickable {
+                    // Handle click event
+                },
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(CircleShape),
-                contentAlignment = Alignment.Center
+            Row(
+                modifier = Modifier.fillMaxWidth(0.8f),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = rememberAsyncImagePainter(artist.artistImageUrl),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
+                Box(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter("${artistImageUrl}${artist.artistImageUrl}"),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
 
-            Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(12.dp))
 
-            Column (
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ){
-                Text(
-                    text = artist.artistName,
-                    color = Secondary,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    //modifier = Modifier.padding(horizontal = 8.dp)
-                )
-
-                Text(
-                    text = "${artist.likesCount} likes",
-                    color = Secondary,
-                    fontSize = 14.sp,
-                    //modifier = Modifier.padding(horizontal = 8.dp)
-                )
-
-                Row (
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                Column (
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ){
                     Text(
-                        text = "${artist.averageRating}",
-                        color = Secondary,
-                        fontSize = 16.sp
+                        text = artist.artistName,
+                        style = Typography.titleLarge.copy(
+                            fontSize = 24.sp,
+                            color = Secondary
+                        )
                     )
 
+                    Text(
+                        text = "${artist.likesCount} likes",
+                        style = Typography.bodyLarge.copy(
+                            fontSize = 14.sp,
+                            color = Secondary
+                        )
+                    )
+
+                    Row (
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ){
+                        Text(
+                            text = "${artist.averageRating}",
+                            style = Typography.bodyLarge.copy(
+                                fontSize = 14.sp,
+                                color = Secondary
+                            )
+                        )
+
+                        Icon(
+                            ImageVector.vectorResource(R.drawable.star_fill),
+                            tint = Secondary,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(16.dp)
+                        )
+                    }
+                }
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalArrangement = Arrangement.Absolute.Right
+            ) {
+                IconButton(
+                    onClick = {
+                        isLiked = !isLiked
+                        onLikeClick(artist.artistId)
+                    }
+                ){
                     Icon(
-                        ImageVector.vectorResource(R.drawable.star_fill),
-                        tint = Secondary,
-                        contentDescription = null
+                        imageVector = if (isLiked) ImageVector.vectorResource(R.drawable.like_fill) else ImageVector.vectorResource(R.drawable.like_line),
+                        contentDescription = null,
+                        tint = Secondary
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.weight(1f))
 
-            IconButton(
-                onClick = { isLiked = !isLiked }
-            ){
-                Icon(
-                    imageVector = if (isLiked) ImageVector.vectorResource(R.drawable.like_fill) else ImageVector.vectorResource(R.drawable.like_line),
-                    contentDescription = null,
-                    tint = Secondary
-                )
-            }
+
         }
 
 

@@ -1,5 +1,6 @@
 package com.hitwaves.ui.screens
 
+import android.app.Activity
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -49,6 +50,7 @@ fun Login(navController: NavHostController) {
             TokenManager.saveToken(result.data!!.token)
             val intent = Intent(context, AppActivity::class.java)
             context.startActivity(intent)
+            (context as? Activity)?.finish()
         } else if (!result.success && result.errorMessage != null) {
             password.value = ""
             snackbarHostState.showSnackbar(result.errorMessage!!)
@@ -102,8 +104,6 @@ fun Login(navController: NavHostController) {
                 textBtn = "Sign in",
                 onClickAction = {
                     loginViewModel.handleLogin(emailUsername.value, password.value)
-
-
                 }
             )
 

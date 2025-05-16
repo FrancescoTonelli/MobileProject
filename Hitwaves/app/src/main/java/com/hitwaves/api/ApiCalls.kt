@@ -3,7 +3,7 @@ package com.hitwaves.api
 
 suspend fun apiAutomaticLogin(): ApiResult<TokenResponse> {
     val url = "automatic_login"
-    return HttpHelper.postRequestAsync<TokenResponse>(
+    return ApiGenericCalls.postRequestAsync<TokenResponse>(
         requestData = Unit,
         endpoint = url,
         withAuth = true
@@ -12,7 +12,7 @@ suspend fun apiAutomaticLogin(): ApiResult<TokenResponse> {
 
 suspend fun apiLoginUser(loginRequest: LoginRequest): ApiResult<TokenResponse> {
     val url = "login"
-    return HttpHelper.postRequestAsync<TokenResponse>(
+    return ApiGenericCalls.postRequestAsync<TokenResponse>(
         requestData = loginRequest,
         endpoint = url,
         withAuth = false
@@ -21,7 +21,7 @@ suspend fun apiLoginUser(loginRequest: LoginRequest): ApiResult<TokenResponse> {
 
 suspend fun apiRegisterUser(registerRequest: RegisterRequest): ApiResult<TokenResponse> {
     val url = "register"
-    return HttpHelper.postRequestAsync<TokenResponse>(
+    return ApiGenericCalls.postRequestAsync<TokenResponse>(
         requestData = registerRequest,
         endpoint = url,
         withAuth = false
@@ -45,25 +45,25 @@ suspend fun apiRegisterUser(registerRequest: RegisterRequest): ApiResult<TokenRe
 //        withAuth = true
 //    )
 //}
-//
-//suspend fun apiGetNearestConcerts(positionRequest: PositionRequest): Pair<Boolean, Any?> {
-//    val url = "nearest_concerts"
-//    return HttpHelper.postRequestAsync<List<NearestConcert>>(
-//        requestData = positionRequest,
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
-//
-//suspend fun apiGetPopularArtistsEvents(): Pair<Boolean, Any?> {
-//    val url = "popular_artists_events"
-//    return HttpHelper.postRequestAsync<List<PopularArtistEvent>>(
-//        requestData = Unit,
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
-//
+
+suspend fun apiGetNearestConcerts(positionRequest: PositionRequest): ApiResult<List<NearestConcert>> {
+    val url = "nearest_concerts"
+    return ApiGenericCalls.postRequestAsync<List<NearestConcert>>(
+        requestData = positionRequest,
+        endpoint = url,
+        withAuth = false
+    )
+}
+
+suspend fun apiGetPopularArtistsEvents(): ApiResult<List<PopularArtistEvent>> {
+    val url = "popular_artists_events"
+    return ApiGenericCalls.postRequestAsync<List<PopularArtistEvent>>(
+        requestData = Unit,
+        endpoint = url,
+        withAuth = false
+    )
+}
+
 //suspend fun apiGetArtists(): Pair<Boolean, Any?> {
 //    val url = "artists"
 //    return HttpHelper.postRequestAsync<List<ArtistResponse>>(
@@ -133,24 +133,23 @@ suspend fun apiRegisterUser(registerRequest: RegisterRequest): ApiResult<TokenRe
 //    )
 //}
 //
-//suspend fun apiGetLikedArtists(): Pair<Boolean, Any?> {
-//    val url = "liked_artists"
-//    return HttpHelper.postRequestAsync<List<LikedArtistResponse>>(
-//        requestData = Unit,
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
-//
-//suspend fun apiLikeOrUnlikeArtist(artistId: Int): Pair<Boolean, Any?> {
-//    val url = "like/$artistId"
-//    return HttpHelper.postRequestAsync<String>(
-//        requestData = Unit,
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
-//
+suspend fun apiGetLikedArtists(): ApiResult<List<LikedArtistResponse>> {
+    val url = "liked_artists"
+    return ApiGenericCalls.getRequestAsync<List<LikedArtistResponse>>(
+        endpoint = url,
+        withAuth = true
+    )
+}
+
+suspend fun apiLikeOrUnlikeArtist(artistId: Int): ApiResult<String> {
+    val url = "like/$artistId"
+    return ApiGenericCalls.postRequestAsync<String>(
+        requestData = Unit,
+        endpoint = url,
+        withAuth = true
+    )
+}
+
 //suspend fun apiGetUserTickets(): Pair<Boolean, Any?> {
 //    val url = "tickets"
 //    return HttpHelper.getRequestAsync<List<TicketResponse>>(

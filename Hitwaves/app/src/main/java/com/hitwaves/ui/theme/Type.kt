@@ -12,8 +12,7 @@ val Typography = Typography(
         fontFamily = Rubik,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        lineHeight = 24.sp
     ),
     titleLarge = TextStyle(
         fontFamily = Rubik,

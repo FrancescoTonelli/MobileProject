@@ -1,5 +1,6 @@
 package com.hitwaves.ui.screens
 
+import android.app.Activity
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -64,6 +65,7 @@ fun Register(navController: NavHostController) {
             TokenManager.saveToken(result.data!!.token)
             val intent = Intent(context, AppActivity::class.java)
             context.startActivity(intent)
+            (context as? Activity)?.finish()
         } else if (!result.success && result.errorMessage != null) {
             password.value = ""
             confirmPassword.value = ""

@@ -76,6 +76,10 @@ fun Home(navController: NavHostController) {
             items(eventList) { event ->
                 EventCard(event = event, navController)
             }
+
+            item {
+                Title(title = "Top Artists")
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,11 +27,16 @@ import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.component.Title
 import com.hitwaves.model.Artist
 import com.hitwaves.ui.theme.*
+import com.hitwaves.ui.viewModel.LikesViewModel
+
+fun initLikes() : LikesViewModel {
+    return LikesViewModel()
+}
 
 @Composable
 fun ArtistDetails(artist: Artist, navController: NavController){
     val eventList = getSampleEvents()
-
+    val likesViewModel = remember { LikesViewModel() }
     BackToHome(navController)
 
     Column (
@@ -40,7 +46,12 @@ fun ArtistDetails(artist: Artist, navController: NavController){
             modifier = Modifier
                 .padding(top = 30.dp)
         ){
-            ArtistCard(artist)
+            ArtistCard(
+                artist = artist,
+                onLikeClick = {
+                    artistId -> {}
+                }
+            )
         }
 
         LazyColumn (

@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.androidx.navigation.compose.android)
     implementation(libs.accompanist.navigation.animation)
+    implementation(libs.play.services.location)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

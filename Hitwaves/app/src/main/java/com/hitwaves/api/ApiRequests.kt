@@ -16,12 +16,12 @@ data class RegisterRequest(
     val email: String,
     val password: String
 )
-//
-//data class PositionRequest(
-//    val latitude: Double,
-//    val longitude: Double
-//)
-//
+
+data class PositionRequest(
+    val latitude: Double,
+    val longitude: Double
+)
+
 //data class ReviewRequest(
 //    @SerializedName("ticket_id") val ticketId: Int,
 //    val rate: Int,

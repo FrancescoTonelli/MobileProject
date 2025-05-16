@@ -23,7 +23,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-
         val token = TokenManager.getToken()
 
 
