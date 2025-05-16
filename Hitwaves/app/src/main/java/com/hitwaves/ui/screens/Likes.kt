@@ -43,7 +43,7 @@ private fun init() : LikesViewModel {
 fun Likes(navController: NavHostController) {
     val favouritesArtist = remember { mutableStateOf<List<Artist>>(emptyList()) }
 
-    val likesViewModel = remember { LikesViewModel() }
+    val likesViewModel = remember { init() }
     val result by likesViewModel.likedArtistsState
     val isLoading by likesViewModel.isLikesLoading
     val toggleState by likesViewModel.toggleState
@@ -103,7 +103,7 @@ fun Likes(navController: NavHostController) {
             } else {
                 item {
                     Text(
-                        text = result.errorMessage ?: "No favourite artists found",
+                        text = "No favourite artists found",
                         style = Typography.bodyLarge.copy(
                             fontSize = 16.sp,
                             color = Secondary

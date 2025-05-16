@@ -242,16 +242,14 @@ def protected_user_nearest_concerts():
             concert.title AS concert_title,
             concert.image AS concert_image,
             concert.date AS concert_date,
+            concert.tour_id AS tour_id,
             place.name AS place_name,
             place.latitude AS place_latitude,
             place.longitude AS place_longitude,
-            tour.title AS tour_title,
-            tour.image AS tour_image,
             artist.name AS artist_name,
             artist.image AS artist_image
         FROM concert
         INNER JOIN place ON concert.place_id = place.id
-        LEFT JOIN tour ON concert.tour_id = tour.id
         LEFT JOIN artist_concert ON concert.id = artist_concert.concert_id
         LEFT JOIN artist ON artist_concert.artist_id = artist.id
         WHERE concert.date >= CURDATE()
@@ -259,117 +257,128 @@ def protected_user_nearest_concerts():
     """)
 
     concerts = cursor.fetchall()
-    conn.close()
 
     def calculate_distance(lat1, lon1, lat2, lon2):
-        R = 6371 
+        R = 6371
         phi1 = math.radians(lat1)
         phi2 = math.radians(lat2)
         delta_phi = math.radians(lat2 - lat1)
         delta_lambda = math.radians(lon2 - lon1)
-
         a = math.sin(delta_phi / 2.0) ** 2 + \
-            math.cos(phi1) * math.cos(phi2) * \
-            math.sin(delta_lambda / 2.0) ** 2
+            math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2.0) ** 2
         c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-
         return R * c
 
-    concert_list = []
     for concert in concerts:
-        distance = calculate_distance(user_lat, user_lon, concert['place_latitude'], concert['place_longitude'])
-        concert_list.append({
+        concert['distance'] = calculate_distance(user_lat, user_lon, concert['place_latitude'], concert['place_longitude'])
+
+    nearest_concerts = sorted(concerts, key=lambda x: x['distance'])[:3]
+
+    for concert in nearest_concerts:
+        if not concert['tour_id']:
+            concert['final_image'] = concert['concert_image']
+            concert['tour_title'] = ""
+        else:
+            cursor.execute("SELECT image, title FROM tour WHERE id = %s", (concert['tour_id'],))
+            tour = cursor.fetchone()
+            concert['final_image'] = tour['image'] if tour and tour['image'] else ''
+            concert['tour_title'] = tour['title'] if tour and tour['title'] else ""
+
+    conn.close()
+
+    response = []
+    for concert in nearest_concerts:
+        response.append({
             'id': concert['concert_id'],
             'title': concert['concert_title'],
             'tour_title': concert['tour_title'],
-            'image': concert['concert_image'] if concert['concert_image'] else concert['tour_image'],
-            'artist': concert['artist_name'],
-            'artist_image': concert['artist_image'],
-            'place_name': concert['place_name'],
+            'image': concert['final_image'],
+            'artist': concert['artist_name'] if concert['artist_name'] else 'Unknown',
+            'artist_image': concert['artist_image'] if concert['artist_image'] else '',
+            'place_name': concert['place_name'] if concert['place_name'] else 'Unknown',
             'date': concert['concert_date'].strftime('%Y-%m-%d'),
-            'distance': round(distance, 1)
+            'distance': round(concert['distance'], 1)
         })
 
-    concert_list = sorted(concert_list, key=lambda x: x['distance'])[:3]
+    return jsonify(response), 200
 
-    return jsonify(concert_list), 200
 
 # Top 3 artists 
 @protected_user_bp.route('/protected_user/popular_artists_events', methods=['POST'])
 def protected_user_popular_artists_events():
-
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute("""
-        SELECT 
-            a.id AS artist_id,
-            a.name AS artist_name,
-            a.image AS artist_image,
-            CASE 
-                WHEN t.id IS NOT NULL THEN 
-                    JSON_OBJECT(
-                        'type', 'tour',
-                        'id', t.id,
-                        'title', t.title,
-                        'image', t.image,
-                        'concert_count', (SELECT COUNT(*) FROM concert WHERE tour_id = t.id)
-                    )
-                WHEN c.id IS NOT NULL THEN 
-                    JSON_OBJECT(
-                        'type', 'concert',
-                        'id', c.id,
-                        'title', c.title,
-                        'image', c.image,
-                        'date', c.date,
-                        'place_name', p.name
-                    )
-                ELSE 
-                    JSON_OBJECT('type', 'no_events')
-            END AS event_data
-        FROM 
-            (SELECT a.* 
-             FROM artist a
-             LEFT JOIN likes l ON a.id = l.artist_id
-             GROUP BY a.id
-             ORDER BY COUNT(l.id) DESC
-             LIMIT 3) AS a
-        LEFT JOIN 
-            (SELECT ac.artist_id, c.*
-             FROM concert c
-             JOIN artist_concert ac ON c.id = ac.concert_id
-             WHERE c.date >= CURDATE()
-             ORDER BY c.date) AS c ON a.id = c.artist_id
-        LEFT JOIN 
-            tour t ON c.tour_id = t.id
-        LEFT JOIN 
-            place p ON c.place_id = p.id
-        GROUP BY 
-            a.id
-        ORDER BY 
-            (SELECT COUNT(*) FROM likes WHERE artist_id = a.id) DESC;
+        SELECT a.id, a.name, a.image
+        FROM artist a
+        LEFT JOIN likes l ON a.id = l.artist_id
+        WHERE EXISTS (
+            SELECT 1
+            FROM artist_concert ac
+            JOIN concert c ON c.id = ac.concert_id
+            WHERE ac.artist_id = a.id AND c.date >= CURDATE()
+        )
+        GROUP BY a.id
+        ORDER BY COUNT(l.id) DESC
+        LIMIT 3;
     """)
-
-    results = cursor.fetchall()
-    conn.close()
+    top_artists = cursor.fetchall()
 
     response = []
-    for row in results:
-        event_data = json.loads(row['event_data']) if row['event_data'] else None
-        
-        item = {
-            'artist_id': row['artist_id'],
-            'artist_name': row['artist_name'],
-            'artist_image': row['artist_image'],
-            'event': event_data
-        }
-        
-        if event_data and event_data['type'] != 'no_events':
-            event_data['artist_name'] = row['artist_name']
-            event_data['artist_image'] = row['artist_image']
-        
-        response.append(item)
 
+    for artist in top_artists:
+        artist_id = artist['id']
+        artist_name = artist['name']
+        artist_image = artist['image']
+
+        cursor.execute("""
+            SELECT c.id AS concert_id, c.title AS concert_title, c.image AS concert_image, 
+                   DATE_FORMAT(c.date, '%Y-%m-%d') AS concert_date, c.place_id, c.tour_id, p.name AS place_name
+            FROM concert c
+            JOIN artist_concert ac ON c.id = ac.concert_id
+            LEFT JOIN place p ON c.place_id = p.id
+            WHERE ac.artist_id = %s AND c.date >= CURDATE()
+            ORDER BY c.date ASC
+            LIMIT 1;
+        """, (artist_id,))
+        concert = cursor.fetchone()
+
+        if concert:
+            if concert['tour_id']:
+                cursor.execute("""
+                    SELECT t.id, t.title, t.image,
+                           (SELECT COUNT(*) FROM concert WHERE tour_id = t.id) AS concert_count
+                    FROM tour t
+                    WHERE t.id = %s;
+                """, (concert['tour_id'],))
+                tour = cursor.fetchone()
+
+                response.append({
+                    'id': tour['id'],
+                    'isTour': True,
+                    'title': tour['title'],
+                    'image': tour['image'],
+                    'artistName': artist_name,
+                    'artistImage': artist_image,
+                    'placeName': concert['place_name'],
+                    'date': None,
+                    'concertCount': tour['concert_count']
+                })
+            else:
+                response.append({
+                    'id': concert['concert_id'],
+                    'isTour': False,
+                    'title': concert['concert_title'],
+                    'image': concert['concert_image'],
+                    'artistName': artist_name,
+                    'artistImage': artist_image,
+                    'placeName': concert['place_name'],
+                    'date': concert['concert_date'],
+                    'concertCount': 0
+                })
+
+    conn.close()
     return jsonify(response), 200
 
 # Get Artists
@@ -1411,6 +1420,7 @@ def protected_user_get_notifications():
             notification
         WHERE
             user_id = %s
+        ORDER BY id DESC
     """, (user_id,))
 
     notifications = cursor.fetchall()

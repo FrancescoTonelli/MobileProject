@@ -43,7 +43,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.hitwaves.R
 import com.hitwaves.model.Artist
-import com.hitwaves.model.Event
+import com.hitwaves.model.EventForCards
 import com.hitwaves.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,7 +52,7 @@ fun SearchWave(
     query: String,
     onQueryChange: (String) -> Unit,
     searchResultsArtists: List<Artist>,
-    searchResultsEvents: List<Event>,
+    searchResultsEventForCards: List<EventForCards>,
     navController: NavController
 ){
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -61,8 +61,8 @@ fun SearchWave(
         searchResultsArtists.filter { it.artistName.contains(query, ignoreCase = true) }
     }
 
-    val filteredEvents = remember(query, searchResultsEvents) {
-        searchResultsEvents.filter { it.title.contains(query, ignoreCase = true) }
+    val filteredEvents = remember(query, searchResultsEventForCards) {
+        searchResultsEventForCards.filter { it.title.contains(query, ignoreCase = true) }
     }
 
     SearchBar(
@@ -200,15 +200,15 @@ fun ShowArtistList(artistList: List<Artist>, navController: NavController) {
 }
 
 @Composable
-fun ShowEventList(eventList: List<Event>, navController: NavController){
+fun ShowEventList(eventForCardsList: List<EventForCards>, navController: NavController){
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (eventList.isNotEmpty()) {
-            items(eventList) { event ->
+        if (eventForCardsList.isNotEmpty()) {
+            items(eventForCardsList) { event ->
                 EventCard(event = event, navController)
             }
         }

@@ -32,12 +32,10 @@ fun Title(title: String){
     ){
         Text(
             text = title,
-            color = Secondary,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-//            modifier = Modifier.onGloballyPositioned { coordinates ->
-//                textWidth = coordinates.size.width
-//            }
+            style = Typography.titleLarge.copy(
+                fontSize = 24.sp,
+                color = Secondary
+            )
         )
         HorizontalDivider(
             modifier = Modifier

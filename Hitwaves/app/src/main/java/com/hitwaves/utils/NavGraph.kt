@@ -7,7 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.hitwaves.model.Artist
-import com.hitwaves.model.Event
+import com.hitwaves.model.EventForCards
 import com.hitwaves.ui.screens.Account
 import com.hitwaves.ui.screens.ArtistDetails
 import com.hitwaves.ui.screens.ConcertMap
@@ -46,14 +46,14 @@ fun NavGraph(navController: NavHostController) {
             ConcertMap(navController)
         }
         composable("eventDetails") {
-            val event = remember {
+            val eventForCards = remember {
                 navController.previousBackStackEntry
                     ?.savedStateHandle
-                    ?.get<Event>("event")
+                    ?.get<EventForCards>("event")
             }
 
-            if (event != null) {
-                EventDetails(event = event, navController = navController)
+            if (eventForCards != null) {
+                EventDetails(eventForCards = eventForCards, navController = navController)
             } else {
                 Text("Evento non disponibile")
             }

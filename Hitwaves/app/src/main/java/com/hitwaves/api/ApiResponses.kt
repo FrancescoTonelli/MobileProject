@@ -23,23 +23,17 @@ data class NearestConcert(
 )
 
 data class PopularArtistEvent(
-    @SerializedName("artist_id") val artistId: Int,
-    @SerializedName("artist_name") val artistName: String,
-    @SerializedName("artist_image") val artistImage: String,
-    val event: EventData
+    @SerializedName("id") val id: Int,
+    @SerializedName("isTour") val isTour: Boolean,
+    @SerializedName("title") val title: String,
+    @SerializedName("image") val image: String,
+    @SerializedName("artistName") val artistName: String,
+    @SerializedName("artistImage") val artistImage: String,
+    @SerializedName("placeName") val placeName: String,
+    @SerializedName("date") val date: String?,
+    @SerializedName("concertCount") val concertCount: Int
 )
 
-data class EventData(
-    val type: String,
-    val id: Int? = null,
-    val title: String? = null,
-    val image: String? = null,
-    @SerializedName("concert_count") val concertCount: Int? = null,
-    val date: String? = null,
-    @SerializedName("place_name") val placeName: String? = null,
-    @SerializedName("artist_name") val artistName: String? = null,
-    @SerializedName("artist_image") val artistImage: String? = null
-)
 
 //data class ArtistResponse(
 //    @SerializedName("artist_id") val id: Int,
@@ -272,10 +266,10 @@ data class LikedArtistResponse(
 //    @SerializedName("concert_date") val concertDate: String,
 //    @SerializedName("artist_name") val artistName: String
 //)
-//
-//data class NotificationResponse(
-//    val id: Int,
-//    val title: String,
-//    val description: String,
-//    @SerializedName("is_read") val isRead: Boolean
-//)
+
+data class NotificationResponse(
+    val id: Int,
+    val title: String,
+    val description: String,
+    @SerializedName("is_read") val isRead: Int
+)

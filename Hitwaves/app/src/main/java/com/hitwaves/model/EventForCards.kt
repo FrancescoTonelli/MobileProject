@@ -4,15 +4,13 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Event(
+data class EventForCards(
     val contentId: Int,
     val isTour: Boolean,
-    val backgroundImageUrl: String,
     val title: String,
-    val artist: Artist,
+    val backgroundImage: String,
+    val artistName: String,
+    val artistImage: String,
     val description: String,
     val date: String?
-    //place
-    //address
-    //time
 ) : Parcelable

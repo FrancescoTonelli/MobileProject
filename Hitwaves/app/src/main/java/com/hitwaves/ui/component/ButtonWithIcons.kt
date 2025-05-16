@@ -52,10 +52,12 @@ fun ButtonWithIcons(
 
             Text(
                 text = textBtn,
-                fontSize = 16.sp,
-                color = FgDark,
-                modifier = Modifier.padding(horizontal = 8.dp),
-                fontWeight = FontWeight.Bold
+                style = Typography.bodyLarge.copy(
+                    color = FgDark,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp
+                ),
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
 
             endIcon?.let {

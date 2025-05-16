@@ -10,13 +10,44 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 
-const val baseUrl = "http://192.168.1.129:5000/"
+const val baseUrl = "http://192.168.187.162:5000/"
 const val baseApiUrl = "${baseUrl}protected_user/"
 const val artistImageUrl = "${baseUrl}static/images/artists/"
 const val concertImageUrl = "${baseUrl}static/images/concerts/"
 const val tourImageUrl = "${baseUrl}static/images/tours/"
 const val userImageUrl = "${baseUrl}static/images/users/"
 
+fun getHttpArtistImageUrl(artistImageName: String?): String {
+    return if (!artistImageName.isNullOrEmpty()) {
+        "$artistImageUrl$artistImageName"
+    } else {
+        artistImageUrl + "default.png"
+    }
+}
+
+fun getHttpConcertImageUrl(concertImageName: String?): String {
+    return if (!concertImageName.isNullOrEmpty()) {
+        "$concertImageUrl$concertImageName"
+    } else {
+        concertImageUrl + "default.png"
+    }
+}
+
+fun getHttpTourImageUrl(tourImageName: String?): String {
+    return if (!tourImageName.isNullOrEmpty()) {
+        "$tourImageUrl$tourImageName"
+    } else {
+        tourImageUrl + "default.png"
+    }
+}
+
+fun getHttpUserImageUrl(userImageName: String?): String {
+    return if (!userImageName.isNullOrEmpty()) {
+        "$userImageUrl$userImageName"
+    } else {
+        userImageUrl + "default.png"
+    }
+}
 
 fun parseErrorMessage(body: String?): String {
     return try {

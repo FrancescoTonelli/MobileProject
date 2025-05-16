@@ -2,27 +2,38 @@ package com.hitwaves.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.hitwaves.R
 import com.hitwaves.ui.component.ButtonWithIcons
-import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.component.SearchWave
 import com.hitwaves.ui.component.Title
 import com.hitwaves.model.Artist
-import com.hitwaves.model.Event
+import com.hitwaves.model.EventForCards
+import com.hitwaves.ui.component.EventCard
+import com.hitwaves.ui.component.loadingIndicator
+import com.hitwaves.ui.theme.*
+import com.hitwaves.ui.viewModel.HomeViewModel
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.graphics.Color
 
-fun onClick(navController: NavHostController) {
+fun goToMap(navController: NavHostController) {
     navController.navigate("map"){
         popUpTo(navController.graph.startDestinationId) {
             saveState = true
@@ -32,6 +43,9 @@ fun onClick(navController: NavHostController) {
     }
 }
 
+private fun init(): HomeViewModel{
+    return HomeViewModel()
+}
 
 @Composable
 fun Home(navController: NavHostController) {
@@ -39,6 +53,63 @@ fun Home(navController: NavHostController) {
 
     var query by rememberSaveable { mutableStateOf("") }
     val onQueryChange: (String) -> Unit = { query = it }
+
+    val homeViewModel = remember { init() }
+    val nearestEvents by homeViewModel.nearestState
+    val isNearestLoading by homeViewModel.isLoadingNearest
+    val popularEvents by homeViewModel.popularState
+    val isPopularLoading by homeViewModel.isLoadingPopular
+
+    var nearestShow : List<EventForCards> by remember { mutableStateOf(emptyList()) }
+    var popularShow : List<EventForCards> by remember { mutableStateOf(emptyList()) }
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        homeViewModel.getNearest(0.0, 0.0)
+        homeViewModel.getPopularEvents()
+    }
+
+    LaunchedEffect(nearestEvents) {
+        if (nearestEvents.success && nearestEvents.data != null) {
+            nearestShow = nearestEvents.data!!.map { event ->
+                EventForCards(
+                    contentId = event.id,
+                    isTour = false,
+                    backgroundImage = event.image.orEmpty(),
+                    title = if(!event.tourTitle.isNullOrEmpty()) "${event.tourTitle} - ${event.title}" else event.title,
+                    artistName = event.artist,
+                    artistImage = event.artistImage.orEmpty(),
+                    description = "${event.placeName} - ${event.distance}km",
+                    date = event.date
+                )
+            }
+
+        } else if (!nearestEvents.success && nearestEvents.errorMessage != null) {
+            snackbarHostState.showSnackbar(nearestEvents.errorMessage!!)
+        }
+    }
+
+    LaunchedEffect(popularEvents) {
+        if (popularEvents.success && popularEvents.data != null) {
+            popularShow = popularEvents.data!!.map { event ->
+                EventForCards(
+                    contentId = event.id,
+                    isTour = event.isTour,
+                    title = event.title,
+                    backgroundImage = event.image,
+                    artistName = event.artistName,
+                    artistImage = event.artistImage,
+                    description = if(event.isTour) "Tour - ${event.concertCount} shows" else event.placeName,
+                    date = if(event.isTour) null else event.date
+                )
+            }
+
+        } else if (!nearestEvents.success && nearestEvents.errorMessage != null) {
+            snackbarHostState.showSnackbar(nearestEvents.errorMessage!!)
+        }
+    }
 
     Column (
         modifier = Modifier
@@ -49,7 +120,7 @@ fun Home(navController: NavHostController) {
             query = query,
             onQueryChange = onQueryChange,
             searchResultsArtists = getSampleArtist(),
-            searchResultsEvents = getSampleEvents(),
+            searchResultsEventForCards = getSampleEvents(),
             navController = navController
         )
 
@@ -69,16 +140,68 @@ fun Home(navController: NavHostController) {
                     startIcon = ImageVector.vectorResource(R.drawable.map),
                     textBtn = "Open map",
                     endIcon = ImageVector.vectorResource(R.drawable.arrow),
-                    onClickAction = { onClick(navController) }
+                    onClickAction = { goToMap(navController) }
                 )
             }
 
-            items(eventList) { event ->
-                EventCard(event = event, navController)
+
+            if(isNearestLoading) {
+                item{
+                    CircularProgressIndicator(color = Color.White)
+                }
+            } else {
+                if (nearestShow.isEmpty()) {
+                    item {
+                        Text(
+                            text = "No near events found",
+                            modifier = Modifier.padding(16.dp),
+                            style = Typography.bodyLarge.copy(
+                                fontSize = 14.sp,
+                                color = Secondary
+                            )
+                        )
+                    }
+                }
+                else {
+                    items(nearestShow) { event ->
+                        EventCard(event = event, navController)
+                    }
+                }
+
             }
 
             item {
+                Spacer(modifier = Modifier.height(16.dp))
                 Title(title = "Top Artists")
+            }
+
+            if(isPopularLoading) {
+                item{
+                    CircularProgressIndicator(color = Color.White)
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            } else {
+                if (popularShow.isEmpty()) {
+                    item {
+                        Text(
+                            text = "No popular events found",
+                            modifier = Modifier.padding(16.dp),
+                            style = Typography.bodyLarge.copy(
+                                fontSize = 14.sp,
+                                color = Secondary
+                            )
+                        )
+                    }
+                }
+                else {
+                    items(popularShow) { event ->
+                        EventCard(event = event, navController)
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                }
+
             }
         }
     }
@@ -87,79 +210,11 @@ fun Home(navController: NavHostController) {
 
 
 
-fun getSampleEvents(): List<Event> {
-    return listOf(
-        Event(
-            contentId = 0,
-            isTour = true,
-            backgroundImageUrl = "https://cdn.albumoftheyear.org/artists/sq/nayt_1727482355.jpg",
-            title = "Live@Roma",
-            artist = getSampleArtist().get(0),
-            description = "Atlantico - Roma",
-            date = "2025/10/13"
-        ),
-        Event(
-            contentId = 0,
-            isTour = false,
-            backgroundImageUrl = "https://cdn.albumoftheyear.org/artists/sq/nayt_1727482355.jpg",
-            title = "Live@Bologna",
-            artist = getSampleArtist().get(1),
-
-            description = "Atlantico - Roma",
-            date = "2025/10/13"
-        ),
-        Event(
-            contentId = 0,
-            isTour = false,
-            backgroundImageUrl = "https://cdn.albumoftheyear.org/artists/sq/nayt_1727482355.jpg",
-            title = "Live@Chicago",
-            artist = getSampleArtist().get(2),
-            description = "Atlantico - Roma",
-            date = "2025/10/13"
-        ),
-        Event(
-            contentId = 0,
-            isTour = false,
-            backgroundImageUrl = "https://cdn.albumoftheyear.org/artists/sq/nayt_1727482355.jpg",
-            title = "Live@Nonantola",
-            artist = getSampleArtist().get(3),
-            description = "Atlantico - Roma",
-            date = "2025/10/13"
-        )
-
-    )
+fun getSampleEvents(): List<EventForCards> {
+    return listOf()
 }
 
 fun getSampleArtist(): List<Artist>{
-    return listOf(
-        Artist(
-            artistId = 0,
-            artistName = "Nayt",
-            artistImageUrl = "https://imgs.search.brave.com/s89lVzcDdhWkaaSUd1BssVMKSbHez2vKwmPHYbOX0gI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9uYXl0/bWVyY2guY29tL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDIzLzA4/L05heXQtTWVyY2gt/MS5wbmc",
-            likesCount = 4800,
-            averageRating = 4.8f
-        ),
-        Artist(
-            artistId = 0,
-            artistName = "RosoloRoso",
-            artistImageUrl = "https://imgs.search.brave.com/s89lVzcDdhWkaaSUd1BssVMKSbHez2vKwmPHYbOX0gI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9uYXl0/bWVyY2guY29tL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDIzLzA4/L05heXQtTWVyY2gt/MS5wbmc",
-            likesCount = 4800,
-            averageRating = 4.8f
-        ),
-        Artist(
-            artistId = 0,
-            artistName = "Sfera",
-            artistImageUrl = "https://imgs.search.brave.com/s89lVzcDdhWkaaSUd1BssVMKSbHez2vKwmPHYbOX0gI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9uYXl0/bWVyY2guY29tL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDIzLzA4/L05heXQtTWVyY2gt/MS5wbmc",
-            likesCount = 4800,
-            averageRating = 4.8f
-        ),
-        Artist(
-            artistId = 0,
-            artistName = "Izi",
-            artistImageUrl = "https://imgs.search.brave.com/s89lVzcDdhWkaaSUd1BssVMKSbHez2vKwmPHYbOX0gI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9uYXl0/bWVyY2guY29tL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDIzLzA4/L05heXQtTWVyY2gt/MS5wbmc",
-            likesCount = 4800,
-            averageRating = 4.8f
-        )
-    )
+    return listOf()
 }
 

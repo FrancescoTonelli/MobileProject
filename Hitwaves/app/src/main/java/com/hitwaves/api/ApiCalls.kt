@@ -232,22 +232,22 @@ suspend fun apiLikeOrUnlikeArtist(artistId: Int): ApiResult<String> {
 //        withAuth = true
 //    )
 //}
-//
-//suspend fun apiGetAllNotifications(): Pair<Boolean, Any?> {
-//    val endpoint = "notifications"
-//
-//    return HttpHelper.getRequestAsync<List<NotificationResponse>>(
-//        endpoint = endpoint,
-//        withAuth = true
-//    )
-//}
-//
-//suspend fun apiReadNotification(notificationId: Int): Pair<Boolean, Any?> {
-//    val endpoint = "notification/read/$notificationId"
-//
-//    return HttpHelper.postRequestAsync<MessageResponse>(
-//        requestData = Unit,
-//        endpoint = endpoint,
-//        withAuth = true
-//    )
-//}
+
+suspend fun apiGetAllNotifications(): ApiResult<List<NotificationResponse>> {
+    val endpoint = "notifications"
+
+    return ApiGenericCalls.getRequestAsync<List<NotificationResponse>>(
+        endpoint = endpoint,
+        withAuth = true
+    )
+}
+
+suspend fun apiReadNotification(notificationId: Int): ApiResult<String> {
+    val endpoint = "notification/read/$notificationId"
+
+    return ApiGenericCalls.postRequestAsync<String>(
+        requestData = Unit,
+        endpoint = endpoint,
+        withAuth = true
+    )
+}

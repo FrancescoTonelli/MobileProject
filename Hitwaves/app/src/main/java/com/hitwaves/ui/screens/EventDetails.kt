@@ -37,12 +37,12 @@ import com.hitwaves.R
 import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.component.ShowArtistList
 import com.hitwaves.ui.component.Title
-import com.hitwaves.model.Event
+import com.hitwaves.model.EventForCards
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.theme.rememberScreenDimensions
 
 @Composable
-fun EventDetails(event: Event, navController: NavController){
+fun EventDetails(eventForCards: EventForCards, navController: NavController){
     val artistList = getSampleArtist()
     val eventList = getSampleEvents()
 
@@ -54,7 +54,7 @@ fun EventDetails(event: Event, navController: NavController){
                 .size(rememberScreenDimensions().screenWidth, 150.dp)
         ){
             Image(
-                painter = rememberAsyncImagePainter(event.backgroundImageUrl),
+                painter = rememberAsyncImagePainter(eventForCards.backgroundImage),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
@@ -73,7 +73,7 @@ fun EventDetails(event: Event, navController: NavController){
                         .background(Primary)
                 ){
                     Text(
-                        text = event.title,
+                        text = eventForCards.title,
                         color = Secondary,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
@@ -86,7 +86,7 @@ fun EventDetails(event: Event, navController: NavController){
                         .background(FgDark)
                 ){
                     Text(
-                        text = event.description,
+                        text = eventForCards.description,
                         color = Color.White,
                         fontSize = 12.sp,
                         modifier = Modifier.padding(horizontal = 8.dp)
@@ -112,7 +112,7 @@ fun EventDetails(event: Event, navController: NavController){
             }
 
 
-            if(event.isTour){
+            if(eventForCards.isTour){
                 item {
                     Title("Shows")
                 }
@@ -129,7 +129,7 @@ fun EventDetails(event: Event, navController: NavController){
 
                 item {
                     Column {
-                        InformationRow("Place", event.description)
+                        InformationRow("Place", eventForCards.description)
 
                         // ecc ecc
                     }

@@ -28,12 +28,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.hitwaves.model.Event
+import com.hitwaves.api.getHttpArtistImageUrl
+import com.hitwaves.api.getHttpConcertImageUrl
+import com.hitwaves.api.getHttpTourImageUrl
+import com.hitwaves.model.EventForCards
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.theme.rememberScreenDimensions
 
 @Composable
-fun EventCard(event: Event, navController: NavController){
+fun EventCard(event: EventForCards, navController: NavController){
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -59,7 +62,7 @@ fun EventCard(event: Event, navController: NavController){
         ){
             Box{
                 Image(
-                    painter = rememberAsyncImagePainter(event.backgroundImageUrl),
+                    painter = rememberAsyncImagePainter(if(event.isTour) getHttpTourImageUrl(event.backgroundImage) else getHttpConcertImageUrl(event.backgroundImage)),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
@@ -88,7 +91,7 @@ fun EventCard(event: Event, navController: NavController){
 }
 
 @Composable
-fun ShowDescription(event: Event){
+fun ShowDescription(event: EventForCards){
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -124,7 +127,7 @@ fun ShowDescription(event: Event){
                     .clip(CircleShape)
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter(event.artist.artistImageUrl),
+                    painter = rememberAsyncImagePainter(getHttpArtistImageUrl(event.artistImage)),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -133,7 +136,7 @@ fun ShowDescription(event: Event){
                 )
             }
             Text(
-                text = event.artist.artistName,
+                text = event.artistName,
                 fontSize = 12.sp,
                 color = Secondary,
                 modifier = Modifier.padding(horizontal = 8.dp)

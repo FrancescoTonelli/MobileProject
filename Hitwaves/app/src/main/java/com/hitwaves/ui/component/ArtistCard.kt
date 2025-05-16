@@ -1,8 +1,6 @@
 package com.hitwaves.ui.component
 
-import android.service.autofill.OnClickAction
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,16 +28,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.hitwaves.model.Artist
-import com.hitwaves.ui.theme.Secondary
-import com.hitwaves.ui.theme.rememberScreenDimensions
+import com.hitwaves.ui.theme.*
 import com.hitwaves.R
-import com.hitwaves.api.artistImageUrl
-import com.hitwaves.ui.theme.Typography
+import com.hitwaves.api.getHttpArtistImageUrl
 
 @Composable
 fun ArtistCard(
@@ -73,7 +68,7 @@ fun ArtistCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
-                        painter = rememberAsyncImagePainter("${artistImageUrl}${artist.artistImageUrl}"),
+                        painter = rememberAsyncImagePainter(getHttpArtistImageUrl(artist.artistImageUrl)),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
