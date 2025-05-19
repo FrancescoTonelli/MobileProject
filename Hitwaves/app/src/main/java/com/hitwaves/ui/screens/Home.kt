@@ -138,7 +138,7 @@ fun Home(navController: NavHostController) {
                     startIcon = ImageVector.vectorResource(R.drawable.map),
                     textBtn = "Open map",
                     endIcon = ImageVector.vectorResource(R.drawable.arrow),
-                    onClickAction = { onClick(navController)}
+                    onClickAction = { goToMap(navController)}
                 )
             }
 

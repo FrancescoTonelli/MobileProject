@@ -24,7 +24,6 @@ ktorSerializationKotlinxJson = "2.3.8"
 material3 = "1.4.0-alpha14"
 navigationCompose = "2.8.9"
 navigationComposeAndroid = "2.9.0"
-playServicesLocation = "21.3.0"
 
 [libraries]
 accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimation" }

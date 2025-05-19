@@ -8,7 +8,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,8 +22,8 @@ import com.hitwaves.ui.component.IconData
 import com.hitwaves.ui.component.getBottomNavItems
 import com.hitwaves.utils.NavGraph
 import com.hitwaves.ui.theme.*
-import com.hitwaves.component.NotificationTopBar
-import com.hitwaves.component.BottomNavigationBar
+import com.hitwaves.ui.component.NotificationTopBar
+import com.hitwaves.ui.component.BottomNavigationBar
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -70,54 +69,11 @@ class AppActivity : ComponentActivity(), PermissionsListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-                Scaffold(
-                    bottomBar = {
-                        Column {
-                            Spacer(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(8.dp)
-                                    .background(
-                                        brush = Brush.verticalGradient(
-                                            colors = listOf(
-                                                Primary.copy(alpha = 0f),
-                                                Primary
-                                            )
-                                        )
-                                    )
-                            )
-
-                            BottomNavigationBar(navController = navController, items = bottomNavItems)
-                        }
-                    },
-                    topBar = {
-                        Column {
-                            NotificationTopBar(navController = navController, item = notificationItem)
-
-                            Spacer(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(8.dp)
-                                    .background(
-                                        brush = Brush.verticalGradient(
-                                            colors = listOf(
-                                                Primary,
-                                                Primary.copy(alpha = 0f)
-                                            )
-                                        )
-                                    )
-                            )
-                        }
-                    }
-                ) { innerPadding ->
-                    Box(
-                        modifier = Modifier
-                            .padding(innerPadding)
-                            .background(BgDark)
-                            .fillMaxSize()
-                    ) {
-                        NavGraph(navController = navController)
-                    }
+        if (PermissionsManager.areLocationPermissionsGranted(this)) {
+            enableEdgeToEdge()
+            setContent {
+                HitwavesTheme {
+                    MainContent()
                 }
             }
         } else {
