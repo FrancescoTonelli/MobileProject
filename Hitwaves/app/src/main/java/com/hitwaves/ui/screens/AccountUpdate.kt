@@ -1,6 +1,7 @@
 package com.hitwaves.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +34,7 @@ import androidx.navigation.NavHostController
 import com.hitwaves.R
 import com.hitwaves.api.UserUpdateRequest
 import com.hitwaves.ui.component.CustomSnackbar
+import com.hitwaves.ui.component.GoBack
 import com.hitwaves.ui.component.LoginButton
 import com.hitwaves.ui.component.LoginDateField
 import com.hitwaves.ui.component.LoginInputField
@@ -97,8 +99,7 @@ fun AccountUpdate(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(BgDark)
-            .padding(24.dp),
+            .background(BgDark),
         contentAlignment = Alignment.Center
     ) {
 
@@ -113,21 +114,10 @@ fun AccountUpdate(navController: NavHostController) {
                 Row(
                     modifier = Modifier.fillMaxWidth()
                         .padding(top = 4.dp, bottom = 24.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            ImageVector.vectorResource(R.drawable.notification_open),
-                            tint = Secondary,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(30.dp)
-                        )
-                    }
+                    GoBack(navController)
 
                     Spacer(modifier = Modifier.width(12.dp))
 

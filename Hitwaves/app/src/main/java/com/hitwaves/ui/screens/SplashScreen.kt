@@ -36,6 +36,15 @@ import com.hitwaves.ui.component.CustomSnackbar
 import com.hitwaves.ui.component.IconData
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.viewModel.SplashScreenViewModel
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.hitwaves.ui.component.CustomMessageBox
 
 private fun init() : SplashScreenViewModel {
     return SplashScreenViewModel()
@@ -46,32 +55,64 @@ fun SplashScreen() {
 
     val splashViewModel = remember { init() }
     val result: ApiResult<TokenResponse> by splashViewModel.autoLoginState
-    val isLoading by splashViewModel.isAutoLoading
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    val activity = context as Activity
+
+    var showSettingsDialog by remember { mutableStateOf(false) }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            val token = TokenManager.getToken()
+            if (token != null) {
+                splashViewModel.handleSplash()
+            } else {
+                context.startActivity(Intent(context, LoginActivity::class.java))
+                activity.finish()
+            }
+        } else {
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                showSettingsDialog = true
+            }
+        }
+    }
 
     LaunchedEffect(Unit) {
-        val token = TokenManager.getToken()
-        if (token != null) {
-            splashViewModel.handleSplash()
+        val permission = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+            val token = TokenManager.getToken()
+            if (token != null) {
+                splashViewModel.handleSplash()
+            } else {
+                context.startActivity(Intent(context, LoginActivity::class.java))
+                activity.finish()
+            }
         } else {
-            val intent = Intent(context, LoginActivity::class.java)
-            context.startActivity(intent)
-            (context as? Activity)?.finish()
+            permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
 
     LaunchedEffect(result) {
         if (result.success && result.data != null) {
             TokenManager.saveToken(result.data!!.token)
-            val intent = Intent(context, AppActivity::class.java)
-            context.startActivity(intent)
-            (context as? Activity)?.finish()
+            context.startActivity(Intent(context, AppActivity::class.java))
+            activity.finish()
         } else if (!result.success && result.errorMessage != null) {
             snackbarHostState.showSnackbar(result.errorMessage!!)
-            val intent = Intent(context, LoginActivity::class.java)
-            context.startActivity(intent)
-            (context as? Activity)?.finish()
+            context.startActivity(Intent(context, LoginActivity::class.java))
+            activity.finish()
+        }
+    }
+
+    LaunchedEffect(permissionLauncher) {
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            showSettingsDialog = true
         }
     }
 
@@ -81,10 +122,7 @@ fun SplashScreen() {
             .background(BgDark),
         contentAlignment = Alignment.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             val logo = IconData(
                 route = "logo",
                 label = "Logo",
@@ -127,6 +165,24 @@ fun SplashScreen() {
         }
     }
 
+    if (showSettingsDialog) {
+
+        CustomMessageBox(
+            title = "Permission denied",
+            message = "To use the app, you must allow location access. Do you want to log out and open the settings?",
+            onConfirm = {
+                showSettingsDialog = false
+                val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri = android.net.Uri.fromParts("package", context.packageName, null)
+                intent.data = uri
+                context.startActivity(intent)
+            },
+            onDismiss = {
+                showSettingsDialog = false
+                activity.finish()
+            }
+        )
+    }
 
     CustomSnackbar(snackbarHostState)
 }

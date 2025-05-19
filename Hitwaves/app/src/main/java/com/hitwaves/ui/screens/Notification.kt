@@ -87,12 +87,7 @@ fun Notification(navController: NavHostController) {
                             val encodedTitle = Uri.encode(notification.title)
                             val encodedDescription = Uri.encode(notification.description)
 
-                            navController.navigate("notificationDetails/$encodedTitle/$encodedDescription") {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                            }
+                            navController.navigate("notificationDetails/$encodedTitle/$encodedDescription")
 
                         }
                     )

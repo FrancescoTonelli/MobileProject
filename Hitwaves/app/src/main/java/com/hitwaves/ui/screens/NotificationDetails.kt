@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.hitwaves.R
+import com.hitwaves.ui.component.GoBack
 import com.hitwaves.ui.theme.*
 
 @Composable
@@ -40,21 +41,15 @@ fun NotificationDetails(navController: NavHostController, title: String = "", de
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(vertical = 24.dp),
+                    .padding(vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth(0.3f),
+                        .fillMaxWidth(0.2f),
                     contentAlignment = Alignment.CenterStart
                 ) {
-                    Icon(
-                        ImageVector.vectorResource(R.drawable.notification_open),
-                        tint = Secondary,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(30.dp)
-                    )
+                    GoBack(navController)
                 }
 
                 Spacer(modifier = Modifier.width(12.dp))

@@ -40,6 +40,7 @@ import com.hitwaves.ui.component.Title
 import com.hitwaves.model.EventForCards
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.theme.rememberScreenDimensions
+import com.hitwaves.ui.component.GoBack
 
 @Composable
 fun EventDetails(eventForCards: EventForCards, navController: NavController){

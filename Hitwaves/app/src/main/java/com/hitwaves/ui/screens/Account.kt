@@ -280,12 +280,7 @@ fun Account(navController: NavHostController) {
                         .fillMaxWidth()
                         .height(80.dp)
                         .clickable {
-                            navController.navigate("account_update") {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                            }
+                            navController.navigate("account_update")
                         },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -328,12 +323,7 @@ fun Account(navController: NavHostController) {
                         .fillMaxWidth()
                         .height(80.dp)
                         .clickable {
-                            navController.navigate("account_reviews") {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                            }
+                            navController.navigate("account_reviews")
                         },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween

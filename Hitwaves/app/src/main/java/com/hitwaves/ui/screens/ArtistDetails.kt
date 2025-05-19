@@ -28,6 +28,7 @@ import com.hitwaves.ui.component.Title
 import com.hitwaves.model.Artist
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.viewModel.LikesViewModel
+import com.hitwaves.ui.component.GoBack
 
 fun initLikes() : LikesViewModel {
     return LikesViewModel()
@@ -69,23 +70,5 @@ fun ArtistDetails(artist: Artist, navController: NavController){
                 EventCard(event = event, navController)
             }
         }
-    }
-}
-
-@Composable
-fun GoBack(navController: NavController){
-    Box(
-        modifier = Modifier
-            .size(35.dp)
-            .clip(CircleShape)
-            .background(Primary)
-            .clickable { navController.popBackStack() },
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.back),
-            contentDescription = null,
-            tint = BgDark
-        )
     }
 }

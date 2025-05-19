@@ -35,6 +35,7 @@ import com.hitwaves.api.ApiResult
 import com.hitwaves.ui.component.AccountReviewCard
 import com.hitwaves.ui.component.CustomMessageBox
 import com.hitwaves.ui.component.CustomSnackbar
+import com.hitwaves.ui.component.GoBack
 import com.hitwaves.ui.component.LoadingIndicator
 import com.hitwaves.ui.theme.BgDark
 import com.hitwaves.ui.theme.Secondary
@@ -82,7 +83,7 @@ fun AccountReviews(navController: NavHostController) {
         contentAlignment = Alignment.TopCenter
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxWidth(0.9f),
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
@@ -90,21 +91,10 @@ fun AccountReviews(navController: NavHostController) {
                 Row(
                     modifier = Modifier.fillMaxWidth()
                         .padding(top = 4.dp, bottom = 24.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            ImageVector.vectorResource(R.drawable.notification_open),
-                            tint = Secondary,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(30.dp)
-                        )
-                    }
+                    GoBack(navController)
 
                     Spacer(modifier = Modifier.width(12.dp))
 

@@ -45,83 +45,18 @@ import android.provider.Settings
 import androidx.compose.runtime.remember
 import com.hitwaves.utils.LocationService
 
-
-class AppActivity : ComponentActivity(), PermissionsListener {
-    //private lateinit var permissionsManager: PermissionsManager
-    private lateinit var locationService: LocationService
-
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        val granted = permissions.values.all { it }
-        onPermissionResult(granted)
-    }
-
-    private fun requestLocationPermissions() {
-        requestPermissionLauncher.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        )
-    }
+class AppActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (PermissionsManager.areLocationPermissionsGranted(this)) {
-            enableEdgeToEdge()
-            setContent {
-                HitwavesTheme {
-                    MainContent()
-                }
+        enableEdgeToEdge()
+        setContent {
+            HitwavesTheme {
+                MainContent()
             }
-        } else {
-            //permissionsManager = PermissionsManager(this)
-            requestLocationPermissions()
-        }
-
-    }
-
-    override fun onExplanationNeeded(permissionsToExplain: List<String>) {
-        AlertDialog.Builder(this)
-            .setTitle("Permissions required")
-            .setMessage("The app needs location to work properly. Please grant permissions.")
-            .setPositiveButton("Continue") { _, _ ->
-                //permissionsManager = PermissionsManager(this)
-                requestLocationPermissions()
-            }
-            .setNegativeButton("Denied") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-    }
-
-
-    override fun onPermissionResult(granted: Boolean) {
-        if (granted) {
-            enableEdgeToEdge()
-            setContent {
-                HitwavesTheme {
-                    MainContent()
-                }
-            }
-        } else {
-            AlertDialog.Builder(this)
-                .setTitle("Permissions denied")
-                .setMessage("Location permissions are required to use the app. You can enable them in settings.")
-                .setPositiveButton("Open settings") { _, _ ->
-                    locationService = LocationService(this)
-                    locationService.openLocationSetting()
-                }
-                .setNegativeButton("Close") { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
         }
     }
-
-
 }
 
 @Composable

@@ -32,6 +32,7 @@ import com.hitwaves.ui.viewModel.HomeViewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.graphics.Color
+import com.hitwaves.ui.component.WaveSearcher
 
 fun goToMap(navController: NavHostController) {
     navController.navigate("map"){
@@ -114,13 +115,24 @@ fun Home(navController: NavHostController) {
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        SearchWave(
-            query = query,
-            onQueryChange = onQueryChange,
-            searchResultsArtists = getSampleArtist(),
-            searchResultsEventForCards = getSampleEvents(),
-            navController = navController
+//        SearchWave(
+//            query = query,
+//            onQueryChange = onQueryChange,
+//            searchResultsArtists = getSampleArtist(),
+//            searchResultsEventForCards = getSampleEvents(),
+//            navController = navController
+//        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        WaveSearcher(
+            value = query,
+            onValueChange = { query = it },
+            placeholder = "Search your wave..."
         )
+
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(
             modifier = Modifier
@@ -129,77 +141,84 @@ fun Home(navController: NavHostController) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            item {
-                Title(title = "Near you")
-            }
-
-            item {
-                ButtonWithIcons(
-                    startIcon = ImageVector.vectorResource(R.drawable.map),
-                    textBtn = "Open map",
-                    endIcon = ImageVector.vectorResource(R.drawable.arrow),
-                    onClickAction = { goToMap(navController)}
-                )
-            }
-
-
-            if(isNearestLoading) {
-                item{
-                    CircularProgressIndicator(color = Color.White)
+            if (query != "") {
+                item {
+                    Title(title = "Stai cercando: $query")
                 }
-            } else {
-                if (nearestShow.isEmpty()) {
-                    item {
-                        Text(
-                            text = "No near events found",
-                            modifier = Modifier.padding(16.dp),
-                            style = Typography.bodyLarge.copy(
-                                fontSize = 14.sp,
-                                color = Secondary
+            }
+            else {
+                item {
+                    Title(title = "Near you")
+                }
+
+                item {
+                    ButtonWithIcons(
+                        startIcon = ImageVector.vectorResource(R.drawable.map),
+                        textBtn = "Open map",
+                        endIcon = ImageVector.vectorResource(R.drawable.arrow),
+                        onClickAction = { goToMap(navController)}
+                    )
+                }
+
+
+                if(isNearestLoading) {
+                    item{
+                        CircularProgressIndicator(color = Color.White)
+                    }
+                } else {
+                    if (nearestShow.isEmpty()) {
+                        item {
+                            Text(
+                                text = "No near events found",
+                                modifier = Modifier.padding(16.dp),
+                                style = Typography.bodyLarge.copy(
+                                    fontSize = 14.sp,
+                                    color = Secondary
+                                )
                             )
-                        )
+                        }
                     }
-                }
-                else {
-                    items(nearestShow) { event ->
-                        EventCard(event = event, navController)
+                    else {
+                        items(nearestShow) { event ->
+                            EventCard(event = event, navController)
+                        }
                     }
+
                 }
 
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                Title(title = "Top Artists")
-            }
-
-            if(isPopularLoading) {
-                item{
-                    CircularProgressIndicator(color = Color.White)
+                item {
                     Spacer(modifier = Modifier.height(16.dp))
+                    Title(title = "Top Artists")
                 }
-            } else {
-                if (popularShow.isEmpty()) {
-                    item {
-                        Text(
-                            text = "No popular events found",
-                            modifier = Modifier.padding(16.dp),
-                            style = Typography.bodyLarge.copy(
-                                fontSize = 14.sp,
-                                color = Secondary
-                            )
-                        )
-                    }
-                }
-                else {
-                    items(popularShow) { event ->
-                        EventCard(event = event, navController)
-                    }
-                    item {
+
+                if(isPopularLoading) {
+                    item{
+                        CircularProgressIndicator(color = Color.White)
                         Spacer(modifier = Modifier.height(16.dp))
                     }
-                }
+                } else {
+                    if (popularShow.isEmpty()) {
+                        item {
+                            Text(
+                                text = "No popular events found",
+                                modifier = Modifier.padding(16.dp),
+                                style = Typography.bodyLarge.copy(
+                                    fontSize = 14.sp,
+                                    color = Secondary
+                                )
+                            )
+                        }
+                    }
+                    else {
+                        items(popularShow) { event ->
+                            EventCard(event = event, navController)
+                        }
+                        item {
+                            Spacer(modifier = Modifier.height(16.dp))
+                        }
+                    }
 
+                }
             }
         }
     }
