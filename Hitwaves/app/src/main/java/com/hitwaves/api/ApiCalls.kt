@@ -1,5 +1,12 @@
 package com.hitwaves.api
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+
 
 suspend fun apiAutomaticLogin(): ApiResult<TokenResponse> {
     val url = "automatic_login"
@@ -27,24 +34,23 @@ suspend fun apiRegisterUser(registerRequest: RegisterRequest): ApiResult<TokenRe
         withAuth = false
     )
 }
-//
-//suspend fun apiLogoutUser(): Pair<Boolean, Any?> {
-//    val url = "logout"
-//    return HttpHelper.postRequestAsync<MessageResponse>(
-//        requestData = Unit,
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
-//
-//suspend fun apiDeleteUser(): Pair<Boolean, Any?> {
-//    val url = "delete"
-//    return HttpHelper.postRequestAsync<MessageResponse>(
-//        requestData = Unit,
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
+
+suspend fun apiLogoutUser(): ApiResult<MessageResponse> {
+    val url = "logout"
+    return ApiGenericCalls.postRequestAsync<MessageResponse>(
+        requestData = Unit,
+        endpoint = url,
+        withAuth = true
+    )
+}
+
+suspend fun apiDeleteUser(): ApiResult<MessageResponse> {
+    val url = "delete"
+    return ApiGenericCalls.deleteRequestAsync<MessageResponse>(
+        endpoint = url,
+        withAuth = true
+    )
+}
 
 suspend fun apiGetNearestConcerts(positionRequest: PositionRequest): ApiResult<List<NearestConcert>> {
     val url = "nearest_concerts"
@@ -175,63 +181,93 @@ suspend fun apiLikeOrUnlikeArtist(artistId: Int): ApiResult<String> {
 //        withAuth = true
 //    )
 //}
-//
-//suspend fun apiGetUserDetails(): Pair<Boolean, Any?> {
-//    val url = "details"
-//
-//    return HttpHelper.getRequestAsync<UserDetailsResponse>(
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
-//
-//suspend fun apiUpdateUserDetails(userUpdateRequest: UserUpdateRequest): Pair<Boolean, Any?> {
-//    val url = "update"
-//
-//    val body = mapOf(
-//        "name" to userUpdateRequest.name,
-//        "surname" to userUpdateRequest.surname,
-//        "birthdate" to userUpdateRequest.birthdate,
-//        "username" to userUpdateRequest.username,
-//        "email" to userUpdateRequest.email,
-//        "password" to userUpdateRequest.password
-//    )
-//
-//    return HttpHelper.putRequestAsync<MessageResponse>(
-//        endpoint = url,
-//        requestData = body,
-//        withAuth = true
-//    )
-//}
-//
-//suspend fun apiUpdateUserImage(imageData: List<Byte>): Pair<Boolean, Any?> {
-//    val endpoint = "update_image"
-//    val request = UpdateUserImageRequest(imageData)
-//
-//    return HttpHelper.putRequestAsync<UpdateUserImageResponse>(
-//        requestData = request,
-//        endpoint = endpoint,
-//        withAuth = true
-//    )
-//}
-//
-//suspend fun apiGetUserReviews(): Pair<Boolean, Any?> {
-//    val endpoint = "reviews"
-//
-//    return HttpHelper.getRequestAsync<List<UserReviewResponses>>(
-//        endpoint = endpoint,
-//        withAuth = true
-//    )
-//}
-//
-//suspend fun apiDeleteUserReview(reviewId: Int): Pair<Boolean, Any?> {
-//    val endpoint = "review/delete/$reviewId"
-//
-//    return HttpHelper.deleteRequestAsync<MessageResponse>(
-//        endpoint = endpoint,
-//        withAuth = true
-//    )
-//}
+
+suspend fun apiGetUserDetails(): ApiResult<UserDetailsResponse> {
+    val url = "details"
+
+    return ApiGenericCalls.getRequestAsync<UserDetailsResponse>(
+        endpoint = url,
+        withAuth = true
+    )
+}
+
+suspend fun apiUpdateUserDetails(userUpdateRequest: UserUpdateRequest): ApiResult<MessageResponse> {
+    val url = "update"
+
+    val body = mapOf(
+        "name" to userUpdateRequest.name,
+        "surname" to userUpdateRequest.surname,
+        "birthdate" to userUpdateRequest.birthdate,
+        "username" to userUpdateRequest.username,
+        "email" to userUpdateRequest.email,
+        "password" to userUpdateRequest.password
+    )
+
+    return ApiGenericCalls.putRequestAsync<MessageResponse>(
+        endpoint = url,
+        requestData = body,
+        withAuth = true
+    )
+}
+
+suspend fun updateUserImageRequest(
+    imageBytes: ByteArray,
+    fileName: String = "profile.jpg"
+): ApiResult<UpdateUserImageResponse> = withContext(Dispatchers.IO) {
+    try {
+        val fullUrl = baseApiUrl + "update_image"
+
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart(
+                "image",
+                fileName,
+                imageBytes.toRequestBody("image/*".toMediaType())
+            )
+            .build()
+
+        val requestBuilder = Request.Builder()
+            .url(fullUrl)
+            .put(requestBody)
+
+        TokenManager.getToken()?.let {
+            requestBuilder.addHeader("Authorization", "Bearer $it")
+        }
+
+        val request = requestBuilder.build()
+        val response = ApiGenericCalls.client.newCall(request).execute()
+        val body = response.body?.string()
+
+        if (response.isSuccessful && body != null) {
+            val result = ApiGenericCalls.gson.fromJson(body, UpdateUserImageResponse::class.java)
+            ApiResult(success = true, data = result)
+        } else {
+            val errorMsg = parseErrorMessage(body)
+            ApiResult(success = false, errorMessage = errorMsg)
+        }
+    } catch (e: Exception) {
+        ApiResult(success = false, errorMessage = "Network error: ${e.message}")
+    }
+}
+
+
+suspend fun apiGetUserReviews(): ApiResult<List<UserReviewResponses>> {
+    val endpoint = "reviews"
+
+    return ApiGenericCalls.getRequestAsync<List<UserReviewResponses>>(
+        endpoint = endpoint,
+        withAuth = true
+    )
+}
+
+suspend fun apiDeleteUserReview(reviewId: Int): ApiResult<MessageResponse> {
+    val endpoint = "review/delete/$reviewId"
+
+    return ApiGenericCalls.deleteRequestAsync<MessageResponse>(
+        endpoint = endpoint,
+        withAuth = true
+    )
+}
 
 suspend fun apiGetAllNotifications(): ApiResult<List<NotificationResponse>> {
     val endpoint = "notifications"
@@ -242,10 +278,10 @@ suspend fun apiGetAllNotifications(): ApiResult<List<NotificationResponse>> {
     )
 }
 
-suspend fun apiReadNotification(notificationId: Int): ApiResult<String> {
+suspend fun apiReadNotification(notificationId: Int): ApiResult<MessageResponse> {
     val endpoint = "notification/read/$notificationId"
 
-    return ApiGenericCalls.postRequestAsync<String>(
+    return ApiGenericCalls.postRequestAsync<MessageResponse>(
         requestData = Unit,
         endpoint = endpoint,
         withAuth = true

@@ -1,7 +1,5 @@
 package com.hitwaves.ui.screens
 
-import android.app.Activity
-import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,18 +19,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.hitwaves.AppActivity
-import com.hitwaves.api.ApiResult
-import com.hitwaves.api.LikedArtistResponse
-import com.hitwaves.api.TokenManager
-import com.hitwaves.api.TokenResponse
 import com.hitwaves.model.Artist
 import com.hitwaves.ui.component.ArtistCard
 import com.hitwaves.ui.component.CustomSnackbar
 import com.hitwaves.ui.component.Title
-import com.hitwaves.ui.component.loadingIndicator
+import com.hitwaves.ui.component.LoadingIndicator
 import com.hitwaves.ui.viewModel.LikesViewModel
-import com.hitwaves.ui.viewModel.LoginViewModel
 import com.hitwaves.ui.theme.*
 
 private fun init() : LikesViewModel {
@@ -118,6 +110,6 @@ fun Likes(navController: NavHostController) {
     CustomSnackbar(snackbarHostState)
 
     if (isLoading) {
-        loadingIndicator()
+        LoadingIndicator()
     }
 }

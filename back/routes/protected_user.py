@@ -1172,7 +1172,7 @@ def protected_user_get_details():
                 name,
                 surname,
                 DATE_FORMAT(birthdate, '%Y-%m-%d') AS birthdate,
-                refunds,
+                ROUND(refunds, 2) AS refunds,
                 image
             FROM user
             WHERE id = %s
@@ -1333,7 +1333,8 @@ def protected_user_get_reviews():
                 r.description AS comment,
                 c.title AS concert_title,
                 DATE_FORMAT(c.date, '%Y-%m-%d') AS concert_date,
-                a.name AS artist_name
+                a.name AS artist_name,
+                a.image AS artist_image
             FROM 
                 review r
             JOIN 
@@ -1352,7 +1353,7 @@ def protected_user_get_reviews():
         
         reviews = cursor.fetchall()
 
-        return jsonify({'reviews': reviews}), 200
+        return jsonify(reviews), 200
 
     except Exception as e:
         return jsonify({'message': f'Server error: {str(e)}'}), 500

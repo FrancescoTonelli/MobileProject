@@ -1,51 +1,54 @@
 package com.hitwaves.ui.screens
 
-import android.app.Activity
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.hitwaves.AppActivity
 import com.hitwaves.R
-import com.hitwaves.api.ApiResult
-import com.hitwaves.api.TokenManager
-import com.hitwaves.api.TokenResponse
+import com.hitwaves.api.UserUpdateRequest
 import com.hitwaves.ui.component.CustomSnackbar
 import com.hitwaves.ui.component.LoginButton
 import com.hitwaves.ui.component.LoginDateField
 import com.hitwaves.ui.component.LoginInputField
 import com.hitwaves.ui.component.LoginPasswordField
-import com.hitwaves.ui.component.SecondaryLoginButton
 import com.hitwaves.ui.component.LoadingIndicator
 import com.hitwaves.ui.theme.*
-import com.hitwaves.ui.viewModel.RegisterViewModel
+import com.hitwaves.ui.viewModel.AccountViewModel
+import kotlinx.coroutines.launch
 
-private fun init() : RegisterViewModel {
-    return RegisterViewModel()
+private fun init() : AccountViewModel {
+    return AccountViewModel()
 }
 
 @Composable
-fun Register(navController: NavHostController) {
+fun AccountUpdate(navController: NavHostController) {
+
     val name = remember { mutableStateOf("") }
     val surname  = remember { mutableStateOf("") }
     val birthdate = remember { mutableStateOf("") }
@@ -54,22 +57,40 @@ fun Register(navController: NavHostController) {
     val password = remember { mutableStateOf("") }
     val confirmPassword = remember { mutableStateOf("") }
 
-    val registerViewModel = remember { init() }
-    val result: ApiResult<TokenResponse> by registerViewModel.registerState
-    val isLoading by registerViewModel.isLoading
+    val accountViewModel = remember { init() }
+    val accountState by accountViewModel.accountState
+    val updateState by accountViewModel.updateState
+    val isLoading by accountViewModel.isLoadingAccount
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(result) {
-        if (result.success && result.data != null) {
-            TokenManager.saveToken(result.data!!.token)
-            val intent = Intent(context, AppActivity::class.java)
-            context.startActivity(intent)
-            (context as? Activity)?.finish()
-        } else if (!result.success && result.errorMessage != null) {
+    LaunchedEffect(Unit) {
+        accountViewModel.getAccount()
+    }
+
+    LaunchedEffect(accountState) {
+        if (accountState.success && accountState.data != null) {
+            name.value = accountState.data!!.name
+            surname.value = accountState.data!!.surname
+            birthdate.value = accountState.data!!.birthdate
+            username.value = accountState.data!!.username
+            email.value = accountState.data!!.email
             password.value = ""
             confirmPassword.value = ""
-            snackbarHostState.showSnackbar(result.errorMessage!!)
+        } else if (!accountState.success && accountState.errorMessage != null) {
+            snackbarHostState.showSnackbar(accountState.errorMessage!!)
+        }
+    }
+
+    LaunchedEffect(updateState) {
+        if (updateState.success && updateState.data != null) {
+            snackbarHostState.showSnackbar("Account updated successfully")
+            accountViewModel.getAccount()
+        } else if (!updateState.success && updateState.errorMessage != null) {
+            password.value = ""
+            confirmPassword.value = ""
+            snackbarHostState.showSnackbar(updateState.errorMessage!!)
         }
     }
 
@@ -81,20 +102,45 @@ fun Register(navController: NavHostController) {
         contentAlignment = Alignment.Center
     ) {
 
-        Icon(
-            imageVector = ImageVector.vectorResource(id = R.drawable.logo),
-            contentDescription = null,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxSize(),
-            tint = Primary.copy(alpha = 0.8f)
-        )
+
 
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
                 .imePadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(top = 4.dp, bottom = 24.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            ImageVector.vectorResource(R.drawable.notification_open),
+                            tint = Secondary,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(30.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Text(
+                        text = "Edit your data",
+                        style = Typography.titleLarge.copy(
+                            fontSize = 24.sp,
+                            color = Secondary,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
+            }
 
             item {
                 LoginInputField(
@@ -154,29 +200,24 @@ fun Register(navController: NavHostController) {
                 Spacer(modifier = Modifier.height(32.dp))
 
                 LoginButton (
-                    textBtn = "Sign up",
+                    textBtn = "Save",
                     onClickAction = {
-                        registerViewModel.handleRegister(
-                            name = name.value,
-                            surname = surname.value,
-                            birthdate = birthdate.value,
-                            username = username.value,
-                            email = email.value,
-                            password = password.value,
-                            confirmPassword = confirmPassword.value
-                        )
-                    }
-                )
-
-                SecondaryLoginButton(
-                    textBtn = "Sign in",
-                    onClickAction = {
-                        navController.navigate("login"){
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
+                        if(password.value != confirmPassword.value) {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar("Passwords do not match")
                             }
-                            launchSingleTop = true
-                            restoreState = true
+                        }
+                        else {
+                            accountViewModel.updateDetails(
+                                UserUpdateRequest(
+                                    name = name.value,
+                                    surname = surname.value,
+                                    birthdate = birthdate.value,
+                                    username = username.value,
+                                    email = email.value,
+                                    password = password.value.ifEmpty { null }
+                                )
+                            )
                         }
                     }
                 )

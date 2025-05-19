@@ -241,31 +241,32 @@ data class LikedArtistResponse(
 //    val rate: Float,
 //    val description: String
 //)
-//
-//data class UserDetailsResponse(
-//    val id: Int,
-//    val username: String,
-//    val email: String,
-//    val name: String,
-//    val surname: String,
-//    val birthdate: String,
-//    val refunds: Double,
-//    val image: String?
-//)
-//
-//data class UpdateUserImageResponse(
-//    val message: String,
-//    @SerializedName("image_path") val imagePath: String
-//)
-//
-//data class UserReviewResponses(
-//    @SerializedName("review_id") val reviewId: Int,
-//    val rating: Int,
-//    val comment: String?,
-//    @SerializedName("concert_title") val concertTitle: String,
-//    @SerializedName("concert_date") val concertDate: String,
-//    @SerializedName("artist_name") val artistName: String
-//)
+
+data class UserDetailsResponse(
+    val id: Int,
+    val username: String,
+    val email: String,
+    val name: String,
+    val surname: String,
+    val birthdate: String,
+    val refunds: Double,
+    val image: String?
+)
+
+data class UpdateUserImageResponse(
+    val message: String,
+    @SerializedName("image_path") val imagePath: String
+)
+
+data class UserReviewResponses(
+    @SerializedName("review_id") val reviewId: Int,
+    @SerializedName("rating") val rating: Int,
+    @SerializedName("comment") val comment: String? = null,
+    @SerializedName("concert_title") val concertTitle: String,
+    @SerializedName("concert_date") val concertDate: String,
+    @SerializedName("artist_name") val artistName: String,
+    @SerializedName("artist_image") val artistImage: String? = null
+)
 
 data class NotificationResponse(
     val id: Int,

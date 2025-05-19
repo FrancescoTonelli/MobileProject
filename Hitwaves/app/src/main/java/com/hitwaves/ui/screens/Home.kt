@@ -14,7 +14,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,7 +25,6 @@ import com.hitwaves.ui.component.Title
 import com.hitwaves.model.Artist
 import com.hitwaves.model.EventForCards
 import com.hitwaves.ui.component.EventCard
-import com.hitwaves.ui.component.loadingIndicator
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.viewModel.HomeViewModel
 import androidx.compose.foundation.lazy.items
@@ -49,7 +47,6 @@ private fun init(): HomeViewModel{
 
 @Composable
 fun Home(navController: NavHostController) {
-    val eventList = getSampleEvents()
 
     var query by rememberSaveable { mutableStateOf("") }
     val onQueryChange: (String) -> Unit = { query = it }
@@ -64,7 +61,6 @@ fun Home(navController: NavHostController) {
     var popularShow : List<EventForCards> by remember { mutableStateOf(emptyList()) }
 
     val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         homeViewModel.getNearest(0.0, 0.0)

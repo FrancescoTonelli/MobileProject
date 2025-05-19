@@ -39,7 +39,8 @@ fun ButtonWithIcons(
         modifier = Modifier.padding(vertical = 8.dp)
     ) {
         Row(
-            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.height(30.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             startIcon?.let {
@@ -57,7 +58,7 @@ fun ButtonWithIcons(
                     fontWeight = FontWeight.Normal,
                     fontSize = 16.sp
                 ),
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 10.dp)
             )
 
             endIcon?.let {

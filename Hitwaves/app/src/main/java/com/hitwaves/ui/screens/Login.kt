@@ -25,10 +25,9 @@ import com.hitwaves.ui.component.LoginButton
 import com.hitwaves.ui.component.LoginInputField
 import com.hitwaves.ui.component.LoginPasswordField
 import com.hitwaves.ui.component.SecondaryLoginButton
-import com.hitwaves.ui.component.loadingIndicator
+import com.hitwaves.ui.component.LoadingIndicator
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.viewModel.LoginViewModel
-import kotlinx.coroutines.launch
 
 private fun init() : LoginViewModel {
     return LoginViewModel()
@@ -126,7 +125,7 @@ fun Login(navController: NavHostController) {
     CustomSnackbar(snackbarHostState)
 
     if (isLoading) {
-        loadingIndicator()
+        LoadingIndicator()
     }
 
 }
