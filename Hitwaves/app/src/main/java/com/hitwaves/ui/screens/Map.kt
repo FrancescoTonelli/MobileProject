@@ -21,26 +21,10 @@ import androidx.navigation.NavController
 import com.hitwaves.R
 import com.hitwaves.utils.LocationService
 import com.mapbox.geojson.Point
-import com.mapbox.maps.CameraOptions
-import com.mapbox.maps.ImageHolder
-import com.mapbox.maps.Style
-import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.rememberIconImage
-import com.mapbox.maps.extension.style.expressions.generated.Expression.Companion.image
-import com.mapbox.maps.extension.style.image.image
-import com.mapbox.maps.extension.style.layers.properties.generated.IconAnchor
-import com.mapbox.maps.extension.style.style
-import com.mapbox.maps.plugin.LocationPuck2D
-import com.mapbox.maps.plugin.locationcomponent.location
-import kotlinx.coroutines.launch
-import com.mapbox.maps.extension.style.image.image
-import com.mapbox.maps.extension.style.layers.generated.symbolLayer
-import com.mapbox.maps.extension.style.sources.generated.geoJsonSource
-import com.mapbox.maps.extension.style.style
-
 
 @Composable
 fun ConcertMap(navController: NavController){

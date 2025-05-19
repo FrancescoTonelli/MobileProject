@@ -228,7 +228,18 @@ fun Home(navController: NavHostController) {
 
 
 fun getSampleEvents(): List<EventForCards> {
-    return listOf()
+    return listOf(
+        EventForCards(
+            contentId = 0,
+            isTour = false,
+            title = "Live@1984",
+            backgroundImage = "https://imgs.search.brave.com/KHtTeWS6X-fASJer5nDjtHqs2FbqcUsXQLmib1PHIDM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4y/LmFsYnVtb2Z0aGV5/ZWFyLm9yZy8zNzV4/MC9hbGJ1bS8yMDEz/OTUtMTk4NC5qcGc",
+            artistName = "Salmo",
+            artistImage = "https://imgs.search.brave.com/thO1WdUflttR7I5iep_ljBahOoFBh16ffn2hH4N3EPs/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pMS5z/bmRjZG4uY29tL2Fy/dHdvcmtzLXYxTjZu/dGNHT1c1bXdYTTEt/Z2tRc3pRLXQ1MDB4/NTAwLmpwZw",
+            description = "Unipol, Bologna",
+            date = null
+        )
+    )
 }
 
 fun getSampleArtist(): List<Artist>{

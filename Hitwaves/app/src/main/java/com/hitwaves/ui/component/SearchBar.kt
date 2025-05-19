@@ -23,9 +23,12 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SearchBarDefaults.InputField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +42,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -47,6 +51,12 @@ import com.hitwaves.R
 import com.hitwaves.model.Artist
 import com.hitwaves.model.EventForCards
 import com.hitwaves.ui.theme.*
+import com.hitwaves.ui.viewModel.FilterViewModel
+import okhttp3.internal.notify
+
+private fun init(): FilterViewModel{
+    return FilterViewModel()
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,57 +69,65 @@ fun SearchWave(
 ){
     var expanded by rememberSaveable { mutableStateOf(false) }
 
-    val filteredArtists = remember(query, searchResultsArtists) {
-        searchResultsArtists.filter { it.artistName.contains(query, ignoreCase = true) }
+//    val filteredArtists = remember(query, searchResultsArtists) {
+//        searchResultsArtists.filter { it.artistName.contains(query, ignoreCase = true) }
+//    }
+//
+//    val filteredEvents = remember(query, searchResultsEventForCards) {
+//        searchResultsEventForCards.filter { it.title.contains(query, ignoreCase = true) ||
+//                it.description.contains(query, ignoreCase = true) ||
+//                it.artistName.contains(query, ignoreCase = true)}
+//    }
+
+    val filterViewModel = remember { init() }
+
+    LaunchedEffect(Unit) {
+
     }
 
-    val filteredEvents = remember(query, searchResultsEventForCards) {
-        searchResultsEventForCards.filter { it.title.contains(query, ignoreCase = true) }
-    }
-
-    SearchBar(
-        inputField = {
-            SearchBarDefaults.InputField(
-                query = query,
-                onQueryChange = {
-                    onQueryChange(it)
-                    expanded = it.isNotBlank()
-                },
-                onSearch = { expanded = false },
-                leadingIcon = {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.search),
-                        tint = Secondary,
-                        contentDescription = null
-                    )
-                },
-                placeholder = {
-                    Text(
-                        text = "Search your wave...",
-                        color = Secondary.copy(alpha = 0.5f)
-                    )
-                },
-                expanded = expanded,
-                onExpandedChange = { expanded = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, Secondary, CircleShape),
-                colors = TextFieldDefaults.colors(BgDark)
-            )
-        },
-        expanded = expanded,
-        onExpandedChange = { expanded = it },
-        modifier = Modifier
-            .width(rememberScreenDimensions().screenWidth * 0.9f)
-            .border(1.dp, Secondary, RectangleShape),
-        colors = SearchBarDefaults.colors(
-            containerColor = BgDark,
-            dividerColor = Color.Transparent,
-            inputFieldColors = TextFieldDefaults.colors(Secondary.copy(alpha = 0.5f)),
-        )
-
+    Column (
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if(expanded){
+        InputField(
+            query = query,
+            onQueryChange = {onQueryChange(it)},
+            onSearch = { expanded = false },
+            leadingIcon = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.search),
+                    tint = Secondary,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(20.dp)
+                )
+            },
+            placeholder = {
+                Text(
+                    text = "Search your wave...",
+                    style = Typography.bodyLarge.copy(
+                        fontSize = 16.sp,
+                        color = Secondary.copy(alpha = 0.5f),
+                        fontWeight = FontWeight.Normal
+                    )
+                )
+            },
+            expanded = expanded,
+            onExpandedChange = { expanded = it },
+            modifier = Modifier
+                .width(rememberScreenDimensions().screenWidth*0.9f)
+                .padding(top = 16.dp)
+                .border(1.dp, Secondary, CircleShape),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = BgDark,
+                unfocusedContainerColor = BgDark,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                cursorColor = Secondary,
+                focusedTextColor = Secondary,
+                unfocusedTextColor = Secondary
+            )
+        )
+        if (expanded) {
             ShowArtistList(filteredArtists, navController)
 
             HorizontalDivider(
@@ -119,13 +137,12 @@ fun SearchWave(
                     .padding(16.dp),
                 thickness = 1.dp,
                 color = Secondary.copy(alpha = 0.5f),
-
-            )
+                )
             ShowEventList(filteredEvents, navController)
         }
-
     }
 }
+
 
 
 @Composable
