@@ -40,7 +40,7 @@ data class ArtistResponse(
     @SerializedName("artist_name") val name: String,
     @SerializedName("artist_image") val image: String?,
     @SerializedName("likes_count") val likesCount: Int,
-    @SerializedName("average_rating") val averageRating: Double
+    @SerializedName("average_rating") val averageRating: Float
 )
 
 data class ConcertNoTourResponse(

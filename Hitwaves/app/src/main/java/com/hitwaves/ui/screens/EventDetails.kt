@@ -85,12 +85,14 @@ fun EventDetails(eventForCards: EventForCards, navController: NavController){
                     modifier = Modifier
                         .background(FgDark)
                 ){
-                    Text(
-                        text = eventForCards.description,
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
+                    eventForCards.description?.let {
+                        Text(
+                            text = it,
+                            color = Color.White,
+                            fontSize = 12.sp,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                    }
                 }
             }
             GoBack(navController)
@@ -129,7 +131,7 @@ fun EventDetails(eventForCards: EventForCards, navController: NavController){
 
                 item {
                     Column {
-                        InformationRow("Place", eventForCards.description)
+                        eventForCards.description?.let { InformationRow("Place", it) }
 
                         // ecc ecc
                     }

@@ -148,12 +148,17 @@ fun ShowDescription(event: EventForCards){
             modifier = Modifier
                 .background(FgDark)
         ){
-            Text(
-                text = event.description,
-                color = Color.White,
-                fontSize = 12.sp,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
+            event.description?.let {
+                Text(
+                    text = it,
+                    style = Typography.bodyLarge.copy(
+                        fontSize = 12.sp,
+                        color = Secondary,
+                        fontWeight = FontWeight.Normal
+                    ),
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
         }
 
     }

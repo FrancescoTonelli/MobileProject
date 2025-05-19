@@ -118,8 +118,6 @@ fun Home(navController: NavHostController) {
         SearchWave(
             query = query,
             onQueryChange = onQueryChange,
-            searchResultsArtists = getSampleArtist(),
-            searchResultsEventForCards = getSampleEvents(),
             navController = navController
         )
 
@@ -206,9 +204,6 @@ fun Home(navController: NavHostController) {
     }
 }
 
-
-
-
 fun getSampleEvents(): List<EventForCards> {
     return listOf(
         EventForCards(
@@ -227,4 +222,3 @@ fun getSampleEvents(): List<EventForCards> {
 fun getSampleArtist(): List<Artist>{
     return listOf()
 }
-
