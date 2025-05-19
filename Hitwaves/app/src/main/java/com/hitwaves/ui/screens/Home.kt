@@ -59,6 +59,7 @@ fun Home(navController: NavHostController) {
     val popularEvents by homeViewModel.popularState
     val isPopularLoading by homeViewModel.isLoadingPopular
 
+
     var nearestShow : List<EventForCards> by remember { mutableStateOf(emptyList()) }
     var popularShow : List<EventForCards> by remember { mutableStateOf(emptyList()) }
 

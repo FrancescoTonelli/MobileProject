@@ -35,24 +35,24 @@ data class PopularArtistEvent(
 )
 
 
-//data class ArtistResponse(
-//    @SerializedName("artist_id") val id: Int,
-//    @SerializedName("artist_name") val name: String,
-//    @SerializedName("artist_image") val image: String?,
-//    @SerializedName("likes_count") val likesCount: Int,
-//    @SerializedName("average_rating") val averageRating: Double
-//)
-//
-//data class ConcertNoTourResponse(
-//    @SerializedName("concert_id") val id: Int,
-//    @SerializedName("concert_title") val title: String,
-//    @SerializedName("concert_image") val image: String?,
-//    @SerializedName("concert_date") val date: String,
-//    @SerializedName("place_name") val placeName: String,
-//    @SerializedName("artist_name") val artistName: String,
-//    @SerializedName("artist_image") val artistImage: String?
-//)
-//
+data class ArtistResponse(
+    @SerializedName("artist_id") val id: Int,
+    @SerializedName("artist_name") val name: String,
+    @SerializedName("artist_image") val image: String?,
+    @SerializedName("likes_count") val likesCount: Int,
+    @SerializedName("average_rating") val averageRating: Double
+)
+
+data class ConcertNoTourResponse(
+    @SerializedName("concert_id") val id: Int,
+    @SerializedName("concert_title") val title: String,
+    @SerializedName("concert_image") val image: String?,
+    @SerializedName("concert_date") val date: String,
+    @SerializedName("place_name") val placeName: String,
+    @SerializedName("artist_name") val artistName: String,
+    @SerializedName("artist_image") val artistImage: String?
+)
+
 //data class MapConcertResponse(
 //    @SerializedName("concert_id") val concertId: Int,
 //    @SerializedName("artist_image") val artistImage: String?,
@@ -60,16 +60,16 @@ data class PopularArtistEvent(
 //    @SerializedName("place_longitude") val longitude: Double
 //)
 //
-//data class TourResponse(
-//    @SerializedName("tour_id") val tourId: Int,
-//    @SerializedName("tour_title") val tourTitle: String,
-//    @SerializedName("tour_image") val tourImage: String?,
-//    @SerializedName("artist_name") val artistName: String,
-//    @SerializedName("artist_image") val artistImage: String?,
-//    @SerializedName("concert_count") val concertCount: Int,
-//    @SerializedName("upcoming_concerts") val upcomingConcerts: Int
-//)
-//
+data class TourResponse(
+    @SerializedName("tour_id") val tourId: Int,
+    @SerializedName("tour_title") val tourTitle: String,
+    @SerializedName("tour_image") val tourImage: String?,
+    @SerializedName("artist_name") val artistName: String,
+    @SerializedName("artist_image") val artistImage: String?,
+    @SerializedName("concert_count") val concertCount: Int,
+    @SerializedName("upcoming_concerts") val upcomingConcerts: Int
+)
+
 //data class TourArtistResponse(
 //    @SerializedName("artist_id") val artistId: Int,
 //    @SerializedName("artist_name") val artistName: String,
