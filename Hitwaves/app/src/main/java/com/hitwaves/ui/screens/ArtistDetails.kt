@@ -36,8 +36,8 @@ fun initLikes() : LikesViewModel {
 @Composable
 fun ArtistDetails(artist: Artist, navController: NavController){
     val eventList = getSampleEvents()
-    val likesViewModel = remember { LikesViewModel() }
-    BackToHome(navController)
+
+    GoBack(navController)
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally
@@ -73,13 +73,13 @@ fun ArtistDetails(artist: Artist, navController: NavController){
 }
 
 @Composable
-fun BackToHome(navController: NavController){
+fun GoBack(navController: NavController){
     Box(
         modifier = Modifier
             .size(35.dp)
             .clip(CircleShape)
             .background(Primary)
-            .clickable { navController.navigateUp() },
+            .clickable { navController.popBackStack() },
         contentAlignment = Alignment.Center
     ) {
         Icon(

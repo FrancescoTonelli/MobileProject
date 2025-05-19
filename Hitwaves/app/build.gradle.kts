@@ -61,6 +61,12 @@ dependencies {
     implementation(libs.accompanist.navigation.animation)
     implementation(libs.play.services.location)
 
+    implementation(libs.android.v11120)
+    implementation(libs.maps.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.play.services.location)
+    implementation(libs.kotlinx.coroutines.play.services)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

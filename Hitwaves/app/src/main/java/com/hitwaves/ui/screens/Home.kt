@@ -9,11 +9,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -136,7 +138,7 @@ fun Home(navController: NavHostController) {
                     startIcon = ImageVector.vectorResource(R.drawable.map),
                     textBtn = "Open map",
                     endIcon = ImageVector.vectorResource(R.drawable.arrow),
-                    onClickAction = { goToMap(navController) }
+                    onClickAction = { onClick(navController)}
                 )
             }
 

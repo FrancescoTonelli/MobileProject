@@ -93,7 +93,7 @@ fun EventDetails(eventForCards: EventForCards, navController: NavController){
                     )
                 }
             }
-            BackToHome(navController)
+            GoBack(navController)
         }
 
         LazyColumn (
