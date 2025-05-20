@@ -2,49 +2,103 @@ package com.hitwaves.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.hitwaves.R
+import com.hitwaves.model.Artist
 import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.component.ShowArtistList
 import com.hitwaves.ui.component.Title
 import com.hitwaves.model.EventForCards
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.theme.rememberScreenDimensions
+import com.hitwaves.ui.viewModel.TourViewModel
+
+private fun init(): TourViewModel {
+    return TourViewModel()
+}
 
 @Composable
-fun EventDetails(eventForCards: EventForCards, navController: NavController){
-    val artistList = getSampleArtist()
-    val eventList = getSampleEvents()
+fun TourDetails(eventForCards: EventForCards, navController: NavController){
+
+    val tourViewModel = remember { init() }
+    val tourArtist by tourViewModel.tourArtistState
+    val tourConcert by tourViewModel.tourConcertState
+
+    var tourArtistShow : List<Artist> by remember { mutableStateOf(emptyList()) }
+    var tourConcertShow : List<EventForCards> by remember { mutableStateOf(emptyList()) }
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        tourViewModel.getTourArtist(eventForCards.contentId)
+        tourViewModel.getTourConcert(eventForCards.contentId)
+    }
+
+    LaunchedEffect(tourArtist) {
+        if (tourArtist.success && tourArtist.data != null) {
+            tourArtistShow = tourArtist.data!!.artists.map { artist ->
+                Artist(
+                    artistId = artist.artistId,
+                    artistName = artist.artistName,
+                    artistImageUrl = artist.artistImage,
+                    likesCount = null,
+                    averageRating = null
+                )
+            }
+        } else if (!tourArtist.success && tourArtist.errorMessage != null) {
+            snackbarHostState.showSnackbar(tourArtist.errorMessage!!)
+        }
+    }
+
+    LaunchedEffect(tourConcert, tourArtist) {
+        if (
+            tourConcert.success && tourConcert.data != null &&
+            tourArtist.success && tourArtist.data != null &&
+            tourArtist.data!!.artists.isNotEmpty()
+        ) {
+            val firstArtist = tourArtist.data!!.artists.first()
+
+            tourConcertShow = tourConcert.data!!.concerts.map { event ->
+                EventForCards(
+                    contentId = event.concertId,
+                    isTour = false,
+                    backgroundImage = event.concertImage.orEmpty(),
+                    title = event.concertTitle,
+                    artistName = firstArtist.artistName,
+                    artistImage = firstArtist.artistImage.orEmpty(),
+                    description = event.placeName,
+                    date = event.concertDate
+                )
+            }
+        } else if (!tourConcert.success && tourConcert.errorMessage != null) {
+            snackbarHostState.showSnackbar(tourConcert.errorMessage!!)
+        }
+    }
+
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally
@@ -108,102 +162,18 @@ fun EventDetails(eventForCards: EventForCards, navController: NavController){
             item {
                 Title("Artists")
             }
-
             item {
-                ShowArtistList(artistList, navController)
+                ShowArtistList(tourArtistShow, navController)
+            }
+            item {
+                Title("Shows")
             }
 
-
-            if(eventForCards.isTour){
-                item {
-                    Title("Shows")
+            if(tourConcertShow.isNotEmpty()){
+                items(tourConcertShow) { event ->
+                    EventCard(event, navController)
                 }
-
-                if(eventList.isNotEmpty()){
-                    items(eventList) { event ->
-                        EventCard(event, navController)
-                    }
-                }
-            }else{
-                item {
-                    Title("Details")
-                }
-
-                item {
-                    Column {
-                        eventForCards.description?.let { InformationRow("Place", it) }
-
-                        // ecc ecc
-                    }
-                }
-            }
-
-            item {
-                Rating()
             }
         }
-
-
-    }
-}
-
-@Composable
-fun InformationRow(title: String, description: String){
-    Row (
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = title,
-            color = Secondary,
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Text(
-            text = description,
-            color = Secondary,
-            fontSize = 18.sp
-        )
-    }
-}
-
-@Composable
-fun Rating(){
-    var isSelected by remember { mutableIntStateOf(0) }
-
-    Row {
-        Text(
-            text = "Rating",
-            color = Secondary,
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp
-        )
-
-        Spacer(Modifier.width(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            repeat(5) { index ->
-                Icon(
-                    imageVector = if (index < isSelected)
-                        ImageVector.vectorResource(R.drawable.star_fill)
-                    else
-                        ImageVector.vectorResource(R.drawable.star_line),
-                    contentDescription = "Star",
-                    tint = Secondary,
-                    modifier = Modifier
-                        .size(23.dp)
-                        .clickable {
-                            isSelected = index + 1
-                        }
-                )
-            }
-        }
-
     }
 }

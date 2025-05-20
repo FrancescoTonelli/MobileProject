@@ -45,7 +45,6 @@ import android.provider.Settings
 import androidx.compose.runtime.remember
 import com.hitwaves.utils.LocationService
 
-
 class AppActivity : ComponentActivity(), PermissionsListener {
     //private lateinit var permissionsManager: PermissionsManager
     private lateinit var locationService: LocationService

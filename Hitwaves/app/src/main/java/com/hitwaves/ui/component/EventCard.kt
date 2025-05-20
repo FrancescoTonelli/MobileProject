@@ -48,14 +48,20 @@ fun EventCard(event: EventForCards, navController: NavController){
                 .height(200.dp)
                 .clickable {
                     navController.currentBackStackEntry?.savedStateHandle?.set("event", event)
-                    navController.navigate("eventDetails"){
+
+                    val destination = when {
+                    //event.isTicket -> "ticketDetails"
+                    event.isTour -> "tourDetails"
+                    else -> "concertDetails"
+                }
+
+                    navController.navigate(destination) {
                         popUpTo(navController.graph.startDestinationId) {
                             saveState = true
                         }
                         launchSingleTop = true
                         restoreState = true
                     }
-
                 },
             shape = RoundedCornerShape(15.dp),
             border = BorderStroke(3.dp, FgDark),
