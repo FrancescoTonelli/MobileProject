@@ -1,5 +1,6 @@
 package com.hitwaves.ui.component
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -53,6 +54,7 @@ import com.hitwaves.model.EventForCards
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.viewModel.FilterViewModel
 import okhttp3.internal.notify
+import androidx.compose.material3.SnackbarHostState
 
 private fun init(): FilterViewModel{
     return FilterViewModel()
@@ -63,26 +65,94 @@ private fun init(): FilterViewModel{
 fun SearchWave(
     query: String,
     onQueryChange: (String) -> Unit,
-    searchResultsArtists: List<Artist>,
-    searchResultsEventForCards: List<EventForCards>,
     navController: NavController
 ){
+    val filterViewModel = remember { init() }
     var expanded by rememberSaveable { mutableStateOf(false) }
 
-//    val filteredArtists = remember(query, searchResultsArtists) {
-//        searchResultsArtists.filter { it.artistName.contains(query, ignoreCase = true) }
-//    }
-//
-//    val filteredEvents = remember(query, searchResultsEventForCards) {
-//        searchResultsEventForCards.filter { it.title.contains(query, ignoreCase = true) ||
-//                it.description.contains(query, ignoreCase = true) ||
-//                it.artistName.contains(query, ignoreCase = true)}
-//    }
+    val isLoading by filterViewModel.isLoadingFilter
+    val allArtist by filterViewModel.allArtistState
+    val allConcert by filterViewModel.allConcertState
+    val allTour by filterViewModel.allTourState
 
-    val filterViewModel = remember { init() }
+    var allArtistSearch : List<Artist> by remember { mutableStateOf(emptyList()) }
+    var allConcertSearch : List<EventForCards> by remember { mutableStateOf(emptyList()) }
+    var allTourSearch : List<EventForCards> by remember { mutableStateOf(emptyList()) }
+
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
+        filterViewModel.getAllArtist()
+        filterViewModel.getAllEvent()
+        filterViewModel.getAllTour()
+    }
 
+    LaunchedEffect(allArtist) {
+        if (allArtist.success && allArtist.data != null) {
+            allArtistSearch = allArtist.data!!.map { artist ->
+                Artist(
+                    artistId = artist.id,
+                    artistName = artist.name,
+                    artistImageUrl = artist.image,
+                    likesCount = artist.likesCount,
+                    averageRating = artist.averageRating
+                )
+            }
+        } else if (!allArtist.success && allArtist.errorMessage != null) {
+            snackbarHostState.showSnackbar(allArtist.errorMessage!!)
+        }
+    }
+
+    LaunchedEffect(allConcert) {
+        if (allConcert.success && allConcert.data != null) {
+            allConcertSearch = allConcert.data!!.map { event ->
+                EventForCards(
+                    contentId = event.id,
+                    isTour = false,
+                    backgroundImage = event.image.orEmpty(),
+                    title = event.title,
+                    artistName = event.artistName,
+                    artistImage = event.artistImage.orEmpty(),
+                    description = event.placeName,
+                    date = event.date
+                )
+            }
+        } else if (!allConcert.success && allConcert.errorMessage != null) {
+            snackbarHostState.showSnackbar(allConcert.errorMessage!!)
+        }
+    }
+
+    LaunchedEffect(allTour) {
+        if (allTour.success && allTour.data != null) {
+            allTourSearch = allTour.data!!.map { event ->
+                EventForCards(
+                    contentId = event.tourId,
+                    isTour = true,
+                    backgroundImage = event.tourImage.orEmpty(),
+                    title = event.tourTitle,
+                    artistName = event.artistName,
+                    artistImage = event.artistImage.orEmpty(),
+                    description = null,
+                    date = null
+                )
+            }
+        } else if (!allTour.success && allTour.errorMessage != null) {
+            snackbarHostState.showSnackbar(allTour.errorMessage!!)
+        }
+    }
+
+
+
+    val filteredArtists = remember(query, allArtistSearch) {
+        allArtistSearch.filter { it.artistName.contains(query, ignoreCase = true) }
+    }
+
+    val allEventsSearch = allConcertSearch + allTourSearch
+
+    val filteredEvents = remember(query, allEventsSearch) {
+        allEventsSearch.filter { it.title.contains(query, ignoreCase = true) ||
+                (it.description ?: "").contains(query, ignoreCase = true) ||
+                it.artistName.contains(query, ignoreCase = true)}
     }
 
     Column (
@@ -145,42 +215,7 @@ fun SearchWave(
 
 
 
-@Composable
-fun MinimalArtist(
-    artist: Artist,
-    isSelected: Boolean,
-    onClick: () -> Unit
-){
-    Column(
-        modifier = Modifier
-            .clickable { onClick() }
-            .background(if (isSelected) Primary.copy(alpha = 0.2f) else Color.Transparent),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ){
-        Box(
-            modifier = Modifier
-                .padding(4.dp)
-                .size(50.dp)
-                .clip(CircleShape)
-        ) {
-            Image(
-                painter = rememberAsyncImagePainter(artist.artistImageUrl),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxSize()
 
-            )
-        }
-        Text(
-            text = artist.artistName,
-            fontSize = 16.sp,
-            color = Secondary,
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
-    }
-}
 
 @Composable
 fun ShowArtistList(artistList: List<Artist>, navController: NavController) {

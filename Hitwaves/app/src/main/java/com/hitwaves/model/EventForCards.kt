@@ -11,6 +11,6 @@ data class EventForCards(
     val backgroundImage: String,
     val artistName: String,
     val artistImage: String,
-    val description: String,
+    val description: String?,
     val date: String?
 ) : Parcelable

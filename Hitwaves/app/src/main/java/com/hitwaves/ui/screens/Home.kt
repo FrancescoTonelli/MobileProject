@@ -60,6 +60,7 @@ fun Home(navController: NavHostController) {
     val popularEvents by homeViewModel.popularState
     val isPopularLoading by homeViewModel.isLoadingPopular
 
+
     var nearestShow : List<EventForCards> by remember { mutableStateOf(emptyList()) }
     var popularShow : List<EventForCards> by remember { mutableStateOf(emptyList()) }
 
@@ -115,20 +116,10 @@ fun Home(navController: NavHostController) {
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-//        SearchWave(
-//            query = query,
-//            onQueryChange = onQueryChange,
-//            searchResultsArtists = getSampleArtist(),
-//            searchResultsEventForCards = getSampleEvents(),
-//            navController = navController
-//        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        WaveSearcher(
-            value = query,
-            onValueChange = { query = it },
-            placeholder = "Search your wave..."
+        SearchWave(
+            query = query,
+            onQueryChange = onQueryChange,
+            navController = navController
         )
 
 
@@ -224,9 +215,6 @@ fun Home(navController: NavHostController) {
     }
 }
 
-
-
-
 fun getSampleEvents(): List<EventForCards> {
     return listOf(
         EventForCards(
@@ -245,4 +233,3 @@ fun getSampleEvents(): List<EventForCards> {
 fun getSampleArtist(): List<Artist>{
     return listOf()
 }
-

@@ -70,24 +70,24 @@ suspend fun apiGetPopularArtistsEvents(): ApiResult<List<PopularArtistEvent>> {
     )
 }
 
-//suspend fun apiGetArtists(): Pair<Boolean, Any?> {
-//    val url = "artists"
-//    return HttpHelper.postRequestAsync<List<ArtistResponse>>(
-//        requestData = Unit,
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
-//
-//suspend fun apiGetConcertsNoTour(): Pair<Boolean, Any?> {
-//    val url = "concerts_no_tour"
-//    return HttpHelper.postRequestAsync<List<ConcertNoTourResponse>>(
-//        requestData = Unit,
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
-//
+suspend fun apiGetArtists(): ApiResult<List<ArtistResponse>> {
+    val url = "artists"
+    return ApiGenericCalls.postRequestAsync<List<ArtistResponse>>(
+        requestData = Unit,
+        endpoint = url,
+        withAuth = true
+    )
+}
+
+suspend fun apiGetConcertsNoTour(): ApiResult<List<ConcertNoTourResponse>> {
+    val url = "concerts_no_tour"
+    return ApiGenericCalls.postRequestAsync<List<ConcertNoTourResponse>>(
+        requestData = Unit,
+        endpoint = url,
+        withAuth = true
+    )
+}
+
 //suspend fun apiGetMapConcerts(): Pair<Boolean, Any?> {
 //    val url = "map_concerts"
 //    return HttpHelper.postRequestAsync<List<MapConcertResponse>>(
@@ -96,15 +96,15 @@ suspend fun apiGetPopularArtistsEvents(): ApiResult<List<PopularArtistEvent>> {
 //        withAuth = true
 //    )
 //}
-//
-//suspend fun apiGetTours(): Pair<Boolean, Any?> {
-//    val url = "tours"
-//    return HttpHelper.postRequestAsync<List<TourResponse>>(
-//        requestData = Unit,
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
+
+suspend fun apiGetTours(): ApiResult<List<TourResponse>> {
+    val url = "tours"
+    return ApiGenericCalls.postRequestAsync<List<TourResponse>>(
+        requestData = Unit,
+        endpoint = url,
+        withAuth = true
+    )
+}
 //
 //suspend fun apiGetTourDetails(tourId: Int): Pair<Boolean, Any?> {
 //    val url = "tour/$tourId"
