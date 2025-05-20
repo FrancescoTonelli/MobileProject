@@ -361,7 +361,7 @@ def protected_user_popular_artists_events():
                     'image': tour['image'],
                     'artistName': artist_name,
                     'artistImage': artist_image,
-                    'placeName': concert['place_name'],
+                    'placeName': None,
                     'date': None,
                     'concertCount': tour['concert_count']
                 })

@@ -81,7 +81,8 @@ fun Home(navController: NavHostController) {
                     artistName = event.artist,
                     artistImage = event.artistImage.orEmpty(),
                     description = "${event.placeName} - ${event.distance}km",
-                    date = event.date
+                    date = event.date,
+                    placeName = event.placeName
                 )
             }
 
@@ -101,7 +102,8 @@ fun Home(navController: NavHostController) {
                     artistName = event.artistName,
                     artistImage = event.artistImage,
                     description = if(event.isTour) "Tour - ${event.concertCount} shows" else event.placeName,
-                    date = if(event.isTour) null else event.date
+                    date = if(event.isTour) null else event.date,
+                    placeName = event.placeName
                 )
             }
 
@@ -131,84 +133,77 @@ fun Home(navController: NavHostController) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (query != "") {
-                item {
-                    Title(title = "Stai cercando: $query")
-                }
+            item {
+                Title(title = "Near you")
             }
-            else {
-                item {
-                    Title(title = "Near you")
+
+            item {
+                ButtonWithIcons(
+                    startIcon = ImageVector.vectorResource(R.drawable.map),
+                    textBtn = "Open map",
+                    endIcon = ImageVector.vectorResource(R.drawable.arrow),
+                    onClickAction = { goToMap(navController)}
+                )
+            }
+
+
+            if(isNearestLoading) {
+                item{
+                    CircularProgressIndicator(color = Color.White)
                 }
-
-                item {
-                    ButtonWithIcons(
-                        startIcon = ImageVector.vectorResource(R.drawable.map),
-                        textBtn = "Open map",
-                        endIcon = ImageVector.vectorResource(R.drawable.arrow),
-                        onClickAction = { goToMap(navController)}
-                    )
-                }
-
-
-                if(isNearestLoading) {
-                    item{
-                        CircularProgressIndicator(color = Color.White)
-                    }
-                } else {
-                    if (nearestShow.isEmpty()) {
-                        item {
-                            Text(
-                                text = "No near events found",
-                                modifier = Modifier.padding(16.dp),
-                                style = Typography.bodyLarge.copy(
-                                    fontSize = 14.sp,
-                                    color = Secondary
-                                )
+            } else {
+                if (nearestShow.isEmpty()) {
+                    item {
+                        Text(
+                            text = "No near events found",
+                            modifier = Modifier.padding(16.dp),
+                            style = Typography.bodyLarge.copy(
+                                fontSize = 14.sp,
+                                color = Secondary
                             )
-                        }
+                        )
                     }
-                    else {
-                        items(nearestShow) { event ->
-                            EventCard(event = event, navController)
-                        }
+                }
+                else {
+                    items(nearestShow) { event ->
+                        EventCard(event = event, navController)
                     }
-
                 }
 
-                item {
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                Title(title = "Top Artists")
+            }
+
+            if(isPopularLoading) {
+                item{
+                    CircularProgressIndicator(color = Color.White)
                     Spacer(modifier = Modifier.height(16.dp))
-                    Title(title = "Top Artists")
                 }
-
-                if(isPopularLoading) {
-                    item{
-                        CircularProgressIndicator(color = Color.White)
+            } else {
+                if (popularShow.isEmpty()) {
+                    item {
+                        Text(
+                            text = "No popular events found",
+                            modifier = Modifier.padding(16.dp),
+                            style = Typography.bodyLarge.copy(
+                                fontSize = 14.sp,
+                                color = Secondary
+                            )
+                        )
+                    }
+                }
+                else {
+                    items(popularShow) { event ->
+                        EventCard(event = event, navController)
+                    }
+                    item {
                         Spacer(modifier = Modifier.height(16.dp))
                     }
-                } else {
-                    if (popularShow.isEmpty()) {
-                        item {
-                            Text(
-                                text = "No popular events found",
-                                modifier = Modifier.padding(16.dp),
-                                style = Typography.bodyLarge.copy(
-                                    fontSize = 14.sp,
-                                    color = Secondary
-                                )
-                            )
-                        }
-                    }
-                    else {
-                        items(popularShow) { event ->
-                            EventCard(event = event, navController)
-                        }
-                        item {
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
-                    }
-
                 }
+
             }
         }
     }
@@ -224,7 +219,8 @@ fun getSampleEvents(): List<EventForCards> {
             artistName = "Salmo",
             artistImage = "https://imgs.search.brave.com/thO1WdUflttR7I5iep_ljBahOoFBh16ffn2hH4N3EPs/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pMS5z/bmRjZG4uY29tL2Fy/dHdvcmtzLXYxTjZu/dGNHT1c1bXdYTTEt/Z2tRc3pRLXQ1MDB4/NTAwLmpwZw",
             description = "Unipol, Bologna",
-            date = null
+            date = null,
+            placeName = "Unipol, Bologna",
         )
     )
 }

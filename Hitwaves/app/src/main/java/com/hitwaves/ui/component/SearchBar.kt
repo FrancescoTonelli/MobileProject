@@ -1,6 +1,7 @@
 package com.hitwaves.ui.component
 
 import android.annotation.SuppressLint
+import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -114,7 +116,8 @@ fun SearchWave(
                     artistName = event.artistName?: "Unknown",
                     artistImage = event.artistImage.orEmpty(),
                     description = event.placeName,
-                    date = event.date
+                    date = event.date,
+                    placeName = event.placeName
                 )
             }
         } else if (!allConcert.success && allConcert.errorMessage != null) {
@@ -132,8 +135,9 @@ fun SearchWave(
                     title = event.tourTitle,
                     artistName = event.artistName,
                     artistImage = event.artistImage.orEmpty(),
-                    description = null,
-                    date = null
+                    description = "Tour - ${event.concertCount} shows",
+                    date = null,
+                    placeName = null
                 )
             }
         } else if (!allTour.success && allTour.errorMessage != null) {
@@ -147,21 +151,29 @@ fun SearchWave(
         allArtistSearch.filter { it.artistName.contains(query, ignoreCase = true) }
     }
 
-    val allEventsSearch = allConcertSearch + allTourSearch
 
-    val filteredEvents = remember(query, allEventsSearch) {
-        allEventsSearch.filter { it.title.contains(query, ignoreCase = true) ||
-                (it.description ?: "").contains(query, ignoreCase = true) ||
+    val filteredConcerts = remember(query, allConcertSearch) {
+        allConcertSearch.filter { it.title.contains(query, ignoreCase = true) ||
+                (it.placeName?: "").contains(query, ignoreCase = true) ||
                 it.artistName.contains(query, ignoreCase = true)}
     }
+
+    val filteredTours = remember(query, allTourSearch) {
+        allTourSearch.filter { it.title.contains(query, ignoreCase = true) ||
+                it.artistName.contains(query, ignoreCase = true)}
+    }
+
+    val filteredEvents = filteredConcerts + filteredTours
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         InputField(
             query = query,
-            onQueryChange = {onQueryChange(it)},
-            onSearch = { expanded = false },
+            onQueryChange = {
+                onQueryChange(it)
+            },
+            onSearch = {  },
             leadingIcon = {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.search),
@@ -197,18 +209,21 @@ fun SearchWave(
                 unfocusedTextColor = Secondary
             )
         )
-        if (expanded) {
-//            ShowArtistList(filteredArtists, navController)
-//
-//            HorizontalDivider(
-//                modifier = Modifier
-//                    .width(rememberScreenDimensions().screenWidth * 0.85f)
-//                    .align(Alignment.CenterHorizontally)
-//                    .padding(16.dp),
-//                thickness = 1.dp,
-//                color = Secondary.copy(alpha = 0.5f),
-//                )
-//            ShowEventList(filteredEvents, navController)
+        if (query.isNotBlank()) {
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ShowArtistList(filteredArtists, navController)
+
+            HorizontalDivider(
+                modifier = Modifier
+                    .width(rememberScreenDimensions().screenWidth * 0.85f)
+                    .align(Alignment.CenterHorizontally)
+                    .padding(16.dp),
+                thickness = 1.dp,
+                color = Secondary.copy(alpha = 0.5f),
+                )
+            ShowEventList(filteredEvents, navController)
         }
     }
 }

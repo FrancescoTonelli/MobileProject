@@ -62,7 +62,10 @@ fun EventCard(event: EventForCards, navController: NavController){
         ){
             Box{
                 Image(
-                    painter = rememberAsyncImagePainter(if(event.isTour) getHttpTourImageUrl(event.backgroundImage) else getHttpConcertImageUrl(event.backgroundImage)),
+                    painter = rememberAsyncImagePainter(if(event.isTour)
+                        getHttpTourImageUrl(event.backgroundImage)
+                    else
+                        getHttpConcertImageUrl(event.backgroundImage)),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
@@ -156,7 +159,7 @@ fun ShowDescription(event: EventForCards){
                         color = Secondary,
                         fontWeight = FontWeight.Normal
                     ),
-                    modifier = Modifier.padding(horizontal = 8.dp)
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
         }

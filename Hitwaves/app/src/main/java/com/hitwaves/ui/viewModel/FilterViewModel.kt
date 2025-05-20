@@ -42,7 +42,7 @@ class FilterViewModel : ViewModel() {
                 if (!response.success) {
                     _allArtistState.value = ApiResult(false, null, response.errorMessage)
                 } else {
-                    _allArtistState.value = ApiResult(true, response.data, "${System.currentTimeMillis()}")
+                    _allArtistState.value = ApiResult(true, response.data, null)
                 }
 
             } catch (e: Exception) {
@@ -65,7 +65,7 @@ class FilterViewModel : ViewModel() {
                 if (!response.success) {
                     _allConcertState.value = ApiResult(false, null, response.errorMessage)
                 } else {
-                    _allConcertState.value = ApiResult(true, response.data, "${System.currentTimeMillis()}")
+                    _allConcertState.value = ApiResult(true, response.data, null)
                 }
 
             } catch (e: Exception) {
@@ -88,7 +88,7 @@ class FilterViewModel : ViewModel() {
                 if (!response.success) {
                     _allTourState.value = ApiResult(false, null, response.errorMessage)
                 } else {
-                    _allTourState.value = ApiResult(true, response.data, "${System.currentTimeMillis()}")
+                    _allTourState.value = ApiResult(true, response.data, null)
                 }
 
             } catch (e: Exception) {

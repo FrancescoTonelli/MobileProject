@@ -20,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.hitwaves.api.getHttpArtistImageUrl
 import com.hitwaves.model.Artist
 import com.hitwaves.ui.theme.Primary
 import com.hitwaves.ui.theme.Secondary
@@ -44,7 +45,7 @@ fun MinimalArtist(
                 .clip(CircleShape)
         ) {
             Image(
-                painter = rememberAsyncImagePainter(artist.artistImageUrl),
+                painter = rememberAsyncImagePainter(getHttpArtistImageUrl(artist.artistImageUrl)),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
