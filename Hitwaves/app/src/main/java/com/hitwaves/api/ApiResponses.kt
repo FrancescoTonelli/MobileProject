@@ -49,7 +49,7 @@ data class ConcertNoTourResponse(
     @SerializedName("concert_image") val image: String?,
     @SerializedName("concert_date") val date: String,
     @SerializedName("place_name") val placeName: String,
-    @SerializedName("artist_name") val artistName: String,
+    @SerializedName("artist_name") val artistName: String? = "Unknown",
     @SerializedName("artist_image") val artistImage: String?
 )
 

@@ -66,11 +66,15 @@ fun SplashScreen() {
             if (!showRationaleFine && !showRationaleCoarse) {
                 showSettingsDialog = true
             } else {
-                // Richiedi permessi in un effetto separato
                 pendingPermissionRequest.value = true
             }
         } else {
-            splashViewModel.handleSplash()
+            if (TokenManager.getToken().isNullOrEmpty()) {
+                context.startActivity(Intent(context, LoginActivity::class.java))
+                activity.finish()
+            } else {
+                splashViewModel.handleSplash()
+            }
         }
     }
 
@@ -89,8 +93,13 @@ fun SplashScreen() {
         val hasCoarse = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
         if (hasFine || hasCoarse) {
-            permissionChecked = true
-            splashViewModel.handleSplash()
+            if (TokenManager.getToken().isNullOrEmpty()) {
+                context.startActivity(Intent(context, LoginActivity::class.java))
+                activity.finish()
+            } else {
+                permissionChecked = true
+                splashViewModel.handleSplash()
+            }
         } else {
             permissionLauncher.launch(arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -108,8 +117,13 @@ fun SplashScreen() {
                         val hasCoarse = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
                         if (hasFine || hasCoarse) {
-                            permissionChecked = true
-                            splashViewModel.handleSplash()
+                            if (TokenManager.getToken().isNullOrEmpty()) {
+                                context.startActivity(Intent(context, LoginActivity::class.java))
+                                activity.finish()
+                            } else {
+                                permissionChecked = true
+                                splashViewModel.handleSplash()
+                            }
                         } else {
                             pendingPermissionRequest.value = true
                         }
@@ -129,6 +143,11 @@ fun SplashScreen() {
 
     LaunchedEffect(result, permissionChecked) {
         if (!permissionChecked) return@LaunchedEffect
+
+        if(TokenManager.getToken().isNullOrEmpty()) {
+            context.startActivity(Intent(context, LoginActivity::class.java))
+            activity.finish()
+        }
 
         if (result.success && result.data != null) {
             TokenManager.saveToken(result.data!!.token)

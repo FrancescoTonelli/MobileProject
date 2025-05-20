@@ -111,7 +111,7 @@ fun SearchWave(
                     isTour = false,
                     backgroundImage = event.image.orEmpty(),
                     title = event.title,
-                    artistName = event.artistName,
+                    artistName = event.artistName?: "Unknown",
                     artistImage = event.artistImage.orEmpty(),
                     description = event.placeName,
                     date = event.date

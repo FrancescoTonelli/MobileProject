@@ -32,7 +32,6 @@ import com.hitwaves.ui.viewModel.HomeViewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.graphics.Color
-import com.hitwaves.ui.component.WaveSearcher
 
 fun goToMap(navController: NavHostController) {
     navController.navigate("map"){
