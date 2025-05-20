@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.hitwaves.R
+import com.hitwaves.model.Artist
 import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.component.ShowArtistList
 import com.hitwaves.ui.component.Title
@@ -44,8 +45,8 @@ import com.hitwaves.ui.component.GoBack
 
 @Composable
 fun EventDetails(eventForCards: EventForCards, navController: NavController){
-    val artistList = getSampleArtist()
-    val eventList = getSampleEvents()
+    val artistList = emptyList<Artist>()
+    val eventList = emptyList<EventForCards>()
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally

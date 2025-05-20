@@ -1,17 +1,31 @@
 package com.hitwaves.ui.viewModel
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.hitwaves.api.ApiResult
+import com.hitwaves.api.MessageResponse
 import com.hitwaves.api.NearestConcert
 import com.hitwaves.api.PopularArtistEvent
 import com.hitwaves.api.PositionRequest
 import com.hitwaves.api.TokenResponse
+import com.hitwaves.api.UserDetailsResponse
 import com.hitwaves.api.apiGetNearestConcerts
 import com.hitwaves.api.apiGetPopularArtistsEvents
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class HomeViewModel: ViewModel() {
     private val _nearestState = mutableStateOf<ApiResult<List<NearestConcert>>>(ApiResult<List<NearestConcert>>(false, null, null))
@@ -76,4 +90,7 @@ class HomeViewModel: ViewModel() {
             }
         }
     }
+
+
+
 }

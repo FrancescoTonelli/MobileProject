@@ -26,6 +26,7 @@ import com.hitwaves.ui.component.ArtistCard
 import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.component.Title
 import com.hitwaves.model.Artist
+import com.hitwaves.model.EventForCards
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.viewModel.LikesViewModel
 import com.hitwaves.ui.component.GoBack
@@ -36,7 +37,7 @@ fun initLikes() : LikesViewModel {
 
 @Composable
 fun ArtistDetails(artist: Artist, navController: NavController){
-    val eventList = getSampleEvents()
+    val eventList = emptyList<EventForCards>()
 
     GoBack(navController)
 
