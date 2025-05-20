@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
 import com.hitwaves.R
+import com.hitwaves.ui.component.GoBack
 import com.hitwaves.utils.LocationService
 import com.mapbox.geojson.Point
 import com.mapbox.maps.extension.compose.MapboxMap
@@ -88,6 +89,8 @@ fun ConcertMap(navController: NavController){
 //                viewportState.transitionToFollowPuckState()
 //            }
         }
+
+        GoBack(navController)
     }
 }
 

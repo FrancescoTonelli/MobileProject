@@ -1,104 +1,135 @@
 package com.hitwaves.ui.screens
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.ActivityCompat
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.hitwaves.AppActivity
 import com.hitwaves.LoginActivity
 import com.hitwaves.R
-import com.hitwaves.api.ApiResult
 import com.hitwaves.api.TokenManager
-import com.hitwaves.api.TokenResponse
+import com.hitwaves.ui.component.CustomMessageBox
 import com.hitwaves.ui.component.CustomSnackbar
 import com.hitwaves.ui.component.IconData
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.viewModel.SplashScreenViewModel
-import android.Manifest
-import android.content.pm.PackageManager
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.hitwaves.ui.component.CustomMessageBox
 
-private fun init() : SplashScreenViewModel {
-    return SplashScreenViewModel()
-}
+private fun init(): SplashScreenViewModel = SplashScreenViewModel()
 
 @Composable
 fun SplashScreen() {
-
-    val splashViewModel = remember { init() }
-    val result: ApiResult<TokenResponse> by splashViewModel.autoLoginState
-    val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val activity = context as Activity
+    val splashViewModel = remember { SplashScreenViewModel() }
+    val result by splashViewModel.autoLoginState
+    val snackbarHostState = remember { SnackbarHostState() }
 
+    var permissionChecked by remember { mutableStateOf(false) }
     var showSettingsDialog by remember { mutableStateOf(false) }
 
+    val pendingPermissionRequest = remember { mutableStateOf(false) }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val hasResumedOnce = remember { mutableStateOf(false) }
+
+
     val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            val token = TokenManager.getToken()
-            if (token != null) {
-                splashViewModel.handleSplash()
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val granted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+
+        permissionChecked = true
+        if (!granted) {
+            val showRationaleFine = ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+            val showRationaleCoarse = ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
+            if (!showRationaleFine && !showRationaleCoarse) {
+                showSettingsDialog = true
             } else {
-                context.startActivity(Intent(context, LoginActivity::class.java))
-                activity.finish()
+                // Richiedi permessi in un effetto separato
+                pendingPermissionRequest.value = true
             }
         } else {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                showSettingsDialog = true
-            }
+            splashViewModel.handleSplash()
+        }
+    }
+
+    LaunchedEffect(pendingPermissionRequest.value) {
+        if (pendingPermissionRequest.value) {
+            pendingPermissionRequest.value = false
+            permissionLauncher.launch(arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ))
         }
     }
 
     LaunchedEffect(Unit) {
-        val permission = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
+        val hasFine = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val hasCoarse = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
-        if (permission == PackageManager.PERMISSION_GRANTED) {
-            val token = TokenManager.getToken()
-            if (token != null) {
-                splashViewModel.handleSplash()
-            } else {
-                context.startActivity(Intent(context, LoginActivity::class.java))
-                activity.finish()
-            }
+        if (hasFine || hasCoarse) {
+            permissionChecked = true
+            splashViewModel.handleSplash()
         } else {
-            permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            permissionLauncher.launch(arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ))
         }
     }
 
-    LaunchedEffect(result) {
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                if (hasResumedOnce.value) {
+                    if (!permissionChecked) {
+                        val hasFine = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                        val hasCoarse = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+
+                        if (hasFine || hasCoarse) {
+                            permissionChecked = true
+                            splashViewModel.handleSplash()
+                        } else {
+                            pendingPermissionRequest.value = true
+                        }
+                    }
+                } else {
+                    hasResumedOnce.value = true
+                }
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+
+    LaunchedEffect(result, permissionChecked) {
+        if (!permissionChecked) return@LaunchedEffect
+
         if (result.success && result.data != null) {
             TokenManager.saveToken(result.data!!.token)
             context.startActivity(Intent(context, AppActivity::class.java))
@@ -107,12 +138,6 @@ fun SplashScreen() {
             snackbarHostState.showSnackbar(result.errorMessage!!)
             context.startActivity(Intent(context, LoginActivity::class.java))
             activity.finish()
-        }
-    }
-
-    LaunchedEffect(permissionLauncher) {
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            showSettingsDialog = true
         }
     }
 
@@ -166,19 +191,18 @@ fun SplashScreen() {
     }
 
     if (showSettingsDialog) {
-
         CustomMessageBox(
             title = "Permission denied",
-            message = "To use the app, you must allow location access. Do you want to log out and open the settings?",
+            message = "To use the app, you must allow location access. Do you want to open the app settings?",
             onConfirm = {
                 showSettingsDialog = false
-                val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                val uri = android.net.Uri.fromParts("package", context.packageName, null)
-                intent.data = uri
+                permissionChecked = false
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.fromParts("package", context.packageName, null)
+                }
                 context.startActivity(intent)
             },
             onDismiss = {
-                showSettingsDialog = false
                 activity.finish()
             }
         )

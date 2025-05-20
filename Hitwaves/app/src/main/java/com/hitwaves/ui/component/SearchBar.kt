@@ -128,17 +128,17 @@ fun SearchWave(
             )
         )
         if (expanded) {
-            ShowArtistList(filteredArtists, navController)
-
-            HorizontalDivider(
-                modifier = Modifier
-                    .width(rememberScreenDimensions().screenWidth * 0.85f)
-                    .align(Alignment.CenterHorizontally)
-                    .padding(16.dp),
-                thickness = 1.dp,
-                color = Secondary.copy(alpha = 0.5f),
-                )
-            ShowEventList(filteredEvents, navController)
+//            ShowArtistList(filteredArtists, navController)
+//
+//            HorizontalDivider(
+//                modifier = Modifier
+//                    .width(rememberScreenDimensions().screenWidth * 0.85f)
+//                    .align(Alignment.CenterHorizontally)
+//                    .padding(16.dp),
+//                thickness = 1.dp,
+//                color = Secondary.copy(alpha = 0.5f),
+//                )
+//            ShowEventList(filteredEvents, navController)
         }
     }
 }
