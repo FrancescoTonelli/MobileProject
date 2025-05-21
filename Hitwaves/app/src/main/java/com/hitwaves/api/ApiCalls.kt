@@ -88,14 +88,14 @@ suspend fun apiGetConcertsNoTour(): ApiResult<List<ConcertNoTourResponse>> {
     )
 }
 
-//suspend fun apiGetMapConcerts(): Pair<Boolean, Any?> {
-//    val url = "map_concerts"
-//    return HttpHelper.postRequestAsync<List<MapConcertResponse>>(
-//        requestData = Unit,
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
+suspend fun apiGetMapConcerts(): ApiResult<List<MapConcertResponse>> {
+    val url = "map_concerts"
+    return ApiGenericCalls.postRequestAsync<List<MapConcertResponse>>(
+        requestData = Unit,
+        endpoint = url,
+        withAuth = true
+    )
+}
 
 suspend fun apiGetTours(): ApiResult<List<TourResponse>> {
     val url = "tours"

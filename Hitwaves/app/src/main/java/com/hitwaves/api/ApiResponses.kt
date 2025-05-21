@@ -53,13 +53,13 @@ data class ConcertNoTourResponse(
     @SerializedName("artist_image") val artistImage: String?
 )
 
-//data class MapConcertResponse(
-//    @SerializedName("concert_id") val concertId: Int,
-//    @SerializedName("artist_image") val artistImage: String?,
-//    @SerializedName("place_latitude") val latitude: Double,
-//    @SerializedName("place_longitude") val longitude: Double
-//)
-//
+data class MapConcertResponse(
+    @SerializedName("concert_id") val concertId: Int,
+    @SerializedName("artist_image") val artistImage: String?,
+    @SerializedName("place_latitude") val latitude: Double,
+    @SerializedName("place_longitude") val longitude: Double
+)
+
 data class TourResponse(
     @SerializedName("tour_id") val tourId: Int,
     @SerializedName("tour_title") val tourTitle: String,

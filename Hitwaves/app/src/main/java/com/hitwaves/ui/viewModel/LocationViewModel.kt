@@ -105,4 +105,8 @@ class LocationViewModel: ViewModel() {
             Pair(null, null)
         }
     }
+
+    fun setIsGpsEnabled(enabled: Boolean) {
+        _isGpsEnabled.value = enabled
+    }
 }

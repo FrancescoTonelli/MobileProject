@@ -31,13 +31,7 @@ fun BottomNavigationBar(navController: NavHostController, items: List<IconData>)
                 selected = isSelected,
                 onClick = {
                     if (!isSelected) {
-                        navController.navigate(item.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        navController.navigate(item.route)
                     }
                 },
                 icon = {
