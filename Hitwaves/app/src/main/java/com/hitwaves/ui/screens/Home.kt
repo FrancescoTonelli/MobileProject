@@ -184,7 +184,7 @@ fun Home(navController: NavHostController) {
                 )
             }
 
-            if (isNearestLoading || isLocationLoading) {
+            if (isLocationLoading || isNearestLoading) {
                 item { CircularProgressIndicator(color = Color.White) }
             } else {
                 if (nearestShow.isEmpty()) {

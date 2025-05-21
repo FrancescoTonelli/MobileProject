@@ -53,7 +53,7 @@ fun EventCard(event: EventForCards, navController: NavController){
                     //event.isTicket -> "ticketDetails"
                     event.isTour -> "tourDetails"
                     else -> "concertDetails"
-                }
+                    }
 
                     navController.navigate(destination) {
                         popUpTo(navController.graph.startDestinationId) {

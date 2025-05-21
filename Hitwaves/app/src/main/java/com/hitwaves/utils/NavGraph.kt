@@ -110,5 +110,30 @@ fun NavGraph(navController: NavHostController) {
             }
         }
 
+        composable(
+            route = "concertDetails/{contentId}",
+            arguments = listOf(navArgument("contentId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val contentId = backStackEntry.arguments?.getInt("contentId")
+            if (contentId != null) {
+                val card = EventForCards(
+                    contentId = contentId,
+                    isTour = false,
+                    title = "Unknown",
+                    placeName = "Unknown",
+                    isTicket = false,
+                    backgroundImage = "Unknown",
+                    artistName = "Unknown",
+                    artistImage = "Unknown",
+                    description = "Unknown",
+                    date = "Unknown"
+                )
+                ConcertDetails(eventForCards = card, navController = navController)
+            } else {
+                Text("Event not available")
+            }
+        }
+
+
     }
 }

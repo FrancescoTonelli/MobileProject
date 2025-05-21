@@ -43,6 +43,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.compose.runtime.remember
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.hitwaves.utils.LocationService
 
 class AppActivity : ComponentActivity() {
@@ -70,43 +71,52 @@ fun MainContent(){
         selectedIcon = ImageVector.vectorResource(id = R.drawable.notification_fill)
     )
 
+    val navBackStackEntry = navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry.value?.destination?.route
+
+    val showBars = currentRoute != "map"
+
     Scaffold(
         bottomBar = {
-            Column {
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp)
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    Primary.copy(alpha = 0f),
-                                    Primary
+            if (showBars) {
+                Column {
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(8.dp)
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(
+                                        Primary.copy(alpha = 0f),
+                                        Primary
+                                    )
                                 )
                             )
-                        )
-                )
+                    )
 
-                BottomNavigationBar(navController = navController, items = bottomNavItems)
+                    BottomNavigationBar(navController = navController, items = bottomNavItems)
+                }
             }
         },
         topBar = {
-            Column {
-                NotificationTopBar(navController = navController, item = notificationItem)
+            if (showBars) {
+                Column {
+                    NotificationTopBar(navController = navController, item = notificationItem)
 
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp)
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    Primary,
-                                    Primary.copy(alpha = 0f)
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(8.dp)
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(
+                                        Primary,
+                                        Primary.copy(alpha = 0f)
+                                    )
                                 )
                             )
-                        )
-                )
+                    )
+                }
             }
         }
     ) { innerPadding ->

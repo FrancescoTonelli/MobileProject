@@ -1,17 +1,8 @@
 package com.hitwaves.ui.screens
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,59 +11,41 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
 import coil.ImageLoader
+import coil.compose.AsyncImagePainter
 import coil.request.ImageRequest
-import coil.request.SuccessResult
+import coil.transform.CircleCropTransformation
 import com.hitwaves.R
-import com.hitwaves.api.MapConcertResponse
 import com.hitwaves.api.getHttpArtistImageUrl
 import com.hitwaves.ui.component.CustomSnackbar
 import com.hitwaves.ui.component.GoBack
 import com.hitwaves.ui.component.LoadingIndicator
-import com.hitwaves.ui.theme.BgDark
-import com.hitwaves.ui.theme.Secondary
-import com.hitwaves.ui.theme.Typography
 import com.hitwaves.ui.viewModel.LocationViewModel
 import com.hitwaves.ui.viewModel.MapViewModel
 import com.mapbox.geojson.Point
-import com.mapbox.maps.ImageHolder
-import com.mapbox.maps.MapView
 import com.mapbox.maps.dsl.cameraOptions
 import com.mapbox.maps.extension.compose.MapEffect
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.rememberIconImage
-import com.mapbox.maps.plugin.LocationPuck2D
-import com.mapbox.maps.plugin.annotation.annotations
-import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
-import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
-import com.mapbox.maps.plugin.locationcomponent.location
+import com.mapbox.maps.extension.style.layers.properties.generated.IconAnchor
 import com.mapbox.maps.plugin.logo.logo
 import com.mapbox.maps.plugin.scalebar.scalebar
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.JsonObject
-import java.io.ByteArrayOutputStream
-import com.mapbox.maps.MapInitOptions
-import com.mapbox.maps.plugin.Plugin
+import androidx.core.graphics.drawable.toBitmap
+import coil.compose.rememberAsyncImagePainter
+import com.hitwaves.ui.component.EventCard
+import com.hitwaves.ui.theme.BgDark
+import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotationInteractionsState
 
 private fun initLocation(): LocationViewModel {
     return LocationViewModel()
@@ -85,27 +58,50 @@ private fun initMap(): MapViewModel {
 @Composable
 fun ConcertMap(navController: NavController) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
     val locationViewModel: LocationViewModel = remember { initLocation() }
     val mapViewModel: MapViewModel = remember { initMap() }
 
-    val isGpsEnabled      by locationViewModel.isGpsEnabled.collectAsState()
+    val isGpsEnabled by locationViewModel.isGpsEnabled.collectAsState()
     val isLoadingLocation by locationViewModel.isLoadingLocation
-    val userLocation      by locationViewModel.locationState
+    val userLocation by locationViewModel.locationState
 
-    val mapState      by mapViewModel.mapEventState
+    val mapState by mapViewModel.mapEventState
     val isLoadingPOIs by mapViewModel.isLoadingPOIs
+    val poiList = mapState.data ?: emptyList()
 
-    val poiList = if (mapState.success && mapState.data != null) mapState.data!! else emptyList()
     val viewportState = rememberMapViewportState()
+    val imageSize = 180
+
+    val debugText = remember { mutableStateOf("") }
+
+    val defaultPainter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(context)
+            .data(getHttpArtistImageUrl(null))
+            .transformations(CircleCropTransformation())
+            .size(imageSize, imageSize)
+            .allowHardware(false)
+            .build()
+    )
+
+    val defaultConcertMarker = if (defaultPainter.state is AsyncImagePainter.State.Success) {
+        rememberIconImage("default_concert_marker", defaultPainter)
+    } else {
+        null
+    }
+
+    val pointAnnotationInteractionsState = remember {
+        PointAnnotationInteractionsState().onClicked { annotation ->
+
+            navController.navigate("concertDetails/${annotation.textField}")
+            true
+        }
+    }
 
     DisposableEffect(Unit) {
         locationViewModel.registerGpsStatusReceiver(context)
-        onDispose {
-            locationViewModel.unregisterGpsStatusReceiver(context)
-        }
+        onDispose { locationViewModel.unregisterGpsStatusReceiver(context) }
     }
 
     LaunchedEffect(Unit) {
@@ -115,20 +111,18 @@ fun ConcertMap(navController: NavController) {
 
     LaunchedEffect(isGpsEnabled) {
         if (!isGpsEnabled) {
-            snackbarHostState.showSnackbar("GPS disattivato — attivalo per vedere gli eventi vicino a te")
+            snackbarHostState.showSnackbar("GPS disabled — enable it to see events near you")
         } else {
             locationViewModel.getUserLocation(context)
         }
     }
 
     LaunchedEffect(isLoadingLocation, userLocation) {
-        if (!isLoadingLocation && userLocation.first == null && userLocation.second == null) {
+        val lat = userLocation.first
+        val lon = userLocation.second
+        if (!isLoadingLocation && lat == null && lon == null) {
             locationViewModel.setIsGpsEnabled(false)
-        }
-        else if ( !isLoadingLocation && userLocation.first != null && userLocation.second != null) {
-            val lat = userLocation.first!!
-            val lon = userLocation.second!!
-
+        } else if (!isLoadingLocation && lat != null && lon != null) {
             viewportState.setCameraOptions(
                 cameraOptions {
                     center(Point.fromLngLat(lon, lat))
@@ -142,24 +136,99 @@ fun ConcertMap(navController: NavController) {
         MapboxMap(
             modifier = Modifier.fillMaxSize(),
             mapViewportState = viewportState
-
         ) {
-            val marker = rememberIconImage(key = R.drawable.custom_location_puck, painter = painterResource(R.drawable.custom_location_puck))
-            if (userLocation.first != null && userLocation.second != null) {
-                val userPoint = Point.fromLngLat(userLocation.second!!, userLocation.first!!)
-                PointAnnotation(userPoint) {
-                    iconImage = marker
+            val userMarker = rememberIconImage(
+                key = R.drawable.custom_location_puck,
+                painter = painterResource(R.drawable.custom_location_puck)
+            )
+
+            userLocation.first?.let { lat ->
+                userLocation.second?.let { lon ->
+                    PointAnnotation(Point.fromLngLat(lon, lat)) {
+                        iconImage = userMarker
+                    }
                 }
             }
+
+            val imageLoader = remember { ImageLoader(context) }
+
+            poiList.forEach { concertPOI ->
+                val point = Point.fromLngLat(concertPOI.longitude, concertPOI.latitude)
+                val imageUrl = getHttpArtistImageUrl(concertPOI.artistImage?.takeIf { it.isNotEmpty() })
+
+                val painterState = produceState<BitmapPainter?>(initialValue = null, imageUrl) {
+                    val request = ImageRequest.Builder(context)
+                        .data(imageUrl)
+                        .transformations(CircleCropTransformation())
+                        .size(imageSize, imageSize)
+                        .allowHardware(false)
+                        .build()
+
+                    val result = imageLoader.execute(request)
+                    val drawable = result.drawable
+                    value = drawable?.toBitmap(imageSize, imageSize)?.asImageBitmap()?.let { BitmapPainter(it) }
+                }.value
+
+                val markerImage = if (painterState != null) {
+                    rememberIconImage(
+                        key = "concert_${concertPOI.concertId}",
+                        painter = painterState
+                    )
+                } else {
+                    null
+                }
+
+                when {
+
+                    markerImage != null -> {
+                        PointAnnotation(
+                            point = point
+                        ) {
+                            iconImage = markerImage
+                            iconSize = 1.0
+                            iconAnchor = IconAnchor.BOTTOM
+                            interactionsState = pointAnnotationInteractionsState
+                            textField = concertPOI.concertId.toString()
+                            textColor = Color.Transparent
+                        }
+                    }
+
+                    defaultConcertMarker != null -> {
+                        PointAnnotation(
+                            point = point
+                        ) {
+                            iconImage = defaultConcertMarker
+                            iconSize = 1.0
+                            iconAnchor = IconAnchor.BOTTOM
+                            interactionsState = pointAnnotationInteractionsState
+                            textField = concertPOI.concertId.toString()
+                            textColor = Color.Transparent
+                        }
+                    }
+                }
+            }
+
+            MapEffect { mapView ->
+                try {
+                    mapView.logo.enabled = false
+                    mapView.scalebar.enabled = false
+                } catch (_: Exception) {
+                }
+            }
+
         }
 
-        if (isLoadingPOIs || isLoadingLocation) {
+        if (isLoadingLocation || isLoadingPOIs) {
             LoadingIndicator()
         }
-
     }
 
-    CustomSnackbar(snackbarHostState)
+    Text(
+        text = debugText.value,
+        modifier = Modifier
+            .background(BgDark)
+    )
 
+    CustomSnackbar(snackbarHostState)
     GoBack(navController)
 }
