@@ -105,7 +105,7 @@ fun ArtistCard(
                         Text(
                             text = "${artist.averageRating}",
                             style = Typography.bodyLarge.copy(
-                                fontSize = 14.sp,
+                                fontSize = 15.sp,
                                 color = Secondary
                             )
                         )
@@ -115,7 +115,7 @@ fun ArtistCard(
                             tint = Secondary,
                             contentDescription = null,
                             modifier = Modifier
-                                .size(16.dp)
+                                .size(15.dp)
                         )
                     }
                 }

@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hitwaves.R
@@ -64,37 +65,28 @@ fun Rating(){
 }
 
 @Composable
-fun RatingViewOnly(rating: Int){
-    var isSelected by remember { mutableIntStateOf(0) }
+fun RatingViewOnly(
+    rating: Int,
+    starSize: Dp,
+    starSpacing: Dp
+){
 
-    Row {
-        Text(
-            text = "Rating",
-            color = Secondary,
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp
-        )
-
-        Spacer(Modifier.width(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            repeat(5) { index ->
-                Icon(
-                    imageVector = if (index < rating)
-                        ImageVector.vectorResource(R.drawable.star_fill)
-                    else
-                        ImageVector.vectorResource(R.drawable.star_line),
-                    contentDescription = "Star",
-                    tint = Secondary,
-                    modifier = Modifier
-                        .size(23.dp)
-                )
-            }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(starSpacing),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        repeat(5) { index ->
+            Icon(
+                imageVector = if (index < rating)
+                    ImageVector.vectorResource(R.drawable.star_fill)
+                else
+                    ImageVector.vectorResource(R.drawable.star_line),
+                contentDescription = "Star",
+                tint = Secondary,
+                modifier = Modifier
+                    .size(starSize)
+            )
         }
-
     }
 }

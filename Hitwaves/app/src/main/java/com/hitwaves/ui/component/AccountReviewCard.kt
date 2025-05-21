@@ -43,7 +43,7 @@ fun AccountReviewCard(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize(0.9f)
             .clip(RoundedCornerShape(16.dp))
             .background(FgDark)
             .border(width = 1.dp, color = Secondary, shape = RoundedCornerShape(16.dp)),
@@ -71,7 +71,7 @@ fun AccountReviewCard(
                     Box(
                         modifier = Modifier
                             .padding(end = 16.dp)
-                            .size(40.dp)
+                            .size(50.dp)
                             .clip(CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
@@ -95,12 +95,21 @@ fun AccountReviewCard(
                             style = Typography.titleLarge.copy(
                                 fontSize = 18.sp,
                                 color = Secondary,
+                                fontWeight = FontWeight.Bold
+                            ),
+                        )
+
+                        Text(
+                            text = userReviewResponses.concertTitle,
+                            style = Typography.titleLarge.copy(
+                                fontSize = 14.sp,
+                                color = Secondary,
                                 fontWeight = FontWeight.Normal
                             ),
                         )
 
                         Text(
-                            text = "${userReviewResponses.concertTitle} - ${userReviewResponses.concertDate}",
+                            text = userReviewResponses.concertDate,
                             style = Typography.titleLarge.copy(
                                 fontSize = 14.sp,
                                 color = Secondary,
@@ -136,17 +145,14 @@ fun AccountReviewCard(
             Column (
                 modifier = Modifier
                     .fillMaxWidth(),
-                verticalArrangement = Arrangement.SpaceBetween,
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(
-                    text = "${userReviewResponses.rating} / 5",
-                    style = Typography.titleLarge.copy(
-                        fontSize = 18.sp,
-                        color = Secondary,
-                        fontWeight = FontWeight.Normal
-                    ),
-                    modifier = Modifier.padding(bottom = 16.dp)
+
+                RatingViewOnly(
+                    rating = userReviewResponses.rating,
+                    starSize = 18.dp,
+                    starSpacing = 3.dp
                 )
 
                 if (!userReviewResponses.comment.isNullOrEmpty()) {
