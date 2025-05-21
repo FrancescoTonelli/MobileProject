@@ -105,23 +105,23 @@ suspend fun apiGetTours(): ApiResult<List<TourResponse>> {
         withAuth = true
     )
 }
-//
-//suspend fun apiGetTourDetails(tourId: Int): Pair<Boolean, Any?> {
-//    val url = "tour/$tourId"
-//    return HttpHelper.getRequestAsync<TourDetailsResponse>(
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
-//
-//suspend fun apiGetConcertDetails(concertId: Int): Pair<Boolean, Any?> {
-//    val url = "concert/$concertId"
-//    return HttpHelper.getRequestAsync<ConcertDetailsResponse>(
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
-//
+
+suspend fun apiGetTourDetails(tourId: Int): ApiResult<TourDetailsResponse> {
+    val url = "tour/$tourId"
+    return ApiGenericCalls.getRequestAsync<TourDetailsResponse>(
+        endpoint = url,
+        withAuth = true
+    )
+}
+
+suspend fun apiGetConcertDetails(concertId: Int): ApiResult<ConcertDetailsResponse> {
+    val url = "concert/$concertId"
+    return ApiGenericCalls.getRequestAsync<ConcertDetailsResponse>(
+        endpoint = url,
+        withAuth = true
+    )
+}
+
 //suspend fun apiGetArtistDetails(artistId: Int): Pair<Boolean, Any?> {
 //    val url = "artist/$artistId"
 //    return HttpHelper.getRequestAsync<ArtistDetailsResponse>(

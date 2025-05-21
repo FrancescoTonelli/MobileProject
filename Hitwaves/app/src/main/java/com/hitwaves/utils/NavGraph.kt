@@ -3,7 +3,6 @@ package com.hitwaves.utils
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -15,8 +14,9 @@ import com.hitwaves.ui.screens.Account
 import com.hitwaves.ui.screens.AccountReviews
 import com.hitwaves.ui.screens.AccountUpdate
 import com.hitwaves.ui.screens.ArtistDetails
+import com.hitwaves.ui.screens.ConcertDetails
 import com.hitwaves.ui.screens.ConcertMap
-import com.hitwaves.ui.screens.EventDetails
+import com.hitwaves.ui.screens.TourDetails
 import com.hitwaves.ui.screens.Home
 import com.hitwaves.ui.screens.Likes
 import com.hitwaves.ui.screens.Login
@@ -69,7 +69,7 @@ fun NavGraph(navController: NavHostController) {
         composable("map") {
             ConcertMap(navController)
         }
-        composable("eventDetails") {
+        composable("tourDetails") {
             val eventForCards = remember {
                 navController.previousBackStackEntry
                     ?.savedStateHandle
@@ -77,7 +77,7 @@ fun NavGraph(navController: NavHostController) {
             }
 
             if (eventForCards != null) {
-                EventDetails(eventForCards = eventForCards, navController = navController)
+                TourDetails(eventForCards = eventForCards, navController = navController)
             } else {
                 Text("Event not available")
             }
@@ -95,5 +95,20 @@ fun NavGraph(navController: NavHostController) {
                 Text("Artist not available")
             }
         }
+
+        composable("concertDetails") {
+            val eventForCards = remember {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.get<EventForCards>("event")
+            }
+
+            if (eventForCards != null) {
+                ConcertDetails(eventForCards = eventForCards, navController = navController)
+            } else {
+                Text("Event not available")
+            }
+        }
+
     }
 }

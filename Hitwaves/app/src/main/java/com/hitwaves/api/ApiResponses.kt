@@ -70,90 +70,90 @@ data class TourResponse(
     @SerializedName("upcoming_concerts") val upcomingConcerts: Int
 )
 
-//data class TourArtistResponse(
-//    @SerializedName("artist_id") val artistId: Int,
-//    @SerializedName("artist_name") val artistName: String,
-//    @SerializedName("artist_image") val artistImage: String?
-//)
-//
-//data class TourConcertResponse(
-//    @SerializedName("concert_id") val concertId: Int,
-//    @SerializedName("concert_title") val concertTitle: String,
-//    @SerializedName("concert_image") val concertImage: String?,
-//    @SerializedName("concert_date") val concertDate: String,
-//    @SerializedName("concert_time_str") val concertTimeStr: String,
-//    @SerializedName("place_name") val placeName: String,
-//    @SerializedName("place_address") val placeAddress: String,
-//    @SerializedName("place_latitude") val placeLatitude: Double,
-//    @SerializedName("place_longitude") val placeLongitude: Double
-//)
-//
-//data class TourDetailsResponse(
-//    @SerializedName("artists") val artists: List<TourArtistResponse>,
-//    @SerializedName("concerts") val concerts: List<TourConcertResponse>
-//)
-//
-//data class ConcertDetailsResponse(
-//    @SerializedName("concert_info") val concertInfo: ConcertInfoResponse,
-//    val artists: List<ArtistConcertDetailsResponse>,
-//    @SerializedName("available_tickets") val availableTickets: List<TicketConcertDetailsResponse>,
-//    val sectors: List<SectorConcertDetailsResponse>,
-//    @SerializedName("tour_info") val tourInfo: TourConcertDetailsResponse? = null
-//)
-//
-//data class ConcertInfoResponse(
-//    @SerializedName("concert_title") val concertTitle: String,
-//    @SerializedName("concert_image") val concertImage: String?,
-//    @SerializedName("concert_date") val concertDate: String,
-//    @SerializedName("concert_time") val concertTime: String,
-//    @SerializedName("place_name") val placeName: String,
-//    @SerializedName("place_address") val placeAddress: String,
-//    @SerializedName("place_id") val placeId: Int,
-//    @SerializedName("tour_id") val tourId: Int?,
-//    @SerializedName("tour_title") val tourTitle: String?,
-//    @SerializedName("tour_image") val tourImage: String?,
-//    @SerializedName("effective_image") val effectiveImage: String,
-//    @SerializedName("is_part_of_tour") val isPartOfTour: Boolean
-//)
-//
-//data class ArtistConcertDetailsResponse(
-//    @SerializedName("artist_id") val artistId: Int,
-//    @SerializedName("artist_name") val artistName: String,
-//    @SerializedName("artist_image") val artistImage: String?
-//)
-//
-//data class TicketConcertDetailsResponse(
-//    @SerializedName("ticket_id") val ticketId: Int,
-//    @SerializedName("ticket_price") val ticketPrice: Double,
-//    @SerializedName("sector_id") val sectorId: Int,
-//    @SerializedName("tour_name") val tourName: String,
-//    @SerializedName("sector_is_stage") val sectorIsStage: Boolean,
-//    val xSx: Double?,
-//    val ySx: Double?,
-//    val xDx: Double?,
-//    val yDx: Double?,
-//    @SerializedName("seat_id") val seatId: Int,
-//    @SerializedName("seat_description") val seatDescription: String?,
-//    val x: Double?,
-//    val y: Double?
-//)
-//
-//data class SectorConcertDetailsResponse(
-//    val id: Int,
-//    val name: String,
-//    @SerializedName("is_stage") val isStage: Boolean,
-//    @SerializedName("x_sx") val xSx: Double?,
-//    @SerializedName("y_sx") val ySx: Double?,
-//    @SerializedName("x_dx") val xDx: Double?,
-//    @SerializedName("y_dx") val yDx: Double?
-//)
-//
-//data class TourConcertDetailsResponse(
-//    val id: Int,
-//    val title: String,
-//    val image: String?
-//)
-//
+data class TourArtistResponse(
+    @SerializedName("artist_id") val artistId: Int,
+    @SerializedName("artist_name") val artistName: String,
+    @SerializedName("artist_image") val artistImage: String?
+)
+
+data class TourConcertResponse(
+    @SerializedName("concert_id") val concertId: Int,
+    @SerializedName("concert_title") val concertTitle: String,
+    @SerializedName("concert_image") val concertImage: String?,
+    @SerializedName("concert_date") val concertDate: String,
+    @SerializedName("concert_time_str") val concertTimeStr: String,
+    @SerializedName("place_name") val placeName: String,
+    @SerializedName("place_address") val placeAddress: String,
+    @SerializedName("place_latitude") val placeLatitude: Double,
+    @SerializedName("place_longitude") val placeLongitude: Double
+)
+
+data class TourDetailsResponse(
+    @SerializedName("artists") val artists: List<TourArtistResponse>,
+    @SerializedName("concerts") val concerts: List<TourConcertResponse>
+)
+
+data class ConcertDetailsResponse(
+    @SerializedName("concert_info") val concertInfo: ConcertInfoResponse,
+    @SerializedName("artists") val artists: List<ArtistConcertDetailsResponse>,
+    @SerializedName("available_tickets") val availableTickets: List<TicketConcertDetailsResponse>,
+    @SerializedName("sectors") val sectors: List<SectorConcertDetailsResponse>,
+    @SerializedName("tour_info") val tourInfo: TourConcertDetailsResponse? = null
+)
+
+data class ConcertInfoResponse(
+    @SerializedName("concert_title") val concertTitle: String,
+    @SerializedName("concert_image") val concertImage: String?,
+    @SerializedName("concert_date") val concertDate: String,
+    @SerializedName("concert_time") val concertTime: String,
+    @SerializedName("place_name") val placeName: String,
+    @SerializedName("place_address") val placeAddress: String,
+    @SerializedName("place_id") val placeId: Int,
+    @SerializedName("tour_id") val tourId: Int?,
+    @SerializedName("tour_title") val tourTitle: String?,
+    @SerializedName("tour_image") val tourImage: String?,
+    @SerializedName("effective_image") val effectiveImage: String,
+    @SerializedName("is_part_of_tour") val isPartOfTour: Boolean
+)
+
+data class ArtistConcertDetailsResponse(
+    @SerializedName("artist_id") val artistId: Int,
+    @SerializedName("artist_name") val artistName: String,
+    @SerializedName("artist_image") val artistImage: String?
+)
+
+data class TicketConcertDetailsResponse(
+    @SerializedName("ticket_id") val ticketId: Int,
+    @SerializedName("ticket_price") val ticketPrice: Double,
+    @SerializedName("sector_id") val sectorId: Int,
+    @SerializedName("tour_name") val tourName: String,
+    @SerializedName("sector_is_stage") val sectorIsStage: Boolean,
+    val xSx: Double?,
+    val ySx: Double?,
+    val xDx: Double?,
+    val yDx: Double?,
+    @SerializedName("seat_id") val seatId: Int,
+    @SerializedName("seat_description") val seatDescription: String?,
+    val x: Double?,
+    val y: Double?
+)
+
+data class SectorConcertDetailsResponse(
+    val id: Int,
+    val name: String,
+    @SerializedName("is_stage") val isStage: Int,
+    @SerializedName("x_sx") val xSx: Double?,
+    @SerializedName("y_sx") val ySx: Double?,
+    @SerializedName("x_dx") val xDx: Double?,
+    @SerializedName("y_dx") val yDx: Double?
+)
+
+data class TourConcertDetailsResponse(
+    val id: Int,
+    val title: String,
+    val image: String?
+)
+
 //data class ArtistDetailsResponse(
 //    val artist: ArtistDetailsInfoResponse,
 //    val concerts: List<ConcertArtistDetailsResponse>,
