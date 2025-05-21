@@ -34,6 +34,7 @@ import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.component.ShowArtistList
 import com.hitwaves.ui.component.Title
 import com.hitwaves.model.EventForCards
+import com.hitwaves.ui.component.GoBack
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.theme.rememberScreenDimensions
 import com.hitwaves.ui.viewModel.TourViewModel
@@ -92,7 +93,8 @@ fun TourDetails(eventForCards: EventForCards, navController: NavController){
                     artistName = firstArtist.artistName,
                     artistImage = firstArtist.artistImage.orEmpty(),
                     description = event.placeName,
-                    date = event.concertDate
+                    date = event.concertDate,
+                    placeName = event.placeName
                 )
             }
         } else if (!tourConcert.success && tourConcert.errorMessage != null) {

@@ -127,7 +127,7 @@ data class TicketConcertDetailsResponse(
     @SerializedName("ticket_price") val ticketPrice: Double,
     @SerializedName("sector_id") val sectorId: Int,
     @SerializedName("tour_name") val tourName: String,
-    @SerializedName("sector_is_stage") val sectorIsStage: Boolean,
+    @SerializedName("sector_is_stage") val sectorIsStage: Int,
     val xSx: Double?,
     val ySx: Double?,
     val xDx: Double?,

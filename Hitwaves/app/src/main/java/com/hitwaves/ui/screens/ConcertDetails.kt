@@ -40,6 +40,7 @@ import com.hitwaves.model.Artist
 import com.hitwaves.model.EventForCards
 import com.hitwaves.model.SectorConcert
 import com.hitwaves.ui.component.CustomSnackbar
+import com.hitwaves.ui.component.GoBack
 import com.hitwaves.ui.component.LoadingIndicator
 import com.hitwaves.ui.component.RatingViewOnly
 import com.hitwaves.ui.component.ShowArtistList
@@ -87,7 +88,8 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
                     artistName = mainArtist?.artistName.orEmpty(),
                     artistImage = mainArtist?.artistImage.orEmpty(),
                     description = info.placeName,
-                    date = info.concertDate
+                    date = info.concertDate,
+                    placeName = info.placeName
                 )
 
 
