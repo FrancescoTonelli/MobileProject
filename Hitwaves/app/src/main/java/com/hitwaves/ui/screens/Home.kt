@@ -9,7 +9,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -24,7 +23,6 @@ import com.hitwaves.R
 import com.hitwaves.ui.component.ButtonWithIcons
 import com.hitwaves.ui.component.SearchWave
 import com.hitwaves.ui.component.Title
-import com.hitwaves.model.Artist
 import com.hitwaves.model.EventForCards
 import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.theme.*
@@ -34,8 +32,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
-import com.hitwaves.api.ApiResult
-import com.hitwaves.ui.component.CustomSnackbar
+import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.viewModel.LocationViewModel
 
 fun goToMap(navController: NavHostController) {
@@ -59,7 +56,7 @@ private fun initLocation(): LocationViewModel {
 @Composable
 fun Home(navController: NavHostController) {
     val context = LocalContext.current
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
 
     var query by rememberSaveable { mutableStateOf("") }
     val onQueryChange: (String) -> Unit = { query = it }
@@ -85,28 +82,26 @@ fun Home(navController: NavHostController) {
     }
 
     LaunchedEffect(Unit) {
-        locationViewModel.getUserLocation(context)
         homeViewModel.getPopularEvents()
+        locationViewModel.getUserLocation(context)
     }
 
-    LaunchedEffect(location) {
+    LaunchedEffect(isGpsEnabled) {
+        if (!isGpsEnabled) {
+            snackBarHostState.showSnackbar("GPS disabled — enable it to see events near you")
+        } else {
+            locationViewModel.getUserLocation(context)
+        }
+    }
+
+    LaunchedEffect(isLocationLoading, location) {
         if(!isLocationLoading) {
             val (lat, lon) = location
             if (lat != null && lon != null) {
                 homeViewModel.getNearest(lat, lon)
             }
             else {
-                isGpsEnabled.and(false)
-            }
-        }
-    }
-
-    LaunchedEffect(isGpsEnabled) {
-        if (!isGpsEnabled) {
-            snackbarHostState.showSnackbar("GPS disabled — enable it to see events near you")
-        } else {
-            if (location.first == null || location.second == null) {
-                locationViewModel.getUserLocation(context)
+                locationViewModel.setIsGpsEnabled(false)
             }
         }
     }
@@ -231,5 +226,5 @@ fun Home(navController: NavHostController) {
         }
     }
 
-    CustomSnackbar(snackbarHostState)
+    CustomSnackBar(snackBarHostState)
 }

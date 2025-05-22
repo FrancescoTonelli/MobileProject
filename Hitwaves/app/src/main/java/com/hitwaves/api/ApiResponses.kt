@@ -202,35 +202,33 @@ data class LikedArtistResponse(
     @SerializedName("likes_count") val likesCount: Int,
     @SerializedName("average_rating") val averageRating: Float
 )
-//
-//data class TicketResponse(
-//    @SerializedName("likes_count") val ticketId: Int,
-//    val concert: ConcertTicketResponse
-//)
-//
-//data class ConcertTicketResponse(
-//    val id: Int,
-//    val title: String,
-//    val image: String?,
-//    val date: String,
-//    val time: String,
-//    @SerializedName("place_name")  val placeName: String,
-//    val artist: ArtistTicketResponse,
-//    val tour: TourTicketResponse?
-//)
-//
-//data class ArtistTicketResponse(
-//    val id: Int,
-//    val name: String,
-//    val image: String?
-//)
-//
-//data class TourTicketResponse(
-//    val id: Int,
-//    val title: String,
-//    val image: String?
-//)
-//
+
+data class TicketResponse(
+    @SerializedName("ticket_id") val ticketId: Int,
+    @SerializedName("concert_title") val concertTitle: String,
+    @SerializedName("concert_image") val concertImage: String?,
+    @SerializedName("concert_date") val concertDate: String,
+    @SerializedName("tour_title") val tourTitle: String?,
+    @SerializedName("artist_name") val artistName: String?,
+    @SerializedName("artist_image") val artistImage: String?,
+    @SerializedName("place_name") val placeName: String
+)
+
+data class TicketDetailsResponse(
+    @SerializedName("ticket_id") val ticketId: Int,
+    @SerializedName("concert_id") val concertId: Int,
+    @SerializedName("concert_title") val concertTitle: String,
+    @SerializedName("concert_image") val concertImage: String?,
+    @SerializedName("concert_date") val concertDate: String,
+    @SerializedName("concert_time") val concertTime: String,
+    @SerializedName("tour_title") val tourTitle: String?,
+    @SerializedName("place_name") val placeName: String,
+    @SerializedName("place_address") val placeAddress: String,
+    @SerializedName("sector_name") val sectorName: String,
+    @SerializedName("seat_description") val seatDescription: String,
+    @SerializedName("validated") val isValidated: Int
+)
+
 //data class CheckReviewResponse(
 //    @SerializedName("has_reviewed") val hasReviewed: Boolean,
 //    val review: ReviewCheckReviewResponse? = null

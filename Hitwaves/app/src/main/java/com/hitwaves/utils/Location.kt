@@ -16,8 +16,6 @@ import kotlinx.coroutines.withContext
 import android.provider.Settings
 import android.Manifest
 
-
-
 data class Coord(
     val latitude: Double,
     val longitude: Double

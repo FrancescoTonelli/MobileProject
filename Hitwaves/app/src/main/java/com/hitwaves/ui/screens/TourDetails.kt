@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.hitwaves.R
 import com.hitwaves.model.Artist
 import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.component.ShowArtistList
@@ -53,7 +52,7 @@ fun TourDetails(eventForCards: EventForCards, navController: NavController){
     var tourArtistShow : List<Artist> by remember { mutableStateOf(emptyList()) }
     var tourConcertShow : List<EventForCards> by remember { mutableStateOf(emptyList()) }
 
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         tourViewModel.getTourArtist(eventForCards.contentId)
@@ -72,7 +71,7 @@ fun TourDetails(eventForCards: EventForCards, navController: NavController){
                 )
             }
         } else if (!tourArtist.success && tourArtist.errorMessage != null) {
-            snackbarHostState.showSnackbar(tourArtist.errorMessage!!)
+            snackBarHostState.showSnackbar(tourArtist.errorMessage!!)
         }
     }
 
@@ -98,7 +97,7 @@ fun TourDetails(eventForCards: EventForCards, navController: NavController){
                 )
             }
         } else if (!tourConcert.success && tourConcert.errorMessage != null) {
-            snackbarHostState.showSnackbar(tourConcert.errorMessage!!)
+            snackBarHostState.showSnackbar(tourConcert.errorMessage!!)
         }
     }
 

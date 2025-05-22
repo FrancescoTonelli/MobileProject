@@ -50,7 +50,7 @@ fun EventCard(event: EventForCards, navController: NavController){
                     navController.currentBackStackEntry?.savedStateHandle?.set("event", event)
 
                     val destination = when {
-                    //event.isTicket -> "ticketDetails"
+                    event.isTicket -> "ticketDetails"
                     event.isTour -> "tourDetails"
                     else -> "concertDetails"
                     }
@@ -60,7 +60,6 @@ fun EventCard(event: EventForCards, navController: NavController){
                             saveState = true
                         }
                         launchSingleTop = true
-                        restoreState = true
                     }
                 },
             shape = RoundedCornerShape(15.dp),

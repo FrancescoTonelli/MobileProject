@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.hitwaves.ui.component.CustomSnackbar
+import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.component.NotificationCard
 import com.hitwaves.ui.component.LoadingIndicator
 import com.hitwaves.ui.theme.*
@@ -38,7 +38,7 @@ fun Notification(navController: NavHostController) {
     val notifs by notificationViewModel.notificationState
     val isLoading by notificationViewModel.isNotificationLoading
     val readNotifs by notificationViewModel.readState
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         notificationViewModel.getNotifications()
@@ -46,13 +46,13 @@ fun Notification(navController: NavHostController) {
 
     LaunchedEffect(notifs) {
         if (!notifs.success && notifs.errorMessage != null) {
-            snackbarHostState.showSnackbar(notifs.errorMessage!!)
+            snackBarHostState.showSnackbar(notifs.errorMessage!!)
         }
     }
 
     LaunchedEffect(readNotifs) {
         if (!readNotifs.success && readNotifs.errorMessage != null) {
-            snackbarHostState.showSnackbar(readNotifs.errorMessage!!)
+            snackBarHostState.showSnackbar(readNotifs.errorMessage!!)
         }
     }
 
@@ -101,7 +101,7 @@ fun Notification(navController: NavHostController) {
         }
     }
 
-    CustomSnackbar(snackbarHostState)
+    CustomSnackBar(snackBarHostState)
 
     if (isLoading) {
         LoadingIndicator()

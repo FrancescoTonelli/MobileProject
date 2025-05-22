@@ -20,7 +20,7 @@ import com.hitwaves.ui.theme.Secondary
 import com.hitwaves.ui.theme.Typography
 
 @Composable
-fun CustomSnackbar(snackbarHostState: SnackbarHostState) {
+fun CustomSnackBar(snackBarHostState: SnackbarHostState) {
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -28,7 +28,7 @@ fun CustomSnackbar(snackbarHostState: SnackbarHostState) {
         contentAlignment = Alignment.BottomCenter
     ) {
         SnackbarHost(
-            hostState = snackbarHostState,
+            hostState = snackBarHostState,
             snackbar = { snackbarData: SnackbarData ->
                 Box(
                     modifier = Modifier

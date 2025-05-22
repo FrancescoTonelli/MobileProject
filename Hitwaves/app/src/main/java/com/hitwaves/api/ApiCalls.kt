@@ -156,14 +156,22 @@ suspend fun apiLikeOrUnlikeArtist(artistId: Int): ApiResult<String> {
     )
 }
 
-//suspend fun apiGetUserTickets(): Pair<Boolean, Any?> {
-//    val url = "tickets"
-//    return HttpHelper.getRequestAsync<List<TicketResponse>>(
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
-//
+suspend fun apiGetUserTickets(): ApiResult<List<TicketResponse>> {
+    val url = "tickets"
+    return ApiGenericCalls.getRequestAsync<List<TicketResponse>>(
+        endpoint = url,
+        withAuth = true
+    )
+}
+
+suspend fun apiGetUserTicketDetails(ticketId: Int): ApiResult<TicketDetailsResponse> {
+    val url = "ticket/$ticketId"
+    return ApiGenericCalls.getRequestAsync<TicketDetailsResponse>(
+        endpoint = url,
+        withAuth = true
+    )
+}
+
 //suspend fun apiCheckUserReview(concertId: Int): Pair<Boolean, Any?> {
 //    val url = "review/check/$concertId"
 //    return HttpHelper.getRequestAsync<CheckReviewResponse>(

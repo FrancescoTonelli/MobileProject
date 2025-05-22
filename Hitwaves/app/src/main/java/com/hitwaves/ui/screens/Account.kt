@@ -51,7 +51,7 @@ import com.hitwaves.api.getHttpUserImageUrl
 import com.hitwaves.ui.component.ButtonWithIcons
 import com.hitwaves.ui.component.CustomMessageBox
 import com.hitwaves.ui.component.CustomPhotoDialog
-import com.hitwaves.ui.component.CustomSnackbar
+import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.component.LoadingIndicator
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.viewModel.AccountViewModel
@@ -87,7 +87,7 @@ fun Account(navController: NavHostController) {
     val deleteState by accountViewModel.deleteState
     val isLoading by accountViewModel.isLoadingAccount
     val imageUpdateState by accountViewModel.imageUpdateState
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -126,13 +126,13 @@ fun Account(navController: NavHostController) {
         if (imageUpdateState.success) {
             accountViewModel.getAccount()
         } else if (imageUpdateState.errorMessage != null) {
-            snackbarHostState.showSnackbar(imageUpdateState.errorMessage!!)
+            snackBarHostState.showSnackbar(imageUpdateState.errorMessage!!)
         }
     }
 
     LaunchedEffect(accountData) {
         if (!accountData.success && accountData.errorMessage != null) {
-            snackbarHostState.showSnackbar(accountData.errorMessage!!)
+            snackBarHostState.showSnackbar(accountData.errorMessage!!)
         }
         else {
             avatar = if (accountData.data?.image != null) {
@@ -151,7 +151,7 @@ fun Account(navController: NavHostController) {
             (context as? Activity)?.finish()
 
         } else if (logoutState.errorMessage != null) {
-            snackbarHostState.showSnackbar(logoutState.errorMessage!!)
+            snackBarHostState.showSnackbar(logoutState.errorMessage!!)
         }
     }
 
@@ -162,7 +162,7 @@ fun Account(navController: NavHostController) {
             (context as? Activity)?.finish()
 
         } else if (deleteState.errorMessage != null) {
-            snackbarHostState.showSnackbar(deleteState.errorMessage!!)
+            snackBarHostState.showSnackbar(deleteState.errorMessage!!)
         }
     }
 
@@ -440,7 +440,7 @@ fun Account(navController: NavHostController) {
     }
 
 
-    CustomSnackbar(snackbarHostState)
+    CustomSnackBar(snackBarHostState)
 
     if (isLoading) {
         LoadingIndicator()

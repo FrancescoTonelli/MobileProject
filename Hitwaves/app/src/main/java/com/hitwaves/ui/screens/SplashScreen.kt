@@ -30,7 +30,7 @@ import com.hitwaves.LoginActivity
 import com.hitwaves.R
 import com.hitwaves.api.TokenManager
 import com.hitwaves.ui.component.CustomMessageBox
-import com.hitwaves.ui.component.CustomSnackbar
+import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.component.IconData
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.viewModel.SplashScreenViewModel
@@ -43,7 +43,7 @@ fun SplashScreen() {
     val activity = context as Activity
     val splashViewModel = remember { SplashScreenViewModel() }
     val result by splashViewModel.autoLoginState
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
 
     var permissionChecked by remember { mutableStateOf(false) }
     var showSettingsDialog by remember { mutableStateOf(false) }
@@ -154,7 +154,7 @@ fun SplashScreen() {
             context.startActivity(Intent(context, AppActivity::class.java))
             activity.finish()
         } else if (!result.success && result.errorMessage != null) {
-            snackbarHostState.showSnackbar(result.errorMessage!!)
+            snackBarHostState.showSnackbar(result.errorMessage!!)
             context.startActivity(Intent(context, LoginActivity::class.java))
             activity.finish()
         }
@@ -227,5 +227,5 @@ fun SplashScreen() {
         )
     }
 
-    CustomSnackbar(snackbarHostState)
+    CustomSnackBar(snackBarHostState)
 }

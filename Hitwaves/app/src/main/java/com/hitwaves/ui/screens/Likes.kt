@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.hitwaves.model.Artist
 import com.hitwaves.ui.component.ArtistCard
-import com.hitwaves.ui.component.CustomSnackbar
+import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.component.Title
 import com.hitwaves.ui.component.LoadingIndicator
 import com.hitwaves.ui.viewModel.LikesViewModel
@@ -41,7 +41,7 @@ fun Likes(navController: NavHostController) {
     val toggleState by likesViewModel.toggleState
     val errorMsg = remember { mutableStateOf("") }
     val context = LocalContext.current
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         likesViewModel.getLikedArtists()
@@ -60,7 +60,7 @@ fun Likes(navController: NavHostController) {
                 )
             }
         } else if (!result.success && result.errorMessage != null) {
-            snackbarHostState.showSnackbar(result.errorMessage!!)
+            snackBarHostState.showSnackbar(result.errorMessage!!)
         }
     }
 
@@ -107,7 +107,7 @@ fun Likes(navController: NavHostController) {
     }
 
 
-    CustomSnackbar(snackbarHostState)
+    CustomSnackBar(snackBarHostState)
 
     if (isLoading) {
         LoadingIndicator()

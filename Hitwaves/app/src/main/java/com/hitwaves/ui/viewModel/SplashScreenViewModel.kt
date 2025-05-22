@@ -5,10 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hitwaves.api.ApiResult
-import com.hitwaves.api.LoginRequest
 import com.hitwaves.api.TokenResponse
 import com.hitwaves.api.apiAutomaticLogin
-import com.hitwaves.api.apiLoginUser
 import kotlinx.coroutines.launch
 
 class SplashScreenViewModel : ViewModel(){

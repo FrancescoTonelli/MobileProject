@@ -6,6 +6,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -14,11 +15,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.hitwaves.ui.theme.*
+import com.hitwaves.ui.viewModel.TicketViewModel
 
 @Composable
-fun SecondaryTextTabs() {
+fun SecondaryTextTabs(ticketViewModel: TicketViewModel) {
     var state by remember { mutableIntStateOf(0) }
-    val titles = listOf("Next Event", "Past Event")
+    val titles = listOf("Next Events", "Past Events")
+
+    LaunchedEffect(state) {
+        ticketViewModel.setDisplayIndex(state)
+    }
+
     Column {
         SecondaryTabRow(
             selectedTabIndex = state,
@@ -45,10 +52,5 @@ fun SecondaryTextTabs() {
                 )
             }
         }
-//        Text(
-//            modifier = Modifier.align(Alignment.CenterHorizontally),
-//            text = "Secondary tab ${state + 1} selected",
-//            style = MaterialTheme.typography.bodyLarge
-//        )
     }
 }

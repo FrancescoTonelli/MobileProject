@@ -30,7 +30,7 @@ import com.hitwaves.R
 import com.hitwaves.api.ApiResult
 import com.hitwaves.api.TokenManager
 import com.hitwaves.api.TokenResponse
-import com.hitwaves.ui.component.CustomSnackbar
+import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.component.LoginButton
 import com.hitwaves.ui.component.LoginDateField
 import com.hitwaves.ui.component.LoginInputField
@@ -57,7 +57,7 @@ fun Register(navController: NavHostController) {
     val registerViewModel = remember { init() }
     val result: ApiResult<TokenResponse> by registerViewModel.registerState
     val isLoading by registerViewModel.isLoading
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
     LaunchedEffect(result) {
@@ -69,7 +69,7 @@ fun Register(navController: NavHostController) {
         } else if (!result.success && result.errorMessage != null) {
             password.value = ""
             confirmPassword.value = ""
-            snackbarHostState.showSnackbar(result.errorMessage!!)
+            snackBarHostState.showSnackbar(result.errorMessage!!)
         }
     }
 
@@ -184,7 +184,7 @@ fun Register(navController: NavHostController) {
         }
     }
 
-    CustomSnackbar(snackbarHostState)
+    CustomSnackBar(snackBarHostState)
 
     if (isLoading) {
         LoadingIndicator()

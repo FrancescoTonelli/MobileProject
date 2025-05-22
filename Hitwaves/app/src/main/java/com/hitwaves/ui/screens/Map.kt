@@ -26,7 +26,7 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.hitwaves.R
 import com.hitwaves.api.getHttpArtistImageUrl
-import com.hitwaves.ui.component.CustomSnackbar
+import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.component.GoBack
 import com.hitwaves.ui.component.LoadingIndicator
 import com.hitwaves.ui.viewModel.LocationViewModel
@@ -43,7 +43,6 @@ import com.mapbox.maps.plugin.logo.logo
 import com.mapbox.maps.plugin.scalebar.scalebar
 import androidx.core.graphics.drawable.toBitmap
 import coil.compose.rememberAsyncImagePainter
-import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.theme.BgDark
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotationInteractionsState
 
@@ -58,7 +57,7 @@ private fun initMap(): MapViewModel {
 @Composable
 fun ConcertMap(navController: NavController) {
     val context = LocalContext.current
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
 
     val locationViewModel: LocationViewModel = remember { initLocation() }
     val mapViewModel: MapViewModel = remember { initMap() }
@@ -111,7 +110,7 @@ fun ConcertMap(navController: NavController) {
 
     LaunchedEffect(isGpsEnabled) {
         if (!isGpsEnabled) {
-            snackbarHostState.showSnackbar("GPS disabled — enable it to see events near you")
+            snackBarHostState.showSnackbar("GPS disabled — enable it to see events near you")
         } else {
             locationViewModel.getUserLocation(context)
         }
@@ -229,6 +228,6 @@ fun ConcertMap(navController: NavController) {
             .background(BgDark)
     )
 
-    CustomSnackbar(snackbarHostState)
+    CustomSnackBar(snackBarHostState)
     GoBack(navController)
 }

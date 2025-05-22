@@ -1,19 +1,12 @@
 package com.hitwaves.ui.component
 
-import android.annotation.SuppressLint
-import android.widget.Space
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -24,11 +17,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SearchBarDefaults.InputField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,24 +29,23 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
 import com.hitwaves.R
 import com.hitwaves.model.Artist
 import com.hitwaves.model.EventForCards
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.viewModel.FilterViewModel
-import okhttp3.internal.notify
 import androidx.compose.material3.SnackbarHostState
+import androidx.activity.compose.BackHandler
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+
 
 private fun init(): FilterViewModel{
     return FilterViewModel()
@@ -81,7 +70,10 @@ fun SearchWave(
     var allConcertSearch : List<EventForCards> by remember { mutableStateOf(emptyList()) }
     var allTourSearch : List<EventForCards> by remember { mutableStateOf(emptyList()) }
 
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     LaunchedEffect(Unit) {
         filterViewModel.getAllArtist()
@@ -101,7 +93,7 @@ fun SearchWave(
                 )
             }
         } else if (!allArtist.success && allArtist.errorMessage != null) {
-            snackbarHostState.showSnackbar(allArtist.errorMessage!!)
+            snackBarHostState.showSnackbar(allArtist.errorMessage!!)
         }
     }
 
@@ -121,7 +113,7 @@ fun SearchWave(
                 )
             }
         } else if (!allConcert.success && allConcert.errorMessage != null) {
-            snackbarHostState.showSnackbar(allConcert.errorMessage!!)
+            snackBarHostState.showSnackbar(allConcert.errorMessage!!)
         }
     }
 
@@ -141,11 +133,16 @@ fun SearchWave(
                 )
             }
         } else if (!allTour.success && allTour.errorMessage != null) {
-            snackbarHostState.showSnackbar(allTour.errorMessage!!)
+            snackBarHostState.showSnackbar(allTour.errorMessage!!)
         }
     }
 
-
+    BackHandler(enabled = expanded) {
+        expanded = false
+        onQueryChange("")
+        focusManager.clearFocus()
+        keyboardController?.hide()
+    }
 
     val filteredArtists = remember(query, allArtistSearch) {
         allArtistSearch.filter { it.artistName.contains(query, ignoreCase = true) }
@@ -172,8 +169,12 @@ fun SearchWave(
             query = query,
             onQueryChange = {
                 onQueryChange(it)
+                expanded = true
             },
-            onSearch = {  },
+            onSearch = {
+                keyboardController?.hide()
+                focusManager.clearFocus()
+            },
             leadingIcon = {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.search),
@@ -209,7 +210,7 @@ fun SearchWave(
                 unfocusedTextColor = Secondary
             )
         )
-        if (query.isNotBlank()) {
+        if (expanded) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -226,11 +227,11 @@ fun SearchWave(
             ShowEventList(filteredEvents, navController)
         }
     }
+
+    if (isLoading) {
+        LoadingIndicator()
+    }
 }
-
-
-
-
 
 @Composable
 fun ShowArtistList(artistList: List<Artist>, navController: NavController) {

@@ -931,16 +931,15 @@ def protected_user_like_artist(artist_id):
     finally:
         conn.close()
 
-# Get User Tickets
 @protected_user_bp.route('/protected_user/tickets', methods=['GET'])
 def protected_user_tickets():
     auth_header = request.headers.get('Authorization')
     if not auth_header:
         return jsonify({'message': 'Token is missing'}), 401
-    
+
     try:
         user_id = verify_token()[0]
-    except Exception as e:
+    except Exception:
         return jsonify({'message': 'Invalid token'}), 401
 
     conn = get_db()
@@ -950,81 +949,114 @@ def protected_user_tickets():
         cursor.execute("""
             SELECT 
                 t.id AS ticket_id,
-                c.id AS concert_id,
                 c.title AS concert_title,
-                c.image AS concert_image,
+                COALESCE(c.image, tour.image) AS concert_image,
                 DATE_FORMAT(c.date, '%Y-%m-%d') AS concert_date,
-                c.time AS concert_time,
-                tour.id AS tour_id,
                 tour.title AS tour_title,
-                tour.image AS tour_image,
-                place.name AS place_name,
-                (
-                    SELECT a.image 
-                    FROM artist a
-                    JOIN artist_concert ac ON a.id = ac.artist_id
-                    WHERE ac.concert_id = c.id
-                    LIMIT 1
-                ) AS artist_image,
-                (
-                    SELECT a.id
-                    FROM artist a
-                    JOIN artist_concert ac ON a.id = ac.artist_id
-                    WHERE ac.concert_id = c.id
-                    LIMIT 1
-                ) AS artist_id,
-                (
-                    SELECT a.name
-                    FROM artist a
-                    JOIN artist_concert ac ON a.id = ac.artist_id
-                    WHERE ac.concert_id = c.id
-                    LIMIT 1
-                ) AS artist_name
+                a.name AS artist_name,
+                a.image AS artist_image,
+                place.name AS place_name
             FROM 
                 ticket t
-            JOIN 
-                concert c ON t.concert_id = c.id
-            LEFT JOIN 
-                tour ON c.tour_id = tour.id
-            JOIN 
-                place ON c.place_id = place.id
+            JOIN concert c ON t.concert_id = c.id
+            LEFT JOIN tour ON c.tour_id = tour.id
+            LEFT JOIN place ON c.place_id = place.id
+            LEFT JOIN (
+                SELECT ac.concert_id, a.id, a.name, a.image
+                FROM artist_concert ac
+                JOIN artist a ON ac.artist_id = a.id
+                GROUP BY ac.concert_id
+            ) a ON a.concert_id = c.id
             WHERE 
                 t.user_id = %s
             ORDER BY 
                 c.date DESC, c.time DESC
         """, (user_id,))
-        
-        tickets = cursor.fetchall()
+        rows = cursor.fetchall()
 
         formatted_tickets = []
-        for ticket in tickets:
+        for row in rows:
             formatted_ticket = {
-                'ticket_id': ticket['ticket_id'],
-                'concert': {
-                    'id': ticket['concert_id'],
-                    'title': ticket['concert_title'],
-                    'image': ticket['concert_image'] or ticket.get('tour_image'),
-                    'date': ticket['concert_date'],
-                    'time': str(ticket['concert_time']),
-                    'place_name': ticket['place_name'],
-                    'artist': {
-                        'id': ticket['artist_id'],
-                        'name': ticket['artist_name'],
-                        'image': ticket['artist_image']
-                    }
-                }
+                'ticket_id': row['ticket_id'],
+                'concert_title': row['concert_title'],
+                'concert_image': row['concert_image'],
+                'concert_date': row['concert_date'],
+                'tour_title': row['tour_title'],
+                'artist_name': row['artist_name'],
+                'artist_image': row['artist_image'],
+                'place_name': row['place_name']
             }
-            
-            if ticket['tour_id']:
-                formatted_ticket['tour'] = {
-                    'id': ticket['tour_id'],
-                    'title': ticket['tour_title'],
-                    'image': ticket['tour_image']
-                }
-            
             formatted_tickets.append(formatted_ticket)
 
-        return jsonify({'tickets': formatted_tickets}), 200
+        return jsonify(formatted_tickets), 200
+
+    except Exception as e:
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+# Get Ticket Details
+@protected_user_bp.route('/protected_user/ticket/<int:ticket_id>', methods=['GET'])
+def protected_user_ticket_detail(ticket_id):
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+
+    try:
+        user_id = verify_token()[0]
+    except Exception:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("""
+            SELECT 
+                t.id AS ticket_id,
+                t.validated,
+                c.id AS concert_id,
+                c.title AS concert_title,
+                COALESCE(c.image, tour.image) AS concert_image,
+                DATE_FORMAT(c.date, '%Y-%m-%d') AS concert_date,
+                TIME_FORMAT(c.time, '%H:%i') AS concert_time,
+                tour.title AS tour_title,
+                place.name AS place_name,
+                place.address AS place_address,
+                sector.name AS sector_name,
+                seat.description AS seat_description
+            FROM 
+                ticket t
+            JOIN concert c ON t.concert_id = c.id
+            LEFT JOIN tour ON c.tour_id = tour.id
+            LEFT JOIN place ON c.place_id = place.id
+            LEFT JOIN seat ON t.seat_id = seat.id
+            LEFT JOIN sector ON seat.sector_id = sector.id
+            WHERE 
+                t.id = %s AND t.user_id = %s
+        """, (ticket_id, user_id))
+
+        row = cursor.fetchone()
+
+        if not row:
+            return jsonify({'message': 'Ticket not found or unauthorized'}), 404
+
+        ticket_info = {
+            'ticket_id': row['ticket_id'],
+            'validated': row['validated'],
+            'concert_id': row['concert_id'],
+            'concert_title': row['concert_title'],
+            'concert_image': row['concert_image'],
+            'concert_date': row['concert_date'],
+            'concert_time': row['concert_time'],
+            'tour_title': row['tour_title'],
+            'place_name': row['place_name'],
+            'place_address': row['place_address'],
+            'sector_name': row['sector_name'],
+            'seat_description': row['seat_description']
+        }
+
+        return jsonify(ticket_info), 200
 
     except Exception as e:
         return jsonify({'message': f'Server error: {str(e)}'}), 500

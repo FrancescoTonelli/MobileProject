@@ -10,10 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,16 +22,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.hitwaves.R
 import com.hitwaves.api.UserUpdateRequest
-import com.hitwaves.ui.component.CustomSnackbar
+import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.component.GoBack
 import com.hitwaves.ui.component.LoginButton
 import com.hitwaves.ui.component.LoginDateField
@@ -63,7 +58,7 @@ fun AccountUpdate(navController: NavHostController) {
     val accountState by accountViewModel.accountState
     val updateState by accountViewModel.updateState
     val isLoading by accountViewModel.isLoadingAccount
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -81,18 +76,18 @@ fun AccountUpdate(navController: NavHostController) {
             password.value = ""
             confirmPassword.value = ""
         } else if (!accountState.success && accountState.errorMessage != null) {
-            snackbarHostState.showSnackbar(accountState.errorMessage!!)
+            snackBarHostState.showSnackbar(accountState.errorMessage!!)
         }
     }
 
     LaunchedEffect(updateState) {
         if (updateState.success && updateState.data != null) {
-            snackbarHostState.showSnackbar("Account updated successfully")
+            snackBarHostState.showSnackbar("Account updated successfully")
             accountViewModel.getAccount()
         } else if (!updateState.success && updateState.errorMessage != null) {
             password.value = ""
             confirmPassword.value = ""
-            snackbarHostState.showSnackbar(updateState.errorMessage!!)
+            snackBarHostState.showSnackbar(updateState.errorMessage!!)
         }
     }
 
@@ -194,7 +189,7 @@ fun AccountUpdate(navController: NavHostController) {
                     onClickAction = {
                         if(password.value != confirmPassword.value) {
                             coroutineScope.launch {
-                                snackbarHostState.showSnackbar("Passwords do not match")
+                                snackBarHostState.showSnackbar("Passwords do not match")
                             }
                         }
                         else {
@@ -215,7 +210,7 @@ fun AccountUpdate(navController: NavHostController) {
         }
     }
 
-    CustomSnackbar(snackbarHostState)
+    CustomSnackBar(snackBarHostState)
 
     if (isLoading) {
         LoadingIndicator()

@@ -8,11 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,17 +22,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.hitwaves.R
-import com.hitwaves.api.ApiResult
 import com.hitwaves.ui.component.AccountReviewCard
 import com.hitwaves.ui.component.CustomMessageBox
-import com.hitwaves.ui.component.CustomSnackbar
+import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.component.GoBack
 import com.hitwaves.ui.component.LoadingIndicator
 import com.hitwaves.ui.theme.BgDark
@@ -53,7 +47,7 @@ fun AccountReviews(navController: NavHostController) {
     val reviews by accountRevViewModel.reviewsState
     val deleteState by accountRevViewModel.deleteState
     val isLoading by accountRevViewModel.isLoadingReviews
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var idToDelete by remember { mutableIntStateOf(0) }
 
@@ -63,7 +57,7 @@ fun AccountReviews(navController: NavHostController) {
 
     LaunchedEffect(reviews) {
        if (reviews.errorMessage != null) {
-            snackbarHostState.showSnackbar(reviews.errorMessage!!)
+            snackBarHostState.showSnackbar(reviews.errorMessage!!)
        }
     }
 
@@ -72,7 +66,7 @@ fun AccountReviews(navController: NavHostController) {
             accountRevViewModel.getReviews()
             deleteState.success = false
         } else if (deleteState.errorMessage != null) {
-            snackbarHostState.showSnackbar(deleteState.errorMessage!!)
+            snackBarHostState.showSnackbar(deleteState.errorMessage!!)
         }
     }
 
@@ -150,7 +144,7 @@ fun AccountReviews(navController: NavHostController) {
         )
     }
 
-    CustomSnackbar(snackbarHostState)
+    CustomSnackBar(snackBarHostState)
 
     if (isLoading) {
         LoadingIndicator()
