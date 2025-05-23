@@ -89,7 +89,8 @@ fun SearchWave(
                     artistName = artist.name,
                     artistImageUrl = artist.image,
                     likesCount = artist.likesCount,
-                    averageRating = artist.averageRating
+                    averageRating = artist.averageRating,
+                    isLiked = false
                 )
             }
         } else if (!allArtist.success && allArtist.errorMessage != null) {

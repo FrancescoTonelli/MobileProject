@@ -46,6 +46,7 @@ import com.hitwaves.R
 import com.hitwaves.api.ConcertArtistDetailsResponse
 import com.hitwaves.api.ReviewArtistDetailsResponse
 import com.hitwaves.api.TourArtistDetailsResponse
+import com.hitwaves.api.artistImageUrl
 import com.hitwaves.api.getHttpArtistImageUrl
 import com.hitwaves.api.getHttpUserImageUrl
 import com.hitwaves.ui.component.ArtistCard
@@ -77,7 +78,6 @@ fun ArtistDetails(artist: Artist, navController: NavController){
     val artistDetails by artistViewModel.artistState
     val isLoading by artistViewModel.isLoadingArtist
     val toggleState by likesViewModel.toggleState
-
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -121,6 +121,7 @@ fun ArtistDetails(artist: Artist, navController: NavController){
             }
 
             reviews = artistDetails.data!!.reviews
+
         }
     }
 
@@ -139,7 +140,18 @@ fun ArtistDetails(artist: Artist, navController: NavController){
         ) {
 
             ArtistCard(
-                artist = artist,
+                artist = if(artistDetails.success && artistDetails.data != null) {
+                    Artist(
+                        artistId = artist.artistId,
+                        artistName = artistDetails.data!!.artist.name,
+                        artistImageUrl = artistDetails.data!!.artist.image,
+                        likesCount = artistDetails.data!!.artist.likesCount,
+                        averageRating = artistDetails.data!!.artist.averageRating.toFloat(),
+                        isLiked = artistDetails.data!!.artist.isLiked
+                    )
+                }else{
+                    artist
+                },
                 onLikeClick = { artistId ->
                     likesViewModel.toggleLike(artistId)
                 },
@@ -153,6 +165,7 @@ fun ArtistDetails(artist: Artist, navController: NavController){
                 verticalArrangement = Arrangement.spacedBy(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
                 item {
                     Title("Next Event")
                 }

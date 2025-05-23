@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,7 +45,15 @@ fun ArtistCard(
     onLikeClick: (Int) -> Unit,
     onClick: () -> Unit
 ) {
-    var isLiked by remember { mutableStateOf(artist.isLiked) }
+    var isLiked by remember(artist.isLiked) { mutableStateOf(artist.isLiked) }
+
+    LaunchedEffect(Unit) {
+        isLiked = artist.isLiked
+    }
+
+    LaunchedEffect(artist.artistId) {
+        isLiked = artist.isLiked
+    }
 
     Column(
         modifier = Modifier

@@ -10,5 +10,5 @@ data class Artist(
     val artistImageUrl: String?,
     val likesCount: Int?,
     val averageRating: Float?,
-    val isLiked: Boolean = false
+    var isLiked: Boolean
 ) : Parcelable

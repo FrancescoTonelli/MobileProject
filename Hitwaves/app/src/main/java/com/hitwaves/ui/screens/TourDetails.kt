@@ -69,7 +69,8 @@ fun TourDetails(eventForCards: EventForCards, navController: NavController){
                     artistName = artist.artistName,
                     artistImageUrl = artist.artistImage,
                     likesCount = null,
-                    averageRating = null
+                    averageRating = null,
+                    isLiked = false
                 )
             }
 
