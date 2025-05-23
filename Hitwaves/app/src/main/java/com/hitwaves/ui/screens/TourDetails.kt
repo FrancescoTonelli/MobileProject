@@ -33,7 +33,9 @@ import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.component.ShowArtistList
 import com.hitwaves.ui.component.Title
 import com.hitwaves.model.EventForCards
+import com.hitwaves.ui.component.CustomSnackbar
 import com.hitwaves.ui.component.GoBack
+import com.hitwaves.ui.component.LoadingIndicator
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.theme.rememberScreenDimensions
 import com.hitwaves.ui.viewModel.TourViewModel
@@ -46,8 +48,8 @@ private fun init(): TourViewModel {
 fun TourDetails(eventForCards: EventForCards, navController: NavController){
 
     val tourViewModel = remember { init() }
-    val tourArtist by tourViewModel.tourArtistState
-    val tourConcert by tourViewModel.tourConcertState
+    val tour by tourViewModel.tourState
+    val isLoading by tourViewModel.isLoadingTour
 
     var tourArtistShow : List<Artist> by remember { mutableStateOf(emptyList()) }
     var tourConcertShow : List<EventForCards> by remember { mutableStateOf(emptyList()) }
@@ -55,13 +57,13 @@ fun TourDetails(eventForCards: EventForCards, navController: NavController){
     val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
-        tourViewModel.getTourArtist(eventForCards.contentId)
-        tourViewModel.getTourConcert(eventForCards.contentId)
+        tourViewModel.getTourDetails(eventForCards.contentId)
+        //tourViewModel.getTourConcert(eventForCards.contentId)
     }
 
-    LaunchedEffect(tourArtist) {
-        if (tourArtist.success && tourArtist.data != null) {
-            tourArtistShow = tourArtist.data!!.artists.map { artist ->
+    LaunchedEffect(tour) {
+        if (tour.success && tour.data != null) {
+            tourArtistShow = tour.data!!.artists.map { artist ->
                 Artist(
                     artistId = artist.artistId,
                     artistName = artist.artistName,
@@ -70,20 +72,10 @@ fun TourDetails(eventForCards: EventForCards, navController: NavController){
                     averageRating = null
                 )
             }
-        } else if (!tourArtist.success && tourArtist.errorMessage != null) {
-            snackBarHostState.showSnackbar(tourArtist.errorMessage!!)
-        }
-    }
 
-    LaunchedEffect(tourConcert, tourArtist) {
-        if (
-            tourConcert.success && tourConcert.data != null &&
-            tourArtist.success && tourArtist.data != null &&
-            tourArtist.data!!.artists.isNotEmpty()
-        ) {
-            val firstArtist = tourArtist.data!!.artists.first()
+            val firstArtist = tour.data!!.artists.first()
 
-            tourConcertShow = tourConcert.data!!.concerts.map { event ->
+            tourConcertShow = tour.data!!.concerts.map { event ->
                 EventForCards(
                     contentId = event.concertId,
                     isTour = false,
@@ -96,11 +88,10 @@ fun TourDetails(eventForCards: EventForCards, navController: NavController){
                     placeName = event.placeName
                 )
             }
-        } else if (!tourConcert.success && tourConcert.errorMessage != null) {
-            snackBarHostState.showSnackbar(tourConcert.errorMessage!!)
+        } else if (!tour.success && tour.errorMessage != null) {
+            snackbarHostState.showSnackbar(tour.errorMessage!!)
         }
     }
-
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally
@@ -177,5 +168,12 @@ fun TourDetails(eventForCards: EventForCards, navController: NavController){
                 }
             }
         }
+    }
+
+    CustomSnackbar(snackbarHostState)
+
+
+    if (isLoading) {
+        LoadingIndicator()
     }
 }
