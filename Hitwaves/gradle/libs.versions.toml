@@ -57,6 +57,9 @@ material3 = { module = "androidx.compose.material3:material3", version.ref = "ma
 androidx-navigation-compose-android = { group = "androidx.navigation", name = "navigation-compose-android", version.ref = "navigationComposeAndroid" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+zxing-core = "com.google.zxing:core:3.5.1"
+compose-ui-graphics = "androidx.compose.ui:ui-graphics:1.8.2"
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

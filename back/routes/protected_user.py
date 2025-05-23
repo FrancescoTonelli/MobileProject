@@ -931,6 +931,7 @@ def protected_user_like_artist(artist_id):
     finally:
         conn.close()
 
+# Get User's Tickets
 @protected_user_bp.route('/protected_user/tickets', methods=['GET'])
 def protected_user_tickets():
     auth_header = request.headers.get('Authorization')
@@ -1057,6 +1058,51 @@ def protected_user_ticket_detail(ticket_id):
         }
 
         return jsonify(ticket_info), 200
+
+    except Exception as e:
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+# Get Ticket QR Data
+@protected_user_bp.route('/protected_user/ticket/qr', methods=['POST'])
+def get_ticket_qr():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+
+    try:
+        user_id = verify_token()[0]
+    except Exception:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    data = request.get_json()
+    ticket_id = data.get('ticket_id')
+    concert_id = data.get('concert_id')
+
+    if not ticket_id or not concert_id:
+        return jsonify({'message': 'ticket\'s id and concert\'s id are required'}), 400
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("""
+            SELECT id AS ticket_id, user_id, concert_id
+            FROM ticket
+            WHERE id = %s AND user_id = %s AND concert_id = %s
+        """, (ticket_id, user_id, concert_id))
+
+        row = cursor.fetchone()
+
+        if not row:
+            return jsonify({'message': 'Ticket not found or unauthorized'}), 404
+
+        return jsonify({
+            'user_id': row['user_id'],
+            'ticket_id': row['ticket_id'],
+            'concert_id': row['concert_id']
+        }), 200
 
     except Exception as e:
         return jsonify({'message': f'Server error: {str(e)}'}), 500

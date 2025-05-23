@@ -255,13 +255,7 @@ fun ShowArtistList(artistList: List<Artist>, navController: NavController) {
                             ?.savedStateHandle
                             ?.set("artist", artist)
 
-                        navController.navigate("artistDetails"){
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        navController.navigate("artistDetails")
                     }
                 )
             }

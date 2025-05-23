@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
@@ -85,8 +86,7 @@ fun Register(navController: NavHostController) {
             imageVector = ImageVector.vectorResource(id = R.drawable.logo),
             contentDescription = null,
             modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxSize(),
+                .size(500.dp),
             tint = Primary.copy(alpha = 0.8f)
         )
 
@@ -171,13 +171,7 @@ fun Register(navController: NavHostController) {
                 SecondaryLoginButton(
                     textBtn = "Sign in",
                     onClickAction = {
-                        navController.navigate("login"){
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        navController.navigate("login")
                     }
                 )
             }

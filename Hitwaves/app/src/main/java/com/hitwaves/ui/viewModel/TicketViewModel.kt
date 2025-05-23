@@ -7,7 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hitwaves.api.ApiResult
 import com.hitwaves.api.TicketDetailsResponse
+import com.hitwaves.api.TicketQrRequest
+import com.hitwaves.api.TicketQrResponse
 import com.hitwaves.api.TicketResponse
+import com.hitwaves.api.apiGetTicketQr
 import com.hitwaves.api.apiGetUserTicketDetails
 import com.hitwaves.api.apiGetUserTickets
 import kotlinx.coroutines.launch
@@ -21,10 +24,15 @@ class TicketViewModel: ViewModel() {
     val isLoadingTickets: State<Boolean> = _isLoadingTickets
     private val _displayIndex = mutableIntStateOf(0)
     val displayIndex: State<Int> = _displayIndex
+
     private val _detailsState = mutableStateOf(ApiResult<TicketDetailsResponse>(false, null, null))
     val detailsState: State<ApiResult<TicketDetailsResponse>> = _detailsState
     private val _isLoadingDetails = mutableStateOf(false)
     val isLoadingDetails: State<Boolean> = _isLoadingDetails
+    private val _qrState = mutableStateOf(ApiResult<TicketQrResponse>(false, null, null))
+    val qrState: State<ApiResult<TicketQrResponse>> = _qrState
+    private val _isLoadingQr = mutableStateOf(false)
+    val isLoadingQr: State<Boolean> = _isLoadingQr
 
     fun getTickets() {
         viewModelScope.launch {
@@ -82,5 +90,28 @@ class TicketViewModel: ViewModel() {
         val today = LocalDate.now()
 
         return !inputDate.isBefore(today)
+    }
+
+    fun getTicketQr(ticketId: Int, concertId: Int) {
+        viewModelScope.launch {
+
+            try {
+
+                _isLoadingQr.value = true
+
+                val response = apiGetTicketQr(TicketQrRequest(ticketId, concertId))
+
+                _isLoadingQr.value = false
+
+                if (!response.success) {
+                    _qrState.value = ApiResult(false, null, response.errorMessage)
+                } else {
+                    _qrState.value = ApiResult(true, response.data, null)
+                }
+
+            } catch (e: Exception) {
+                _qrState.value = ApiResult(false, null, e.message.toString())
+            }
+        }
     }
 }

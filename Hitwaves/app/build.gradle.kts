@@ -68,6 +68,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.androidx.appcompat)
 
+    implementation(libs.zxing.core)
+    implementation(libs.compose.ui.graphics)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

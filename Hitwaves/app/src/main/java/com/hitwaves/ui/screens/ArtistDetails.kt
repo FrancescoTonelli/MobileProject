@@ -39,7 +39,6 @@ fun initLikes() : LikesViewModel {
 fun ArtistDetails(artist: Artist, navController: NavController){
     val eventList = emptyList<EventForCards>()
 
-    GoBack(navController)
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally
@@ -52,7 +51,8 @@ fun ArtistDetails(artist: Artist, navController: NavController){
                 artist = artist,
                 onLikeClick = {
                     artistId -> {}
-                }
+                },
+                onClick = { }
             )
         }
 
@@ -72,4 +72,6 @@ fun ArtistDetails(artist: Artist, navController: NavController){
             }
         }
     }
+
+    GoBack(navController)
 }

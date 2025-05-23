@@ -89,6 +89,11 @@ fun Likes(navController: NavHostController) {
                         artist = artist,
                         onLikeClick = {
                             artistId -> likesViewModel.toggleLike(artistId)
+                        },
+                        onClick = {
+                            navController.currentBackStackEntry?.savedStateHandle?.set("artist", artist)
+
+                            navController.navigate("artistDetails")
                         }
                     )
                 }

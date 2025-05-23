@@ -1,5 +1,7 @@
 package com.hitwaves.api
 
+import com.google.gson.annotations.SerializedName
+
 
 data class LoginRequest(
     val email: String? = null,
@@ -36,6 +38,7 @@ data class UserUpdateRequest(
     val password: String?
 )
 
-data class UpdateUserImageRequest(
-    val image: List<Byte>
+data class TicketQrRequest(
+    @SerializedName("ticket_id") val ticketId: Int,
+    @SerializedName("concert_id") val concertId: Int
 )

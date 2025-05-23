@@ -229,6 +229,12 @@ data class TicketDetailsResponse(
     @SerializedName("validated") val isValidated: Int
 )
 
+data class TicketQrResponse(
+    @SerializedName("user_id") val userId: Int,
+    @SerializedName("ticket_id") val ticketId: Int,
+    @SerializedName("concert_id") val concertId: Int
+)
+
 //data class CheckReviewResponse(
 //    @SerializedName("has_reviewed") val hasReviewed: Boolean,
 //    val review: ReviewCheckReviewResponse? = null

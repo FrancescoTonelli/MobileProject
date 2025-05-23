@@ -55,12 +55,7 @@ fun EventCard(event: EventForCards, navController: NavController){
                     else -> "concertDetails"
                     }
 
-                    navController.navigate(destination) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                    }
+                    navController.navigate(destination)
                 },
             shape = RoundedCornerShape(15.dp),
             border = BorderStroke(3.dp, FgDark),

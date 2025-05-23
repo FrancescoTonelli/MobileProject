@@ -172,6 +172,15 @@ suspend fun apiGetUserTicketDetails(ticketId: Int): ApiResult<TicketDetailsRespo
     )
 }
 
+suspend fun apiGetTicketQr(qrRequest: TicketQrRequest): ApiResult<TicketQrResponse> {
+    val url = "ticket/qr"
+    return ApiGenericCalls.postRequestAsync<TicketQrResponse>(
+        requestData = qrRequest,
+        endpoint = url,
+        withAuth = true
+    )
+}
+
 //suspend fun apiCheckUserReview(concertId: Int): Pair<Boolean, Any?> {
 //    val url = "review/check/$concertId"
 //    return HttpHelper.getRequestAsync<CheckReviewResponse>(

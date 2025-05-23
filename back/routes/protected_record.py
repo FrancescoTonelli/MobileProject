@@ -1290,12 +1290,14 @@ def protected_record_validate_ticket():
             return jsonify({'message': 'Concert does not belong to this record company'}), 403
 
         cursor.execute("""
-            SELECT id FROM ticket 
+            SELECT id, validated FROM ticket 
             WHERE id = %s AND user_id = %s AND concert_id = %s
         """, (ticket_id, user_id, concert_id))
         ticket = cursor.fetchone()
         if not ticket:
             return jsonify({'message': 'Ticket not found or does not belong to the specified user'}), 404
+        if ticket['validated']:
+            return jsonify({'message': 'Ticket already validated'}), 403
 
         cursor.execute("""
             UPDATE ticket 

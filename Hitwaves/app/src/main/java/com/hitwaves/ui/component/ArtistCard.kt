@@ -30,6 +30,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.hitwaves.model.Artist
 import com.hitwaves.ui.theme.*
@@ -39,7 +40,8 @@ import com.hitwaves.api.getHttpArtistImageUrl
 @Composable
 fun ArtistCard(
     artist: Artist,
-    onLikeClick: (Int) -> Unit
+    onLikeClick: (Int) -> Unit,
+    onClick: () -> Unit
 ) {
     var isLiked by remember { mutableStateOf(artist.isLiked) }
 
@@ -53,7 +55,7 @@ fun ArtistCard(
                 .fillMaxWidth()
                 .padding(15.dp)
                 .clickable {
-                    // Handle click event
+                    onClick()
                 },
             verticalAlignment = Alignment.CenterVertically,
         ) {

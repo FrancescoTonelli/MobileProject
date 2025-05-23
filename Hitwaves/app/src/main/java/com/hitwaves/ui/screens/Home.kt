@@ -36,13 +36,7 @@ import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.viewModel.LocationViewModel
 
 fun goToMap(navController: NavHostController) {
-    navController.navigate("map"){
-        popUpTo(navController.graph.startDestinationId) {
-            saveState = true
-        }
-        launchSingleTop = true
-        restoreState = true
-    }
+    navController.navigate("map")
 }
 
 private fun initHome(): HomeViewModel{

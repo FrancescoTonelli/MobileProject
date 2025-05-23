@@ -23,13 +23,21 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hitwaves.R
+import com.hitwaves.ui.theme.Primary
 import com.hitwaves.ui.theme.Secondary
 
 @Composable
-fun Rating(){
-    var isSelected by remember { mutableIntStateOf(0) }
+fun Rating(
+    rating: Int,
+    onChange: (Int) -> Unit,
+    starSize: Dp,
+    starSpacing: Dp
+){
 
-    Row {
+    Row (
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Text(
             text = "Rating",
             color = Secondary,
@@ -41,21 +49,24 @@ fun Rating(){
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(starSpacing),
             verticalAlignment = Alignment.CenterVertically
         ) {
             repeat(5) { index ->
                 Icon(
-                    imageVector = if (index < isSelected)
+                    imageVector = if (index < rating)
                         ImageVector.vectorResource(R.drawable.star_fill)
                     else
                         ImageVector.vectorResource(R.drawable.star_line),
                     contentDescription = "Star",
-                    tint = Secondary,
+                    tint = if (index < rating)
+                        Primary
+                    else
+                        Secondary,
                     modifier = Modifier
-                        .size(23.dp)
+                        .size(starSize)
                         .clickable {
-                            isSelected = index + 1
+                            onChange(index + 1)
                         }
                 )
             }

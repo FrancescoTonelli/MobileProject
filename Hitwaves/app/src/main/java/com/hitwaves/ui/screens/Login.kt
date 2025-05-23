@@ -110,13 +110,7 @@ fun Login(navController: NavHostController) {
             SecondaryLoginButton(
                 textBtn = "Sign up",
                 onClickAction = {
-                    navController.navigate("register") {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    navController.navigate("register")
                 }
             )
         }
