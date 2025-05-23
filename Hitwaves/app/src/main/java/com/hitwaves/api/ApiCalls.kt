@@ -122,14 +122,14 @@ suspend fun apiGetConcertDetails(concertId: Int): ApiResult<ConcertDetailsRespon
     )
 }
 
-//suspend fun apiGetArtistDetails(artistId: Int): Pair<Boolean, Any?> {
-//    val url = "artist/$artistId"
-//    return HttpHelper.getRequestAsync<ArtistDetailsResponse>(
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
-//
+suspend fun apiGetArtistDetails(artistId: Int): ApiResult<ArtistDetailsResponse> {
+    val url = "artist/$artistId"
+    return ApiGenericCalls.getRequestAsync<ArtistDetailsResponse>(
+        endpoint = url,
+        withAuth = true
+    )
+}
+
 //suspend fun apiPurchaseTicket(ticketId: Int): Pair<Boolean, Any?> {
 //    val url = "ticket/purchase/$ticketId"
 //    return HttpHelper.postRequestAsync<MessageResponse>(

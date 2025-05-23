@@ -70,7 +70,7 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
 
     val concertViewModel = remember { init() }
     val concert by concertViewModel.concertState
-    val loading by concertViewModel.isLoadingConcert
+    val isLoading by concertViewModel.isLoadingConcert
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -324,7 +324,7 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
     CustomSnackbar(snackbarHostState)
 
 
-    if (loading) {
+    if (isLoading) {
         LoadingIndicator()
     }
 }

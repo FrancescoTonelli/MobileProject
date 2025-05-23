@@ -10,16 +10,13 @@ import com.hitwaves.api.apiGetTourDetails
 import kotlinx.coroutines.launch
 
 class TourViewModel : ViewModel(){
-    private val _tourArtistState = mutableStateOf(ApiResult<TourDetailsResponse>(false, null, null))
-    val tourArtistState: State<ApiResult<TourDetailsResponse>> = _tourArtistState
-
-    private val _tourConcertState = mutableStateOf(ApiResult<TourDetailsResponse>(false, null, null))
-    val tourConcertState: State<ApiResult<TourDetailsResponse>> = _tourConcertState
+    private val _tourState = mutableStateOf(ApiResult<TourDetailsResponse>(false, null, null))
+    val tourState: State<ApiResult<TourDetailsResponse>> = _tourState
 
     private val _isLoadingTour = mutableStateOf(false)
     val isLoadingTour : State<Boolean> = _isLoadingTour
 
-    fun getTourArtist(tourId : Int){
+    fun getTourDetails(tourId : Int){
         viewModelScope.launch {
             try {
 
@@ -30,35 +27,13 @@ class TourViewModel : ViewModel(){
                 _isLoadingTour.value = false
 
                 if (!response.success) {
-                    _tourArtistState.value = ApiResult(false, null, response.errorMessage)
+                    _tourState.value = ApiResult(false, null, response.errorMessage)
                 } else {
-                    _tourArtistState.value = ApiResult(true, response.data, "${System.currentTimeMillis()}")
+                    _tourState.value = ApiResult(true, response.data, "${System.currentTimeMillis()}")
                 }
 
             } catch (e: Exception) {
-                _tourArtistState.value = ApiResult(false, null, e.message.toString())
-            }
-        }
-    }
-
-    fun getTourConcert(tourId : Int){
-        viewModelScope.launch {
-            try {
-
-                _isLoadingTour.value = true
-
-                val response = apiGetTourDetails(tourId)
-
-                _isLoadingTour.value = false
-
-                if (!response.success) {
-                    _tourConcertState.value = ApiResult(false, null, response.errorMessage)
-                } else {
-                    _tourConcertState.value = ApiResult(true, response.data, "${System.currentTimeMillis()}")
-                }
-
-            } catch (e: Exception) {
-                _tourConcertState.value = ApiResult(false, null, e.message.toString())
+                _tourState.value = ApiResult(false, null, e.message.toString())
             }
         }
     }
