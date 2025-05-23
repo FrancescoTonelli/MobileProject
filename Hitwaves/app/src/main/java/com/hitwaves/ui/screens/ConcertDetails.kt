@@ -124,7 +124,9 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
                 )
             }
 
-            concertSector = concert.data!!.sectors.map { sector ->
+            concertSector = concert.data!!.sectors
+                .filter { it.isStage == 0 }
+                .map { sector ->
                 SectorConcert(
                     id = sector.id,
                     name = sector.name,

@@ -47,6 +47,7 @@ import com.hitwaves.api.ConcertArtistDetailsResponse
 import com.hitwaves.api.ReviewArtistDetailsResponse
 import com.hitwaves.api.TourArtistDetailsResponse
 import com.hitwaves.api.getHttpArtistImageUrl
+import com.hitwaves.api.getHttpUserImageUrl
 import com.hitwaves.ui.component.ArtistCard
 import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.component.Title
@@ -56,6 +57,7 @@ import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.component.GoBack
 import com.hitwaves.ui.component.LoadingIndicator
+import com.hitwaves.ui.component.RatingViewOnly
 import com.hitwaves.ui.viewModel.ArtistViewModel
 import com.hitwaves.ui.viewModel.LikesViewModel
 
@@ -100,7 +102,7 @@ fun ArtistDetails(artist: Artist, navController: NavController){
                     isTicket = false,
                     artistName = artistDetails.data!!.artist.name,
                     artistImage = artistDetails.data!!.artist.image.orEmpty(),
-                    description = null
+                    description = concert.placeName
                 )
             }
 
@@ -123,6 +125,7 @@ fun ArtistDetails(artist: Artist, navController: NavController){
     }
 
     val nextEvent = nextConcert + nextTour
+
 
     Box(
         modifier = Modifier
@@ -147,7 +150,7 @@ fun ArtistDetails(artist: Artist, navController: NavController){
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(35.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
@@ -161,7 +164,7 @@ fun ArtistDetails(artist: Artist, navController: NavController){
                 item {
                     HorizontalDivider(
                         modifier = Modifier
-                            .padding(top = 8.dp)
+                            .padding(vertical = 10.dp)
                             .width(rememberScreenDimensions().screenWidth * 0.9f),
                         thickness = 1.dp,
                         color = Secondary
@@ -172,8 +175,20 @@ fun ArtistDetails(artist: Artist, navController: NavController){
                     Title("Reviews")
                 }
 
-                items(reviews) { review ->
-                    ReviewCard(review)
+                if(reviews.isEmpty()){
+                    item {
+                        Text(
+                            text = "No reviews yet",
+                            style = Typography.bodyLarge.copy(
+                                fontSize = 16.sp,
+                                color = Secondary
+                            )
+                        )
+                    }
+                }else {
+                    items(reviews) { review ->
+                        ReviewCard(review)
+                    }
                 }
             }
         }
@@ -193,82 +208,110 @@ fun ArtistDetails(artist: Artist, navController: NavController){
 
 @Composable
 fun ReviewCard(review : ReviewArtistDetailsResponse){
-    Column(
-        //horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+    Box(
         modifier = Modifier
-            .width(rememberScreenDimensions().screenWidth * 0.9f)
-            .clip(RoundedCornerShape(15))
-            .background(FgDark)
-            .padding(8.dp)
+            .fillMaxSize(0.9f)
+            .clip(RoundedCornerShape(16.dp))
+            .background(FgDark),
+        contentAlignment = Alignment.Center
     ) {
-        Row (
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ){
-            Box(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .size(50.dp)
-                    .clip(CircleShape)
-            ) {
-                Image(
-                    painter = rememberAsyncImagePainter(getHttpArtistImageUrl(review.userImage)),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                )
-            }
-
-            Column (
-                //horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ){
-                Text(
-                    text = review.username,
-                    style = Typography.bodyLarge.copy(
-                        fontSize = 20.sp,
-                        color = Secondary,
-                        fontWeight = FontWeight.Normal
-                    ),
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                )
-
-                Text(
-                    text = "${ review.username } - ${ review.concertDate }",
-                    style = Typography.bodyLarge.copy(
-                        fontSize = 16.sp,
-                        color = Secondary,
-                        fontWeight = FontWeight.Normal
-                    ),
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                )
-            }
-        }
-
-
-        HorizontalDivider(
+        Column(
+            //horizontalAlignment = Alignment.CenterHorizontally,
+            //verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
-                .padding(top = 8.dp)
-                .width(290.dp)
-                .align(Alignment.CenterHorizontally),
-            thickness = 1.dp,
-            color = Secondary.copy(alpha = 0.8f)
-        )
+                .fillMaxSize(0.9f)
+                .padding(vertical = 24.dp, horizontal = 15.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .size(50.dp)
+                        .clip(CircleShape)
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(getHttpUserImageUrl(review.userImage)),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                }
 
-        //TODO:missing rating star
+                Column(
+                    //horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = review.username,
+                        style = Typography.titleLarge.copy(
+                            fontSize = 18.sp,
+                            color = Secondary,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
 
-        review.description?.let {
-            Text(
-                text = it,
-                style = Typography.bodyLarge.copy(
-                    fontSize = 16.sp,
-                    color = Secondary,
-                    fontWeight = FontWeight.Normal
-                ),
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    Text(
+                        text = review.concertTitle,
+                        style = Typography.titleLarge.copy(
+                            fontSize = 14.sp,
+                            color = Secondary,
+                            fontWeight = FontWeight.Normal
+                        ),
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+
+                    Text(
+                        text = review.concertDate,
+                        style = Typography.titleLarge.copy(
+                            fontSize = 14.sp,
+                            color = Secondary,
+                            fontWeight = FontWeight.Normal
+                        ),
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                }
+            }
+
+
+            HorizontalDivider(
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
+                thickness = 1.dp,
+                color = Secondary.copy(alpha = 0.8f)
             )
+
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                RatingViewOnly(
+                    rating = review.rate,
+                    starSize = 18.dp,
+                    starSpacing = 3.dp
+                )
+
+                if (!review.description.isNullOrEmpty()) {
+                    Text(
+                        text = review.description,
+                        style = Typography.bodyLarge.copy(
+                            fontSize = 16.sp,
+                            color = Secondary,
+                            fontWeight = FontWeight.Normal
+                        ),
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
+            }
         }
     }
 }

@@ -149,56 +149,56 @@ data class SectorConcertDetailsResponse(
 )
 
 data class TourConcertDetailsResponse(
-    val id: Int,
-    val title: String,
-    val image: String?
+    @SerializedName("id") val id: Int,
+    @SerializedName("title") val title: String,
+    @SerializedName("image") val image: String?
 )
 
 data class ArtistDetailsResponse(
-    val artist: ArtistDetailsInfoResponse,
-    val concerts: List<ConcertArtistDetailsResponse>,
-    val tours: List<TourArtistDetailsResponse>,
-    val reviews: List<ReviewArtistDetailsResponse>
+    @SerializedName("artist") val artist: ArtistDetailsInfoResponse,
+    @SerializedName("concerts") val concerts: List<ConcertArtistDetailsResponse>,
+    @SerializedName("tours") val tours: List<TourArtistDetailsResponse>,
+    @SerializedName("reviews") val reviews: List<ReviewArtistDetailsResponse>
 )
 
 data class ArtistDetailsInfoResponse(
-    val id: Int,
-    val name: String,
-    val image: String?,
+    @SerializedName("id") val id: Int,
+    @SerializedName("name") val name: String,
+    @SerializedName("image") val image: String?,
     @SerializedName("likes_count") val likesCount: Int,
     @SerializedName("average_rating") val averageRating: Double,
     @SerializedName("is_liked") val isLiked: Boolean
 )
 
 data class ConcertArtistDetailsResponse(
-    val id: Int,
-    val title: String,
-    val image: String?,
-    val date: String,
+    @SerializedName("id") val id: Int,
+    @SerializedName("title") val title: String,
+    @SerializedName("image") val image: String?,
+    @SerializedName("date") val date: String,
     @SerializedName("place_name") val placeName: String
 )
 
 data class TourArtistDetailsResponse(
-    val id: Int,
-    val title: String,
-    val image: String?,
+    @SerializedName("id") val id: Int,
+    @SerializedName("title") val title: String,
+    @SerializedName("image") val image: String?,
     @SerializedName("concerts_count") val concertsCount: Int
 )
 
 data class ReviewArtistDetailsResponse(
-    val id: Int,
-    val rate: Double,
-    val description: String?,
+    @SerializedName("id") val id: Int,
+    @SerializedName("rate") val rate: Int,
+    @SerializedName("description") val description: String?,
     @SerializedName("concert_title") val concertTitle: String,
     @SerializedName("concert_date") val concertDate: String,
-    val username: String,
+    @SerializedName("username") val username: String,
     @SerializedName("user_image") val userImage: String?
 )
 
 data class LikedArtistResponse(
-    val id: Int,
-    val name: String,
-    val image: String?,
+    @SerializedName("id") val id: Int,
+    @SerializedName("name") val name: String,
+    @SerializedName("image") val image: String?,
     @SerializedName("likes_count") val likesCount: Int,
     @SerializedName("average_rating") val averageRating: Float
 )

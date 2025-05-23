@@ -138,7 +138,7 @@ fun AccountReviewCard(
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
                 thickness = 1.dp,
-                color = Secondary
+                color = Secondary.copy(alpha = 0.8f)
             )
 
             Column (
