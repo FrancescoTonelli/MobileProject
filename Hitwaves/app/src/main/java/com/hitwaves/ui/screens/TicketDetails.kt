@@ -111,40 +111,32 @@ fun TicketDetails(eventForCards: EventForCards, navController: NavController) {
 
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .imePadding(),
         contentAlignment = Alignment.TopCenter
     ) {
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-
-            if (details.success && details.data != null) {
-                if (ticketViewModel.isFutureOrToday(details.data!!.concertDate)) {
-                    TicketDisplayFuture(details, qr, loadingQr)
-                }
-                else {
-                    TicketDisplayPast(details)
-                }
+        if (details.success && details.data != null) {
+            if (ticketViewModel.isFutureOrToday(details.data!!.concertDate)) {
+                TicketDisplayFuture(details, qr, loadingQr)
             }
             else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = details.errorMessage.toString(),
-                        style = Typography.bodyLarge.copy(
-                            fontSize = 20.sp,
-                            color = Secondary
-                        )
+                TicketDisplayPast(details)
+            }
+        }
+        else {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = details.errorMessage.toString(),
+                    style = Typography.bodyLarge.copy(
+                        fontSize = 20.sp,
+                        color = Secondary
                     )
-                }
+                )
             }
         }
 

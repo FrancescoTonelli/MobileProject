@@ -596,7 +596,7 @@ def protected_user_concert_details(concert_id):
                 concert c
             JOIN 
                 place p ON c.place_id = p.id
-            LEFT JOIN  -- Usiamo LEFT JOIN per includere concerti senza tour
+            LEFT JOIN  
                 tour t ON c.tour_id = t.id
             WHERE 
                 c.id = %s
@@ -628,7 +628,7 @@ def protected_user_concert_details(concert_id):
                 t.id AS ticket_id,
                 t.price AS ticket_price,
                 s.id AS sector_id,
-                s.name AS tour_name,  -- Corretto da sector_name a tour_name
+                s.name AS tour_name,  
                 s.is_stage AS sector_is_stage,
                 s.x_sx, s.y_sx, s.x_dx, s.y_dx,
                 se.id AS seat_id,

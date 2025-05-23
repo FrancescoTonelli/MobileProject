@@ -71,10 +71,12 @@ fun MainContent(){
         selectedIcon = ImageVector.vectorResource(id = R.drawable.notification_fill)
     )
 
+
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
 
     val showBars = currentRoute != "map"
+    val noInnerPadding = currentRoute == "account_update" || currentRoute == "account_reviews"
 
     Scaffold(
         bottomBar = {

@@ -25,7 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 
-val spacerHeight = 24.dp
+val spacerHeight = 16.dp
 
 @Composable
 fun DetailRow(label: String, value: String, displayDivider: Boolean = true) {

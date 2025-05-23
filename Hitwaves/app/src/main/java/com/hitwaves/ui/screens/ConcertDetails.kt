@@ -55,9 +55,14 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontStyle
 import com.hitwaves.R
+import com.hitwaves.api.ConcertInfoResponse
 import com.hitwaves.api.TicketConcertDetailsResponse
+import com.hitwaves.api.getHttpTourImageUrl
 import com.hitwaves.ui.component.ButtonWithIcons
+import com.hitwaves.ui.component.DetailRow
+import com.hitwaves.ui.component.GmapsDetailRow
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -76,13 +81,9 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
     val snackBarHostState = remember { SnackbarHostState() }
 
     var concertArtist : List<Artist> by remember { mutableStateOf(emptyList()) }
-    var concertInfo: EventForCards? by remember { mutableStateOf(null) }
+    var concertInfo: ConcertInfoResponse? by remember { mutableStateOf(null) }
     var concertSector: List<SectorConcert> by remember { mutableStateOf(emptyList()) }
-    var concertAddress: String? by remember { mutableStateOf(null) }
-    var concertTime: String? by remember { mutableStateOf(null) }
     var concertTickets: Map<Int, List<TicketConcertDetailsResponse>> by remember { mutableStateOf(emptyMap()) }
-
-
 
     var quantity by remember { mutableIntStateOf(1) }
     var selectedSector by remember { mutableStateOf<SectorConcert?>(null) }
@@ -95,24 +96,8 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
     LaunchedEffect(concert) {
         if (concert.success && concert.data != null) {
             val info = concert.data!!.concertInfo
-            val mainArtist = concert.data!!.artists.firstOrNull()
 
-            concertInfo =
-                EventForCards(
-                    contentId = eventForCards.contentId,
-                    isTour = false,
-                    title = info.concertTitle,
-                    backgroundImage = info.concertImage?: "",
-                    artistName = mainArtist?.artistName.orEmpty(),
-                    artistImage = mainArtist?.artistImage.orEmpty(),
-                    description = info.placeName,
-                    date = info.concertDate,
-                    placeName = info.placeName
-                )
-
-
-            concertAddress = info.placeAddress
-            concertTime = info.concertTime
+            concertInfo = info
 
             concertArtist = concert.data!!.artists.map { artist ->
                 Artist(
@@ -124,7 +109,9 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
                 )
             }
 
-            concertSector = concert.data!!.sectors.map { sector ->
+            concertSector = concert.data!!.sectors
+                .filter{it.isStage == 0}
+                .map { sector ->
                 SectorConcert(
                     id = sector.id,
                     name = sector.name,
@@ -149,8 +136,20 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
             modifier = Modifier
                 .size(rememberScreenDimensions().screenWidth, 150.dp)
         ){
+
             Image(
-                painter = rememberAsyncImagePainter(getHttpConcertImageUrl(eventForCards.backgroundImage)),
+                painter = rememberAsyncImagePainter(
+                    if (concert.success && concert.data != null && concertInfo != null) {
+                        if (concertInfo!!.isPartOfTour) {
+                            getHttpTourImageUrl(concertInfo!!.effectiveImage)
+                        }else {
+                            getHttpConcertImageUrl(concertInfo!!.effectiveImage)
+                        }
+                    }
+                    else {
+                        ""
+                    }
+                ),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
@@ -169,10 +168,20 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
                         .background(Primary)
                 ){
                     Text(
-                        text = eventForCards.title,
-                        color = Secondary,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold,
+                        text = if(concert.success && concert.data != null && concertInfo != null) {
+                            if(concertInfo!!.isPartOfTour) {
+                                "${concertInfo!!.tourTitle} - ${concertInfo!!.concertTitle}"
+                            }else{
+                                concertInfo!!.concertTitle
+                            }
+                        }else {
+                            ""
+                        },
+                        style = Typography.bodyLarge.copy(
+                            color = Secondary,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                 }
@@ -181,14 +190,15 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
                     modifier = Modifier
                         .background(FgDark)
                 ){
-                    eventForCards.description?.let {
-                        Text(
-                            text = it,
-                            color = Color.White,
+                    Text(
+                        text = "Concert",
+                        style = Typography.bodyLarge.copy(
+                            color = Secondary,
                             fontSize = 12.sp,
-                            modifier = Modifier.padding(horizontal = 8.dp)
-                        )
-                    }
+                            fontStyle = FontStyle.Normal
+                        ),
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
                 }
             }
             GoBack(navController)
@@ -215,13 +225,14 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
 
             item {
                 Column (
-                   verticalArrangement = Arrangement.spacedBy(25.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    concertInfo?.description?.let { InformationRow("Place", it) }
-                    concertAddress?.let { InformationRow("Address", it) }
-                    concertInfo?.date?.let { InformationRow("Date", it) }
-                    concertTime?.let { InformationRow("Time", it) }
+                    if (concert.success && concert.data!=null && concertInfo != null) {
+                        DetailRow("Place", concertInfo!!.placeName, displayDivider = false)
+                        GmapsDetailRow("Address", concertInfo!!.placeAddress, displayDivider = false)
+                        DetailRow("Date", concertInfo!!.concertDate, displayDivider = false)
+                        DetailRow("Time", concertInfo!!.concertTime, displayDivider = false)
+                    }
                 }
             }
 
@@ -231,14 +242,12 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
 
             item {
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(25.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
                     //Quantity
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-//                    horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
@@ -251,7 +260,6 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
                             modifier = Modifier.padding(end = 16.dp)
                         )
 
-                        //Spacer(modifier = Modifier.weight(1f))
 
                         QuantitySelector(
                             quantity = quantity,
@@ -282,11 +290,19 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
                         )
                     }
 
-                    val seatDescription : String = concertTickets[selectedSector?.id]?.firstOrNull()?.seatDescription ?: ""
-                    val ticketPrice : String = concertTickets[selectedSector?.id]?.firstOrNull()?.ticketPrice?.let { NumberFormat.getCurrencyInstance(Locale.ITALY).format(it) } ?: ""
+                    val seatDescription = concertTickets[selectedSector?.id]?.firstOrNull()?.seatDescription ?: "Select a sector"
 
-                    InformationRow("Seat", seatDescription)
-                    InformationRow("Price", ticketPrice)
+
+
+                    val ticketPrice = if (concertTickets[selectedSector?.id] != null) {
+                        "€ ${ String.format(Locale.US, "%.2f", concertTickets[selectedSector?.id]?.firstOrNull()?.ticketPrice) }"
+                    }
+                    else {
+                        "Select a sector"
+                    }
+
+                    DetailRow("Seat", seatDescription, displayDivider = false)
+                    DetailRow("Price", ticketPrice, displayDivider = false)
 
                     ButtonWithIcons(ImageVector.vectorResource(R.drawable.seat), "Seating chart", ImageVector.vectorResource(R.drawable.arrow)) { }
                 }
@@ -330,34 +346,7 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
     }
 }
 
-@Composable
-fun InformationRow(title: String, description: String) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(
-            text = title,
-            style = Typography.bodyLarge.copy(
-                fontSize = 18.sp,
-                color = Secondary,
-                fontWeight = FontWeight.Bold
-            ),
-            modifier = Modifier.padding(end = 16.dp)
-        )
 
-        Spacer(modifier = Modifier.weight(1f))
-
-        Text(
-            text = description,
-            style = Typography.bodyLarge.copy(
-                fontSize = 18.sp,
-                color = Secondary,
-                fontWeight = FontWeight.Normal
-            ),
-        )
-    }
-}
 
 @Composable
 fun QuantitySelector(

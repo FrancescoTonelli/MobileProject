@@ -50,51 +50,72 @@ fun TicketDisplayPast(details: ApiResult<TicketDetailsResponse>) {
     val ratingNew = remember { mutableIntStateOf(0) }
     val descriptionNew = remember { mutableStateOf("") }
 
-    Column (
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp),
-            contentAlignment = Alignment.Center
-        ){
-            Image(
-                painter = rememberAsyncImagePainter(if (details.data?.tourTitle.isNullOrEmpty()) {
-                    getHttpConcertImageUrl(details.data?.concertImage)
-                } else {
-                    getHttpTourImageUrl(details.data?.concertImage)
-                }),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
+    ) {
 
-            Column(
+        item {
+
+            Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Bottom
-
-            ) {
-                Box (
-                    modifier = Modifier
-                        .background(Primary)
-                ){
-                    (if (details.success) {
-                        if (details.data?.tourTitle.isNullOrEmpty()) {
-                            details.data?.concertTitle
-                        } else {
-                            "${details.data?.tourTitle} - ${details.data?.concertTitle}"
-                        }
+                    .fillMaxWidth()
+                    .height(150.dp),
+                contentAlignment = Alignment.Center
+            ){
+                Image(
+                    painter = rememberAsyncImagePainter(if (details.data?.tourTitle.isNullOrEmpty()) {
+                        getHttpConcertImageUrl(details.data?.concertImage)
                     } else {
-                        details.errorMessage.toString()
-                    })?.let {
+                        getHttpTourImageUrl(details.data?.concertImage)
+                    }),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(10.dp),
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Bottom
+
+                ) {
+                    Box (
+                        modifier = Modifier
+                            .background(Primary)
+                    ){
+                        (if (details.success) {
+                            if (details.data?.tourTitle.isNullOrEmpty()) {
+                                details.data?.concertTitle
+                            } else {
+                                "${details.data?.tourTitle} - ${details.data?.concertTitle}"
+                            }
+                        } else {
+                            details.errorMessage.toString()
+                        })?.let {
+                            Text(
+                                text = it,
+                                style = Typography.titleLarge.copy(
+                                    fontSize = 18.sp,
+                                    color = Secondary,
+                                    fontWeight = FontWeight.Bold
+                                ),
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
+                    }
+
+                    Box (
+                        modifier = Modifier
+                            .background(FgDark)
+                    ){
                         Text(
-                            text = it,
+                            text = "Concert",
                             style = Typography.titleLarge.copy(
-                                fontSize = 18.sp,
+                                fontSize = 12.sp,
                                 color = Secondary,
                                 fontWeight = FontWeight.Bold
                             ),
@@ -102,66 +123,45 @@ fun TicketDisplayPast(details: ApiResult<TicketDetailsResponse>) {
                         )
                     }
                 }
-
-                Box (
-                    modifier = Modifier
-                        .background(FgDark)
-                ){
-                    Text(
-                        text = "Concert",
-                        style = Typography.titleLarge.copy(
-                            fontSize = 12.sp,
-                            color = Secondary,
-                            fontWeight = FontWeight.Bold
-                        ),
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                    )
-                }
             }
-        }
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .fillMaxHeight()
-                .imePadding(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .fillMaxHeight(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Title(
                     title = "Details"
                 )
-            }
 
-            item {
                 DetailRow(
                     label = "Place",
-                    value = details.data!!.placeName
+                    value = details.data!!.placeName,
+                    displayDivider = false
                 )
                 GmapsDetailRow(
                     label = "Address",
-                    value = details.data.placeAddress
+                    value = details.data.placeAddress,
+                    displayDivider = false
                 )
                 DetailRow(
                     label = "Date",
-                    value = details.data.concertDate
+                    value = details.data.concertDate,
+                    displayDivider = false
                 )
                 DetailRow(
                     label = "Time",
                     value = details.data.concertTime,
                     displayDivider = false
                 )
-            }
 
-            item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Title(
                     title = "Rate your experience"
                 )
-            }
 
-            item {
                 Spacer(modifier = Modifier.height(20.dp))
                 Box(
                     modifier = Modifier
@@ -178,9 +178,7 @@ fun TicketDisplayPast(details: ApiResult<TicketDetailsResponse>) {
                     )
                 }
                 Spacer(modifier = Modifier.height(20.dp))
-            }
 
-            item {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -226,9 +224,7 @@ fun TicketDisplayPast(details: ApiResult<TicketDetailsResponse>) {
                         .fillMaxWidth()
                         .height(150.dp)
                 )
-            }
 
-            item {
                 Spacer(modifier = Modifier.height(60.dp))
                 ButtonWithIcons(
                     startIcon = ImageVector.vectorResource(R.drawable.airplane),

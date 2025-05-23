@@ -43,6 +43,7 @@ import com.mapbox.maps.plugin.logo.logo
 import com.mapbox.maps.plugin.scalebar.scalebar
 import androidx.core.graphics.drawable.toBitmap
 import coil.compose.rememberAsyncImagePainter
+import com.hitwaves.model.EventForCards
 import com.hitwaves.ui.theme.BgDark
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotationInteractionsState
 
@@ -92,8 +93,22 @@ fun ConcertMap(navController: NavController) {
 
     val pointAnnotationInteractionsState = remember {
         PointAnnotationInteractionsState().onClicked { annotation ->
+            val event = EventForCards(
+                contentId = annotation.textField!!.toInt(),
+                isTour = false,
+                placeName = "",
+                isTicket = false,
+                title = "",
+                backgroundImage = "",
+                artistName = "",
+                artistImage = "",
+                description = "",
+                date = ""
+            )
 
-            navController.navigate("concertDetails/${annotation.textField}")
+            navController.currentBackStackEntry?.savedStateHandle?.set("event", event)
+
+            navController.navigate("concertDetails")
             true
         }
     }

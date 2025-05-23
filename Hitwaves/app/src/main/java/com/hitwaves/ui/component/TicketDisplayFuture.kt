@@ -142,15 +142,18 @@ fun TicketDisplayFuture(details: ApiResult<TicketDetailsResponse>, qr: ApiResult
 
             DetailRow(
                 label = "Place",
-                value = details.data!!.placeName
+                value = details.data!!.placeName,
+                displayDivider = false
             )
             GmapsDetailRow(
                 label = "Address",
-                value = details.data.placeAddress
+                value = details.data.placeAddress,
+                displayDivider = false
             )
             DetailRow(
                 label = "Date",
-                value = details.data.concertDate
+                value = details.data.concertDate,
+                displayDivider = false
             )
             DetailRow(
                 label = "Time",
@@ -165,7 +168,8 @@ fun TicketDisplayFuture(details: ApiResult<TicketDetailsResponse>, qr: ApiResult
 
             DetailRow(
                 label = "Sector",
-                value = details.data.sectorName
+                value = details.data.sectorName,
+                displayDivider = false
             )
             DetailRow(
                 label = "Seat",
