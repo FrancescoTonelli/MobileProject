@@ -52,7 +52,7 @@ import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.component.Title
 import com.hitwaves.model.Artist
 import com.hitwaves.model.EventForCards
-import com.hitwaves.ui.component.CustomSnackbar
+import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.component.GoBack
 import com.hitwaves.ui.component.LoadingIndicator
@@ -139,7 +139,8 @@ fun ArtistDetails(artist: Artist, navController: NavController){
                 artist = artist,
                 onLikeClick = { artistId ->
                     likesViewModel.toggleLike(artistId)
-                }
+                },
+                onClick = {}
             )
 
             LazyColumn(
@@ -180,7 +181,7 @@ fun ArtistDetails(artist: Artist, navController: NavController){
 
         GoBack(navController)
 
-        CustomSnackbar(snackbarHostState)
+        CustomSnackBar(snackbarHostState)
 
         if (isLoading) {
             LoadingIndicator()

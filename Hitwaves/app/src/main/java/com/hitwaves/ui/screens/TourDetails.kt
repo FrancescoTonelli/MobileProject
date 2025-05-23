@@ -33,7 +33,7 @@ import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.component.ShowArtistList
 import com.hitwaves.ui.component.Title
 import com.hitwaves.model.EventForCards
-import com.hitwaves.ui.component.CustomSnackbar
+import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.component.GoBack
 import com.hitwaves.ui.component.LoadingIndicator
 import com.hitwaves.ui.theme.*
@@ -89,7 +89,7 @@ fun TourDetails(eventForCards: EventForCards, navController: NavController){
                 )
             }
         } else if (!tour.success && tour.errorMessage != null) {
-            snackbarHostState.showSnackbar(tour.errorMessage!!)
+            snackBarHostState.showSnackbar(tour.errorMessage!!)
         }
     }
 
@@ -170,7 +170,7 @@ fun TourDetails(eventForCards: EventForCards, navController: NavController){
         }
     }
 
-    CustomSnackbar(snackbarHostState)
+    CustomSnackBar(snackBarHostState)
 
 
     if (isLoading) {

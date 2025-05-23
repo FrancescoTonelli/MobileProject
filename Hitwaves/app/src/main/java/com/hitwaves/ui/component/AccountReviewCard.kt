@@ -39,14 +39,13 @@ import com.hitwaves.ui.theme.*
 @Composable
 fun AccountReviewCard(
     userReviewResponses: UserReviewResponses,
-    onDelete: () -> Unit,
+    onDelete: () -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize(0.9f)
             .clip(RoundedCornerShape(16.dp))
-            .background(FgDark)
-            .border(width = 1.dp, color = Secondary, shape = RoundedCornerShape(16.dp)),
+            .background(FgDark),
         contentAlignment = Alignment.Center
     ) {
 
