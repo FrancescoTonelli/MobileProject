@@ -1,5 +1,6 @@
 package com.hitwaves.utils
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -26,7 +27,7 @@ import com.hitwaves.ui.screens.TicketDetails
 import com.hitwaves.ui.screens.Tickets
 
 @Composable
-fun NavGraph(navController: NavHostController) {
+fun NavGraph(navController: NavHostController, innerPadding: PaddingValues) {
     NavHost(
         navController = navController,
         startDestination = "home"
@@ -47,7 +48,7 @@ fun NavGraph(navController: NavHostController) {
             Account(navController)
         }
         composable("account_update") {
-            AccountUpdate(navController)
+            AccountUpdate(navController, innerPadding)
         }
         composable("account_reviews") {
             AccountReviews(navController)
@@ -119,36 +120,10 @@ fun NavGraph(navController: NavHostController) {
             }
 
             if (eventForCards != null) {
-                TicketDetails(eventForCards = eventForCards, navController = navController)
+                TicketDetails(eventForCards = eventForCards, navController = navController, innerPadding = innerPadding)
             } else {
                 Text("Event not available")
             }
         }
-
-        composable(
-            route = "concertDetails/{contentId}",
-            arguments = listOf(navArgument("contentId") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val contentId = backStackEntry.arguments?.getInt("contentId")
-            if (contentId != null) {
-                val card = EventForCards(
-                    contentId = contentId,
-                    isTour = false,
-                    title = "Unknown",
-                    placeName = "Unknown",
-                    isTicket = false,
-                    backgroundImage = "Unknown",
-                    artistName = "Unknown",
-                    artistImage = "Unknown",
-                    description = "Unknown",
-                    date = "Unknown"
-                )
-                ConcertDetails(eventForCards = card, navController = navController)
-            } else {
-                Text("Event not available")
-            }
-        }
-
-
     }
 }

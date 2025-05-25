@@ -3,14 +3,21 @@ package com.hitwaves.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -44,7 +51,7 @@ private fun init() : AccountViewModel {
 }
 
 @Composable
-fun AccountUpdate(navController: NavHostController) {
+fun AccountUpdate(navController: NavHostController, innerPadding: PaddingValues) {
 
     val name = remember { mutableStateOf("") }
     val surname  = remember { mutableStateOf("") }
@@ -59,7 +66,6 @@ fun AccountUpdate(navController: NavHostController) {
     val updateState by accountViewModel.updateState
     val isLoading by accountViewModel.isLoadingAccount
     val snackBarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
@@ -102,6 +108,7 @@ fun AccountUpdate(navController: NavHostController) {
 
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
+                .consumeWindowInsets(innerPadding)
                 .imePadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -206,6 +213,8 @@ fun AccountUpdate(navController: NavHostController) {
                         }
                     }
                 )
+
+                Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
             }
         }
     }

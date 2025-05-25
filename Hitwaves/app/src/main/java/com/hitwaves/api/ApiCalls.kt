@@ -181,23 +181,23 @@ suspend fun apiGetTicketQr(qrRequest: TicketQrRequest): ApiResult<TicketQrRespon
     )
 }
 
-//suspend fun apiCheckUserReview(concertId: Int): Pair<Boolean, Any?> {
-//    val url = "review/check/$concertId"
-//    return HttpHelper.getRequestAsync<CheckReviewResponse>(
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
-//
-//suspend fun apiAddReview(reviewRequest: ReviewRequest): Pair<Boolean, Any?> {
-//    val url = "review"
-//
-//    return HttpHelper.postRequestAsync<MessageResponse>(
-//        endpoint = url,
-//        requestData = reviewRequest,
-//        withAuth = true
-//    )
-//}
+suspend fun apiCheckUserReview(concertId: Int): ApiResult<CheckReviewResponse> {
+    val url = "review/check/$concertId"
+    return ApiGenericCalls.getRequestAsync<CheckReviewResponse>(
+        endpoint = url,
+        withAuth = true
+    )
+}
+
+suspend fun apiAddReview(reviewRequest: ReviewRequest): ApiResult<MessageResponse> {
+    val url = "review"
+
+    return ApiGenericCalls.postRequestAsync<MessageResponse>(
+        endpoint = url,
+        requestData = reviewRequest,
+        withAuth = true
+    )
+}
 
 suspend fun apiGetUserDetails(): ApiResult<UserDetailsResponse> {
     val url = "details"

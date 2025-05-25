@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -79,7 +80,7 @@ private fun init() : TicketViewModel {
 }
 
 @Composable
-fun TicketDetails(eventForCards: EventForCards, navController: NavController) {
+fun TicketDetails(eventForCards: EventForCards, navController: NavController, innerPadding: PaddingValues) {
     val ticketViewModel = remember { init() }
     val details by ticketViewModel.detailsState
     val loading by ticketViewModel.isLoadingDetails
@@ -90,7 +91,6 @@ fun TicketDetails(eventForCards: EventForCards, navController: NavController) {
     val scope = rememberCoroutineScope()
 
     val snackBarHostState = remember { SnackbarHostState() }
-
 
     LaunchedEffect(Unit) {
         ticketViewModel.getTicketDetails(eventForCards.contentId)
@@ -111,8 +111,7 @@ fun TicketDetails(eventForCards: EventForCards, navController: NavController) {
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .imePadding(),
+            .fillMaxSize(),
         contentAlignment = Alignment.TopCenter
     ) {
 
@@ -121,7 +120,7 @@ fun TicketDetails(eventForCards: EventForCards, navController: NavController) {
                 TicketDisplayFuture(details, qr, loadingQr)
             }
             else {
-                TicketDisplayPast(details)
+                TicketDisplayPast(details, innerPadding)
             }
         }
         else {

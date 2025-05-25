@@ -23,11 +23,11 @@ data class PositionRequest(
     val longitude: Double
 )
 
-//data class ReviewRequest(
-//    @SerializedName("ticket_id") val ticketId: Int,
-//    val rate: Int,
-//    val description: String? = ""
-//)
+data class ReviewRequest(
+    @SerializedName("ticket_id") val ticketId: Int,
+    val rate: Int,
+    val description: String? = ""
+)
 
 data class UserUpdateRequest(
     val name: String?,

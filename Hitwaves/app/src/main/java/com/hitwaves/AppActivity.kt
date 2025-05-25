@@ -24,27 +24,8 @@ import com.hitwaves.utils.NavGraph
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.component.NotificationTopBar
 import com.hitwaves.ui.component.BottomNavigationBar
-import android.Manifest
-import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.content.Context
-import android.content.pm.PackageManager
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.content.MediaType.Companion.Text
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.mapbox.android.core.permissions.PermissionsListener
-import com.mapbox.android.core.permissions.PermissionsManager
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
-import androidx.compose.runtime.remember
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.hitwaves.utils.LocationService
 
 class AppActivity : ComponentActivity() {
 
@@ -76,7 +57,6 @@ fun MainContent(){
     val currentRoute = navBackStackEntry.value?.destination?.route
 
     val showBars = currentRoute != "map"
-    val noInnerPadding = currentRoute == "account_update" || currentRoute == "account_reviews"
 
     Scaffold(
         bottomBar = {
@@ -127,7 +107,7 @@ fun MainContent(){
                 .padding(innerPadding)
                 .background(BgDark)
         ) {
-            NavGraph(navController = navController)
+            NavGraph(navController = navController, innerPadding = innerPadding)
         }
     }
 }

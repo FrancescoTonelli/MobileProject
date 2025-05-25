@@ -1181,21 +1181,29 @@ def protected_user_add_review():
 
     try:
         cursor.execute("""
-            SELECT t.id, t.concert_id, c.date 
+            SELECT t.id, t.user_id, t.validated, t.concert_id, c.date 
             FROM ticket t
             JOIN concert c ON t.concert_id = c.id
-            WHERE t.id = %s 
-            AND t.user_id = %s
-            AND t.validated = 1
+            WHERE t.id = %s
             LIMIT 1
-        """, (ticket_id, user_id))
+        """, (ticket_id,))
         
         ticket = cursor.fetchone()
-        
+
         if not ticket:
-            return jsonify({'message': 'Ticket not found, not validated or not owned by user'}), 403
+            return jsonify({'message': 'Ticket not found'}), 403
+
+        if ticket['user_id'] != user_id:
+            return jsonify({'message': 'Ticket not owned by user'}), 403
+
+        if not ticket['validated']:
+            return jsonify({'message': 'Ticket has not been validated'}), 403
+
+        if ticket['date'] >= datetime.date.today():
+            return jsonify({'message': 'Cannot review future concerts'}), 403
 
         concert_id = ticket['concert_id']
+
         
         if ticket['date'] >= datetime.date.today():
             return jsonify({'message': 'Cannot review future concerts'}), 403
