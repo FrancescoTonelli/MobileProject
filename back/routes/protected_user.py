@@ -971,7 +971,7 @@ def protected_user_tickets():
             WHERE 
                 t.user_id = %s
             ORDER BY 
-                c.date DESC, c.time DESC
+                c.date, c.time
         """, (user_id,))
         rows = cursor.fetchall()
 

@@ -37,6 +37,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
@@ -293,15 +294,16 @@ fun TicketDisplayPast(details: ApiResult<TicketDetailsResponse>, innerPadding: P
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            contentAlignment = Alignment.CenterStart
+                            contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 text = "You have already reviewed this concert. See Account > Your Reviews to edit your review.",
                                 style = Typography.bodyLarge.copy(
                                     fontSize = 18.sp,
                                     color = Secondary,
-                                    fontWeight = FontWeight.Bold
-                                )
+                                    fontWeight = FontWeight.Normal
+                                ),
+                                textAlign = TextAlign.Center
                             )
                         }
                     }
@@ -310,15 +312,16 @@ fun TicketDisplayPast(details: ApiResult<TicketDetailsResponse>, innerPadding: P
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        contentAlignment = Alignment.CenterStart
+                        contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = "Error checking review existence: ${existingState.errorMessage}",
                             style = Typography.bodyLarge.copy(
                                 fontSize = 18.sp,
                                 color = Secondary,
-                                fontWeight = FontWeight.Bold
-                            )
+                                fontWeight = FontWeight.Normal
+                            ),
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
@@ -332,8 +335,9 @@ fun TicketDisplayPast(details: ApiResult<TicketDetailsResponse>, innerPadding: P
                             style = Typography.bodyLarge.copy(
                                 fontSize = 18.sp,
                                 color = Secondary,
-                                fontWeight = FontWeight.Bold
-                            )
+                                fontWeight = FontWeight.Normal
+                            ),
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
@@ -341,15 +345,16 @@ fun TicketDisplayPast(details: ApiResult<TicketDetailsResponse>, innerPadding: P
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        contentAlignment = Alignment.CenterStart
+                        contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = "An error occurred while checking review existence.",
                             style = Typography.bodyLarge.copy(
                                 fontSize = 18.sp,
                                 color = Secondary,
-                                fontWeight = FontWeight.Bold
-                            )
+                                fontWeight = FontWeight.Normal
+                            ),
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
