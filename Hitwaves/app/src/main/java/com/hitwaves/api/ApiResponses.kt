@@ -126,21 +126,16 @@ data class TicketConcertDetailsResponse(
     @SerializedName("ticket_id") val ticketId: Int,
     @SerializedName("ticket_price") val ticketPrice: Double,
     @SerializedName("sector_id") val sectorId: Int,
-    @SerializedName("tour_name") val tourName: String,
-    @SerializedName("sector_is_stage") val sectorIsStage: Int,
-    val xSx: Double?,
-    val ySx: Double?,
-    val xDx: Double?,
-    val yDx: Double?,
+    @SerializedName("sector_name") val sectorName: String,
     @SerializedName("seat_id") val seatId: Int,
     @SerializedName("seat_description") val seatDescription: String?,
-    val x: Double?,
-    val y: Double?
+    @SerializedName("seat_x") val x: Double?,
+    @SerializedName("seat_y") val y: Double?
 )
 
 data class SectorConcertDetailsResponse(
-    val id: Int,
-    val name: String,
+    @SerializedName("id") val id: Int,
+    @SerializedName("name") val name: String,
     @SerializedName("is_stage") val isStage: Int,
     @SerializedName("x_sx") val xSx: Double?,
     @SerializedName("y_sx") val ySx: Double?,
@@ -153,6 +148,33 @@ data class TourConcertDetailsResponse(
     @SerializedName("title") val title: String,
     @SerializedName("image") val image: String?
 )
+
+data class CanvasResponse(
+    @SerializedName("tickets") val tickets: List<TicketCanvasResponse>,
+    @SerializedName("sectors") val sectors: List<SectorCanvasResponse>
+)
+
+data class TicketCanvasResponse(
+    @SerializedName("ticket_id") val ticketId: Int,
+    @SerializedName("ticket_price") val ticketPrice: Double,
+    @SerializedName("ticket_user_id") val ticketUserId: Int?,
+    @SerializedName("seat_id") val seatId: Int,
+    @SerializedName("seat_description") val seatDescription: String,
+    @SerializedName("seat_x") val seatX: Float,
+    @SerializedName("seat_y") val seatY: Float,
+    @SerializedName("sector_name") val sectorName: String
+)
+
+data class SectorCanvasResponse(
+    @SerializedName("id") val id: Int,
+    @SerializedName("name") val name: String,
+    @SerializedName("is_stage") val isStage: Int,
+    @SerializedName("x_sx") val xSx: Float,
+    @SerializedName("y_sx") val ySx: Float,
+    @SerializedName("x_dx") val xDx: Float,
+    @SerializedName("y_dx") val yDx: Float
+)
+
 
 data class ArtistDetailsResponse(
     @SerializedName("artist") val artist: ArtistDetailsInfoResponse,

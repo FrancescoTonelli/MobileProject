@@ -70,6 +70,7 @@ dependencies {
 
     implementation(libs.zxing.core)
     implementation(libs.compose.ui.graphics)
+    implementation(libs.androidx.foundation.layout.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

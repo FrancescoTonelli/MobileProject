@@ -122,6 +122,14 @@ suspend fun apiGetConcertDetails(concertId: Int): ApiResult<ConcertDetailsRespon
     )
 }
 
+suspend fun apiGetConcertCanvas(concertId: Int): ApiResult<CanvasResponse> {
+    val url = "concert/$concertId/canvas"
+    return ApiGenericCalls.getRequestAsync<CanvasResponse>(
+        endpoint = url,
+        withAuth = false
+    )
+}
+
 suspend fun apiGetArtistDetails(artistId: Int): ApiResult<ArtistDetailsResponse> {
     val url = "artist/$artistId"
     return ApiGenericCalls.getRequestAsync<ArtistDetailsResponse>(

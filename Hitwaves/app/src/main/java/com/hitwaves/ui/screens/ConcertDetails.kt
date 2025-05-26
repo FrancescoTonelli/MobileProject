@@ -52,6 +52,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -63,6 +64,7 @@ import com.hitwaves.api.getHttpTourImageUrl
 import com.hitwaves.ui.component.ButtonWithIcons
 import com.hitwaves.ui.component.DetailRow
 import com.hitwaves.ui.component.GmapsDetailRow
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -87,6 +89,7 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
 
     var quantity by remember { mutableIntStateOf(1) }
     var selectedSector by remember { mutableStateOf<SectorConcert?>(null) }
+    val coroutineScope = rememberCoroutineScope()
 
 
     LaunchedEffect(Unit) {
@@ -305,7 +308,20 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
                     DetailRow("Seat", seatDescription, displayDivider = false)
                     DetailRow("Price", ticketPrice, displayDivider = false)
 
-                    ButtonWithIcons(ImageVector.vectorResource(R.drawable.seat), "Seating chart", ImageVector.vectorResource(R.drawable.arrow)) { }
+                    ButtonWithIcons(
+                        ImageVector.vectorResource(R.drawable.seat),
+                        "Seating chart",
+                        ImageVector.vectorResource(R.drawable.arrow),
+                        onClickAction = {
+                            if (concert.success && concert.data != null) {
+                                navController.navigate("ticketMap/${eventForCards.contentId}")
+                            } else {
+                                coroutineScope.launch {
+                                    snackBarHostState.showSnackbar("Concert data not available")
+                                }
+                            }
+                        }
+                    )
                 }
 
             }

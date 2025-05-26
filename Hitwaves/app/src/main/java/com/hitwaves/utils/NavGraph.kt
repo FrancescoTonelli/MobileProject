@@ -24,6 +24,7 @@ import com.hitwaves.ui.screens.Login
 import com.hitwaves.ui.screens.Notification
 import com.hitwaves.ui.screens.NotificationDetails
 import com.hitwaves.ui.screens.TicketDetails
+import com.hitwaves.ui.screens.ConcertCanvas
 import com.hitwaves.ui.screens.Tickets
 
 @Composable
@@ -111,6 +112,17 @@ fun NavGraph(navController: NavHostController, innerPadding: PaddingValues) {
                 Text("Event not available")
             }
         }
+
+        composable("ticketMap/{concertId}") { backStackEntry ->
+            val concertId = backStackEntry.arguments?.getString("concertId")?.toIntOrNull()
+
+            if (concertId != null) {
+                ConcertCanvas(navController = navController, concertId = concertId)
+            } else {
+                Text("Canvas not available")
+            }
+        }
+
 
         composable("ticketDetails") {
             val eventForCards = remember {

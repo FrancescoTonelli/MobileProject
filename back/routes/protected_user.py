@@ -628,9 +628,7 @@ def protected_user_concert_details(concert_id):
                 t.id AS ticket_id,
                 t.price AS ticket_price,
                 s.id AS sector_id,
-                s.name AS tour_name,  
-                s.is_stage AS sector_is_stage,
-                s.x_sx, s.y_sx, s.x_dx, s.y_dx,
+                s.name AS sector_name,
                 se.id AS seat_id,
                 se.description AS seat_description,
                 se.x AS seat_x,
@@ -683,6 +681,72 @@ def protected_user_concert_details(concert_id):
             }
 
         return jsonify(response), 200
+
+    except Exception as e:
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
+# Get canvas items
+@protected_user_bp.route('/protected_user/concert/<int:concert_id>/canvas', methods=['GET'])
+def protected_user_get_concert_canvas(concert_id):
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cursor.execute("""
+            SELECT 
+                t.id AS ticket_id,
+                t.price AS ticket_price,
+                t.user_id AS ticket_user_id,
+                se.id AS seat_id,
+                se.description AS seat_description,
+                se.x AS seat_x,
+                se.y AS seat_y,
+                s.name AS sector_name
+            FROM 
+                ticket t
+            JOIN 
+                seat se ON t.seat_id = se.id
+            JOIN 
+                sector s ON se.sector_id = s.id
+            WHERE 
+                t.concert_id = %s
+        """, (concert_id,))
+        all_tickets = cursor.fetchall()
+
+        cursor.execute("""
+            SELECT place_id
+            FROM concert
+            WHERE id = %s
+        """, (concert_id,))
+        concert = cursor.fetchone()
+
+        if not concert:
+            return jsonify({'message': 'Concert not found'}), 404
+
+        place_id = concert['place_id']
+
+        cursor.execute("""
+            SELECT 
+                id,
+                name,
+                is_stage,
+                x_sx,
+                y_sx,
+                x_dx,
+                y_dx
+            FROM 
+                sector
+            WHERE 
+                place_id = %s
+        """, (place_id,))
+        sectors = cursor.fetchall()
+
+        return jsonify({
+            'tickets': all_tickets,
+            'sectors': sectors
+        }), 200
 
     except Exception as e:
         return jsonify({'message': f'Server error: {str(e)}'}), 500
