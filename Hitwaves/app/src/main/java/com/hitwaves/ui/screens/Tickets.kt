@@ -86,7 +86,8 @@ fun Tickets(navController: NavHostController) {
                                         artistName = ticket.artistName?: "Unknown",
                                         artistImage = ticket.artistImage?:"",
                                         description = ticket.placeName,
-                                        date = ticket.concertDate
+                                        date = ticket.concertDate,
+                                        isPartOfTour = !ticket.tourTitle.isNullOrEmpty()
                                     )
 
                                     Spacer(modifier = Modifier.height(8.dp))
@@ -123,7 +124,8 @@ fun Tickets(navController: NavHostController) {
                                         artistName = ticket.artistName?: "Unknown",
                                         artistImage = ticket.artistImage?:"",
                                         description = ticket.placeName,
-                                        date = ticket.concertDate
+                                        date = ticket.concertDate,
+                                        isPartOfTour = !ticket.tourTitle.isNullOrEmpty()
                                     )
 
                                     Spacer(modifier = Modifier.height(8.dp))

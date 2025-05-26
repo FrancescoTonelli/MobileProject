@@ -62,7 +62,7 @@ fun EventCard(event: EventForCards, navController: NavController){
         ){
             Box{
                 Image(
-                    painter = rememberAsyncImagePainter(if(event.isTour)
+                    painter = rememberAsyncImagePainter(if(event.isTour || event.isPartOfTour)
                         getHttpTourImageUrl(event.backgroundImage)
                     else
                         getHttpConcertImageUrl(event.backgroundImage)),
