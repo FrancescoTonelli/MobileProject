@@ -51,8 +51,10 @@ import com.hitwaves.api.TicketConcertDetailsResponse
 import com.hitwaves.api.getHttpConcertImageUrl
 import com.hitwaves.api.getHttpTourImageUrl
 import com.hitwaves.model.Artist
+import com.hitwaves.model.DataToCheckout
 import com.hitwaves.model.EventForCards
 import com.hitwaves.model.SectorConcert
+import com.hitwaves.model.TicketToCheckout
 import com.hitwaves.ui.component.ButtonWithIcons
 import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.component.DetailRow
@@ -351,7 +353,47 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
                             ImageVector.vectorResource(R.drawable.card),
                             "Checkout",
                             ImageVector.vectorResource(R.drawable.arrow),
-                            onClickAction = {}
+                            onClickAction = {
+                                if (concert.success && concert.data != null && selectedSector != null && quantity > 0) {
+                                    val ticketsForSector = concert.data?.availableTickets?.filter {
+                                        it.sectorId == selectedSector!!.id
+                                    }
+
+                                    val availableQuantity = ticketsForSector?.size ?: 0
+
+                                    if (availableQuantity >= quantity) {
+
+                                        val checkoutData = DataToCheckout(
+                                            concertId = eventForCards.contentId,
+                                            tickets = concert.data?.availableTickets?.filter {
+                                                it.sectorId == selectedSector!!.id
+                                            }?.take(quantity)?.map { ticket ->
+                                                TicketToCheckout(
+                                                    ticketId = ticket.ticketId,
+                                                    sectorName = ticket.sectorName,
+                                                    seatDescription = ticket.seatDescription?: "Unknown",
+                                                    price = ticket.ticketPrice
+                                                )
+                                            } ?: emptyList(),
+                                        )
+
+                                        navController.currentBackStackEntry?.savedStateHandle?.set("checkoutData", checkoutData)
+
+                                        navController.navigate("checkout")
+
+                                    } else {
+                                        coroutineScope.launch {
+                                            snackBarHostState.showSnackbar(
+                                                "Only $availableQuantity ticket(s) available in the selected sector"
+                                            )
+                                        }
+                                    }
+                                } else {
+                                    coroutineScope.launch {
+                                        snackBarHostState.showSnackbar("Please select a sector and quantity")
+                                    }
+                                }
+                            }
                         )
                     }
                 }
@@ -389,7 +431,7 @@ fun QuantitySelector(
             modifier = Modifier
                 .padding(end = 16.dp)
                 .clickable {
-                    if (quantity>0)
+                    if (quantity>1)
                         onQuantityChange(quantity - 1)
                 }
         )
