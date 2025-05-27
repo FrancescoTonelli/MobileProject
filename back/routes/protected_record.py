@@ -218,6 +218,41 @@ def protected_record_automatic_login():
 
     return jsonify({'token': token}), 200
 
+# Register FCM Token
+@protected_record_bp.route('/protected_record/register_fcm_token', methods=['POST'])
+def protected_user_register_fcm_token():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    try:
+        record_company_id = verify_token()[0]
+    except Exception as e:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    data = request.get_json()
+    required = ['fcm_token']
+    if not all(k in data for k in required):
+        return jsonify({'message': 'Missing fields'}), 400
+
+    fcm_token = data['fcm_token']
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("""
+            UPDATE RECORD_COMPANY SET fcm_token = %s WHERE id = %s"
+        """, (fcm_token, record_company_id))
+        conn.commit()
+        return jsonify({'message': 'FCM token registered successfully'}), 200
+
+    except Exception as e:
+        conn.rollback()
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()
+
 # Login
 @protected_record_bp.route('/protected_record/login', methods=['POST'])
 def protected_record_login():

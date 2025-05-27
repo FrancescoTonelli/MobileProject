@@ -313,11 +313,11 @@ suspend fun apiReadNotification(notificationId: Int): ApiResult<MessageResponse>
     )
 }
 
-suspend fun apiSendFcmToken(token: String): ApiResult<Unit> {
+suspend fun apiSendFcmToken(token: String): ApiResult<MessageResponse> {
     val requestBody = FcmTokenRequest(fcmToken = token)
-    return ApiGenericCalls.postRequestAsync(
+    return ApiGenericCalls.postRequestAsync<MessageResponse>(
         requestData = requestBody,
-        endpoint = "", //TODO
+        endpoint = "register_fcm_token",
         withAuth = true
     )
 }

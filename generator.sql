@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 27, 2025 alle 14:42
+-- Creato il: Mag 27, 2025 alle 16:07
 -- Versione del server: 10.4.32-MariaDB
 -- Versione PHP: 8.2.12
 
@@ -199,16 +199,17 @@ CREATE TABLE `record_company` (
   `id` int(11) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `session_token` varchar(255) DEFAULT NULL
+  `session_token` varchar(255) DEFAULT NULL,
+  `fcm_token` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `record_company`
 --
 
-INSERT INTO `record_company` (`id`, `email`, `password`, `session_token`) VALUES
-(3, 'alpha@example.com', '$2b$12$rM2awtCM8c/tYYWOYezTMuXvncW48Lvv88RVO6e3kt5EkYf6zCuXS', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb21wYW55X2lkIjozfQ.jlRGPVO42Qe1julQuud8ocTndzKeF6ZDU8vFX7jwnfA'),
-(4, 'esp@ex.com', '$2b$12$rM2awtCM8c/tYYWOYezTMuXvncW48Lvv88RVO6e3kt5EkYf6zCuXS', NULL);
+INSERT INTO `record_company` (`id`, `email`, `password`, `session_token`, `fcm_token`) VALUES
+(3, 'alpha@example.com', '$2b$12$rM2awtCM8c/tYYWOYezTMuXvncW48Lvv88RVO6e3kt5EkYf6zCuXS', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb21wYW55X2lkIjozfQ.jlRGPVO42Qe1julQuud8ocTndzKeF6ZDU8vFX7jwnfA', NULL),
+(4, 'esp@ex.com', '$2b$12$rM2awtCM8c/tYYWOYezTMuXvncW48Lvv88RVO6e3kt5EkYf6zCuXS', NULL, NULL);
 
 -- --------------------------------------------------------
 
