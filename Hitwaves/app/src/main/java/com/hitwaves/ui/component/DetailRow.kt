@@ -24,11 +24,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.Dp
 
-val spacerHeight = 16.dp
 
 @Composable
-fun DetailRow(label: String, value: String, displayDivider: Boolean = true) {
+fun DetailRow(label: String, value: String, displayDivider: Boolean = true, spacerHeight: Dp = 16.dp) {
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -90,7 +90,7 @@ fun DetailRow(label: String, value: String, displayDivider: Boolean = true) {
 }
 
 @Composable
-fun GmapsDetailRow(label: String, value: String, displayDivider: Boolean = true) {
+fun GmapsDetailRow(label: String, value: String, displayDivider: Boolean = true, spacerHeight: Dp = 16.dp) {
     val context = LocalContext.current
     val encodedAddress = Uri.encode(value)
     val gmapsUri = "https://www.google.com/maps/search/?api=1&query=$encodedAddress"

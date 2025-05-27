@@ -252,7 +252,9 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
                     //Quantity
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp)
                     ) {
                         Text(
                             text = "Quantity",
@@ -275,7 +277,9 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp)
                     ) {
                         Text(
                             text = "Sector",
@@ -294,18 +298,12 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
                         )
                     }
 
-                    val seatDescription = concertTickets[selectedSector?.id]?.firstOrNull()?.seatDescription ?: "Select a sector"
-
-
-
                     val ticketPrice = if (concertTickets[selectedSector?.id] != null) {
                         "€ ${ String.format(Locale.US, "%.2f", concertTickets[selectedSector?.id]?.firstOrNull()?.ticketPrice) }"
                     }
                     else {
                         "Select a sector"
                     }
-
-                    DetailRow("Seat", seatDescription, displayDivider = false)
                     DetailRow("Price", ticketPrice, displayDivider = false)
 
                     ButtonWithIcons(
@@ -383,7 +381,10 @@ fun QuantitySelector(
             tint = Secondary,
             modifier = Modifier
                 .padding(end = 16.dp)
-                .clickable { onQuantityChange(quantity - 1) }
+                .clickable {
+                    if (quantity>0)
+                        onQuantityChange(quantity - 1)
+                }
         )
 
         BasicTextField(
@@ -410,7 +411,10 @@ fun QuantitySelector(
             tint = Secondary,
             modifier = Modifier
                 .padding(start = 16.dp)
-                .clickable { onQuantityChange(quantity + 1) }
+                .clickable {
+                    if(quantity < 10)
+                        onQuantityChange(quantity + 1)
+                }
         )
 
     }
