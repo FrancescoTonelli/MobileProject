@@ -90,24 +90,32 @@ fun Home(navController: NavHostController) {
 
     var nearestShow by remember { mutableStateOf(emptyList<EventForCards>()) }
     var popularShow by remember { mutableStateOf(emptyList<EventForCards>()) }
-    var showSettingsDialog by remember { mutableStateOf(false) }
 
-    val coroutineScope = rememberCoroutineScope()
+    var hasRequestedNotificationPermission by rememberSaveable { mutableStateOf(false) }
+    var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
+
+
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (!isGranted) {
-            showSettingsDialog = true
+            val shouldShow = shouldShowRequestPermissionRationale(activity, Manifest.permission.POST_NOTIFICATIONS)
+            showSettingsDialog = shouldShow
         }
     }
 
-    LaunchedEffect(Unit){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (shouldShowRequestPermissionRationale(activity, Manifest.permission.POST_NOTIFICATIONS)) {
-                showSettingsDialog = true
-            } else {
-                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+    LaunchedEffect(Unit) {
+        if (!hasRequestedNotificationPermission && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            hasRequestedNotificationPermission = true
+
+            val permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                if (shouldShowRequestPermissionRationale(activity, Manifest.permission.POST_NOTIFICATIONS)) {
+                    showSettingsDialog = true
+                } else {
+                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
             }
         }
     }
@@ -268,8 +276,8 @@ fun Home(navController: NavHostController) {
             title = "Permission denied",
             message = "To stay up to date with important updates, we recommend enabling notifications.\nDo you want to enable notifications?",
             onConfirm = {
-                showSettingsDialog = false
                 permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                showSettingsDialog = false
             },
             onDismiss = {
                 showSettingsDialog = false
