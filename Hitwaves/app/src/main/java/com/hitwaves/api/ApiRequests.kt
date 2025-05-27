@@ -46,3 +46,7 @@ data class TicketQrRequest(
 data class TicketPurchaseRequest(
     @SerializedName("ticket_ids") val ticketIds: List<Int>
 )
+
+data class FcmTokenRequest(
+    @SerializedName("fcm_token") val fcmToken: String
+)
