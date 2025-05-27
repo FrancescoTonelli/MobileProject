@@ -1,39 +1,57 @@
 package com.hitwaves.ui.screens
 
-import androidx.compose.foundation.layout.*
+import android.Manifest
+import android.app.Activity
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.hitwaves.R
+import com.hitwaves.model.EventForCards
 import com.hitwaves.ui.component.ButtonWithIcons
+import com.hitwaves.ui.component.CustomMessageBox
+import com.hitwaves.ui.component.CustomSnackBar
+import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.component.SearchWave
 import com.hitwaves.ui.component.Title
-import com.hitwaves.model.EventForCards
-import com.hitwaves.ui.component.EventCard
-import com.hitwaves.ui.theme.*
+import com.hitwaves.ui.theme.Secondary
+import com.hitwaves.ui.theme.Typography
 import com.hitwaves.ui.viewModel.HomeViewModel
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.graphics.Color
-import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.viewModel.LocationViewModel
+import kotlinx.coroutines.launch
+
 
 fun goToMap(navController: NavHostController) {
     navController.navigate("map")
@@ -47,9 +65,12 @@ private fun initLocation(): LocationViewModel {
     return LocationViewModel()
 }
 
+
+
 @Composable
 fun Home(navController: NavHostController) {
     val context = LocalContext.current
+    val activity = context as Activity
     val snackBarHostState = remember { SnackbarHostState() }
 
     var query by rememberSaveable { mutableStateOf("") }
@@ -69,6 +90,28 @@ fun Home(navController: NavHostController) {
 
     var nearestShow by remember { mutableStateOf(emptyList<EventForCards>()) }
     var popularShow by remember { mutableStateOf(emptyList<EventForCards>()) }
+    var showSettingsDialog by remember { mutableStateOf(false) }
+
+    val coroutineScope = rememberCoroutineScope()
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (!isGranted) {
+            showSettingsDialog = true
+        }
+    }
+
+    LaunchedEffect(Unit){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (shouldShowRequestPermissionRationale(activity, Manifest.permission.POST_NOTIFICATIONS)) {
+                showSettingsDialog = true
+            } else {
+                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
 
     DisposableEffect(Unit) {
         locationViewModel.registerGpsStatusReceiver(context)
@@ -219,6 +262,19 @@ fun Home(navController: NavHostController) {
                 }
             }
         }
+    }
+    if (showSettingsDialog) {
+        CustomMessageBox(
+            title = "Permission denied",
+            message = "To stay up to date with important updates, we recommend enabling notifications.\nDo you want to enable notifications?",
+            onConfirm = {
+                showSettingsDialog = false
+                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            },
+            onDismiss = {
+                showSettingsDialog = false
+            }
+        )
     }
 
     CustomSnackBar(snackBarHostState)
