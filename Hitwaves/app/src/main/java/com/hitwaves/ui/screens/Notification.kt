@@ -35,24 +35,24 @@ fun Notification(navController: NavHostController) {
 
 
     val notificationViewModel = remember { init() }
-    val notifs by notificationViewModel.notificationState
+    val notificationState by notificationViewModel.notificationState
     val isLoading by notificationViewModel.isNotificationLoading
-    val readNotifs by notificationViewModel.readState
+    val readState by notificationViewModel.readState
     val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         notificationViewModel.getNotifications()
     }
 
-    LaunchedEffect(notifs) {
-        if (!notifs.success && notifs.errorMessage != null) {
-            snackBarHostState.showSnackbar(notifs.errorMessage!!)
+    LaunchedEffect(notificationState) {
+        if (!notificationState.success && notificationState.errorMessage != null) {
+            snackBarHostState.showSnackbar(notificationState.errorMessage!!)
         }
     }
 
-    LaunchedEffect(readNotifs) {
-        if (!readNotifs.success && readNotifs.errorMessage != null) {
-            snackBarHostState.showSnackbar(readNotifs.errorMessage!!)
+    LaunchedEffect(readState) {
+        if (!readState.success && readState.errorMessage != null) {
+            snackBarHostState.showSnackbar(readState.errorMessage!!)
         }
     }
 
@@ -63,7 +63,7 @@ fun Notification(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            if (!notifs.success || notifs.data.isNullOrEmpty()) {
+            if (!notificationState.success || notificationState.data.isNullOrEmpty()) {
                 item {
                     Spacer(modifier = Modifier.padding(16.dp))
                     Text(
@@ -76,7 +76,7 @@ fun Notification(navController: NavHostController) {
                 }
             }
             else {
-                items(notifs.data!!) { notification ->
+                items(notificationState.data!!) { notification ->
                     NotificationCard(
                         title = notification.title,
                         isRead = notification.isRead == 1,

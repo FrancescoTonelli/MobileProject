@@ -17,55 +17,58 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.hitwaves.R
+import com.hitwaves.api.ConcertInfoResponse
+import com.hitwaves.api.TicketConcertDetailsResponse
 import com.hitwaves.api.getHttpConcertImageUrl
+import com.hitwaves.api.getHttpTourImageUrl
 import com.hitwaves.model.Artist
 import com.hitwaves.model.EventForCards
 import com.hitwaves.model.SectorConcert
+import com.hitwaves.ui.component.ButtonWithIcons
 import com.hitwaves.ui.component.CustomSnackBar
+import com.hitwaves.ui.component.DetailRow
+import com.hitwaves.ui.component.GmapsDetailRow
 import com.hitwaves.ui.component.GoBack
 import com.hitwaves.ui.component.LoadingIndicator
 import com.hitwaves.ui.component.ShowArtistList
 import com.hitwaves.ui.component.Title
-import com.hitwaves.ui.theme.*
+import com.hitwaves.ui.theme.BgDark
+import com.hitwaves.ui.theme.FgDark
+import com.hitwaves.ui.theme.Primary
+import com.hitwaves.ui.theme.Secondary
+import com.hitwaves.ui.theme.Typography
 import com.hitwaves.ui.theme.rememberScreenDimensions
 import com.hitwaves.ui.viewModel.ConcertViewModel
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontStyle
-import com.hitwaves.R
-import com.hitwaves.api.ConcertInfoResponse
-import com.hitwaves.api.TicketConcertDetailsResponse
-import com.hitwaves.api.getHttpTourImageUrl
-import com.hitwaves.ui.component.ButtonWithIcons
-import com.hitwaves.ui.component.DetailRow
-import com.hitwaves.ui.component.GmapsDetailRow
 import kotlinx.coroutines.launch
-import java.text.NumberFormat
 import java.util.Locale
 
 
@@ -344,7 +347,12 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
                     ) {
                         Title("Ready for the wave?")
 
-                        ButtonWithIcons(ImageVector.vectorResource(R.drawable.card), "Checkout", ImageVector.vectorResource(R.drawable.arrow)) { }
+                        ButtonWithIcons(
+                            ImageVector.vectorResource(R.drawable.card),
+                            "Checkout",
+                            ImageVector.vectorResource(R.drawable.arrow),
+                            onClickAction = {}
+                        )
                     }
                 }
             }
@@ -366,8 +374,7 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
 @Composable
 fun QuantitySelector(
     quantity: Int,
-    onQuantityChange: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    onQuantityChange: (Int) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,

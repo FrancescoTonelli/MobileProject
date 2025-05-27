@@ -10,32 +10,26 @@ import com.hitwaves.api.apiAutomaticLogin
 import kotlinx.coroutines.launch
 
 class SplashScreenViewModel : ViewModel(){
-    private val _autoLoginState = mutableStateOf<ApiResult<TokenResponse>>(ApiResult<TokenResponse>(false, null, null))
+    private val _autoLoginState = mutableStateOf(ApiResult<TokenResponse>(false, null, null))
     val autoLoginState: State<ApiResult<TokenResponse>> = _autoLoginState
-    private val _isAutoLoading = mutableStateOf(false)
-    val isAutoLoading : State<Boolean> = _isAutoLoading
 
     fun handleSplash() {
 
         viewModelScope.launch {
 
-            _isAutoLoading.value = true
-
             try {
 
                 val response = apiAutomaticLogin()
 
-                _isAutoLoading.value = false
-
                 if (!response.success) {
-                    _autoLoginState.value = ApiResult<TokenResponse>(false, null, response.errorMessage)
+                    _autoLoginState.value = ApiResult(false, null, response.errorMessage)
                 }
                 else {
-                    _autoLoginState.value = ApiResult<TokenResponse>(true, response.data, null)
+                    _autoLoginState.value = ApiResult(true, response.data, null)
                 }
 
             } catch (e: Exception) {
-                _autoLoginState.value = ApiResult<TokenResponse>(false, null, e.message.toString())
+                _autoLoginState.value = ApiResult(false, null, e.message.toString())
             }
 
 

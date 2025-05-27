@@ -8,10 +8,8 @@ import com.hitwaves.api.ApiResult
 import com.hitwaves.api.CheckReviewResponse
 import com.hitwaves.api.MessageResponse
 import com.hitwaves.api.ReviewRequest
-import com.hitwaves.api.UserReviewResponses
 import com.hitwaves.api.apiAddReview
 import com.hitwaves.api.apiCheckUserReview
-import com.hitwaves.api.apiGetUserReviews
 import kotlinx.coroutines.launch
 
 class ReviewsViewModel: ViewModel() {
@@ -30,12 +28,12 @@ class ReviewsViewModel: ViewModel() {
                 _isLoading.value = false
 
                 if (!response.success) {
-                    _checkReviewState.value = ApiResult<CheckReviewResponse>(false, null, response.errorMessage)
+                    _checkReviewState.value = ApiResult(false, null, response.errorMessage)
                 } else {
-                    _checkReviewState.value = ApiResult<CheckReviewResponse>(true, response.data, null)
+                    _checkReviewState.value = ApiResult(true, response.data, null)
                 }
             } catch (e: Exception) {
-                _checkReviewState.value = ApiResult<CheckReviewResponse>(false, null, e.message.toString())
+                _checkReviewState.value = ApiResult(false, null, e.message.toString())
             }
         }
     }
@@ -56,12 +54,12 @@ class ReviewsViewModel: ViewModel() {
                 _isLoading.value = false
 
                 if (!response.success) {
-                    _postReviewState.value = ApiResult<MessageResponse>(false, null, response.errorMessage)
+                    _postReviewState.value = ApiResult(false, null, response.errorMessage)
                 } else {
-                    _postReviewState.value = ApiResult<MessageResponse>(true, response.data, null)
+                    _postReviewState.value = ApiResult(true, response.data, null)
                 }
             } catch (e: Exception) {
-                _postReviewState.value = ApiResult<MessageResponse>(false, null, e.message.toString())
+                _postReviewState.value = ApiResult(false, null, e.message.toString())
             }
         }
     }

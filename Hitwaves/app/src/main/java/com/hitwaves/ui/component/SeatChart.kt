@@ -7,21 +7,55 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.sp
+import androidx.core.content.res.ResourcesCompat
+import com.hitwaves.R
 import com.hitwaves.api.SectorCanvasResponse
 import com.hitwaves.api.TicketCanvasResponse
-import com.hitwaves.ui.theme.*
+import com.hitwaves.ui.theme.FgDark
+import com.hitwaves.ui.theme.MapBackground
+import com.hitwaves.ui.theme.MapSeat
+import com.hitwaves.ui.theme.MapSeatTaken
+import com.hitwaves.ui.theme.MapSector
+import com.hitwaves.ui.theme.MapStage
+import com.hitwaves.ui.theme.Secondary
 
 @Composable
-fun InteractiveCanvasMap(
+fun rememberRubikPaint(): Paint {
+    val context = LocalContext.current
+    val density = LocalDensity.current
+    val paint = remember { Paint().apply { isAntiAlias = true } }
+
+    LaunchedEffect(Unit) {
+        paint.apply {
+            color = Secondary.toArgb()
+            textSize = with(density) { 4.sp.toPx() }
+            typeface = ResourcesCompat.getFont(context, R.font.rubik_medium)
+        }
+    }
+
+    return paint
+}
+
+@Composable
+fun SeatChart(
     tickets: List<TicketCanvasResponse>,
     sectors: List<SectorCanvasResponse>,
     onTicketClick: (TicketCanvasResponse) -> Unit,
@@ -30,6 +64,8 @@ fun InteractiveCanvasMap(
     var scale by remember { mutableFloatStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
     var isInitialized by remember { mutableStateOf(false) }
+
+    val paint = rememberRubikPaint()
 
     val allPoints = remember(sectors, tickets) {
         sectors.flatMap {
@@ -50,7 +86,7 @@ fun InteractiveCanvasMap(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Secondary)
+            .background(MapBackground)
             .pointerInput(Unit) {
                 detectTransformGestures { _, pan, zoom, _ ->
                     scale *= zoom
@@ -64,7 +100,7 @@ fun InteractiveCanvasMap(
 
                     val hit = tickets.find {
                         val seat = Offset(it.seatX, it.seatY)
-                        (seat - logicalTap).getDistance() <= 20f
+                        (seat - logicalTap).getDistance() <= 5f
                     }
 
                     hit?.let {
@@ -101,14 +137,12 @@ fun InteractiveCanvasMap(
                         size = rect.size
                     )
 
+
                     drawContext.canvas.nativeCanvas.drawText(
                         sector.name,
-                        topLeft.x + 8,
-                        topLeft.y - 10,
-                        Paint().apply {
-                            color = android.graphics.Color.BLACK
-                            textSize = 28f
-                        }
+                        topLeft.x + 3,
+                        topLeft.y - 8,
+                        paint
                     )
                 }
 
@@ -117,14 +151,14 @@ fun InteractiveCanvasMap(
 
                     drawCircle(
                         color = if (ticket.ticketUserId == null) MapSeat else MapSeatTaken,
-                        radius = 10f,
+                        radius = 5f,
                         center = seatPos
                     )
 
                     if (checkInCart(ticket.ticketId)) {
                         drawCircle(
-                            color = Color.Black,
-                            radius = 12f,
+                            color = FgDark,
+                            radius = 3f,
                             center = seatPos,
                             style = Stroke(width = 2f)
                         )

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -67,7 +68,8 @@ fun Tickets(navController: NavHostController) {
 
             LazyColumn (
                 modifier = Modifier
-                    .fillMaxSize(0.9f),
+                    .fillMaxWidth(0.9f)
+                    .fillMaxHeight(),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -86,7 +88,8 @@ fun Tickets(navController: NavHostController) {
                                         artistName = ticket.artistName?: "Unknown",
                                         artistImage = ticket.artistImage?:"",
                                         description = ticket.placeName,
-                                        date = ticket.concertDate
+                                        date = ticket.concertDate,
+                                        isPartOfTour = !ticket.tourTitle.isNullOrEmpty()
                                     )
 
                                     Spacer(modifier = Modifier.height(8.dp))
@@ -123,7 +126,8 @@ fun Tickets(navController: NavHostController) {
                                         artistName = ticket.artistName?: "Unknown",
                                         artistImage = ticket.artistImage?:"",
                                         description = ticket.placeName,
-                                        date = ticket.concertDate
+                                        date = ticket.concertDate,
+                                        isPartOfTour = !ticket.tourTitle.isNullOrEmpty()
                                     )
 
                                     Spacer(modifier = Modifier.height(8.dp))

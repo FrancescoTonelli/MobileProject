@@ -32,6 +32,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.hitwaves.R
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.viewModel.NotificationViewModel
+import com.hitwaves.ui.theme.FgDark
+import com.hitwaves.ui.theme.Primary
+import com.hitwaves.ui.theme.Secondary
+import com.hitwaves.ui.theme.Typography
 
 private fun init() : NotificationViewModel {
     return NotificationViewModel()

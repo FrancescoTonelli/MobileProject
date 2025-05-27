@@ -1,39 +1,24 @@
 package com.hitwaves.ui.viewModel
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import android.location.Location
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.CancellationTokenSource
 import com.hitwaves.api.ApiResult
-import com.hitwaves.api.MessageResponse
 import com.hitwaves.api.NearestConcert
 import com.hitwaves.api.PopularArtistEvent
 import com.hitwaves.api.PositionRequest
-import com.hitwaves.api.TokenResponse
-import com.hitwaves.api.UserDetailsResponse
 import com.hitwaves.api.apiGetNearestConcerts
 import com.hitwaves.api.apiGetPopularArtistsEvents
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 class HomeViewModel: ViewModel() {
-    private val _nearestState = mutableStateOf<ApiResult<List<NearestConcert>>>(ApiResult<List<NearestConcert>>(false, null, null))
+    private val _nearestState = mutableStateOf(ApiResult<List<NearestConcert>>(false, null, null))
     val nearestState: State<ApiResult<List<NearestConcert>>> = _nearestState
     private val _isLoadingNearest = mutableStateOf(false)
     val isLoadingNearest : State<Boolean> = _isLoadingNearest
 
-    private val _popularState = mutableStateOf<ApiResult<List<PopularArtistEvent>>>(ApiResult<List<PopularArtistEvent>>(false, null, null))
+    private val _popularState = mutableStateOf(ApiResult<List<PopularArtistEvent>>(false, null, null))
     val popularState: State<ApiResult<List<PopularArtistEvent>>> = _popularState
     private val _isLoadingPopular = mutableStateOf(false)
     val isLoadingPopular : State<Boolean> = _isLoadingPopular
@@ -55,14 +40,14 @@ class HomeViewModel: ViewModel() {
                 _isLoadingNearest.value = false
 
                 if (!response.success) {
-                    _nearestState.value = ApiResult<List<NearestConcert>>(false, null, response.errorMessage)
+                    _nearestState.value = ApiResult(false, null, response.errorMessage)
                 }
                 else {
-                    _nearestState.value = ApiResult<List<NearestConcert>>(true, response.data, null)
+                    _nearestState.value = ApiResult(true, response.data, null)
                 }
 
             } catch (e: Exception) {
-                _nearestState.value = ApiResult<List<NearestConcert>>(false, null, e.message.toString())
+                _nearestState.value = ApiResult(false, null, e.message.toString())
             }
         }
     }
@@ -79,14 +64,14 @@ class HomeViewModel: ViewModel() {
                 _isLoadingPopular.value = false
 
                 if (!response.success) {
-                    _popularState.value = ApiResult<List<PopularArtistEvent>>(false, null, response.errorMessage)
+                    _popularState.value = ApiResult(false, null, response.errorMessage)
                 }
                 else {
-                    _popularState.value = ApiResult<List<PopularArtistEvent>>(true, response.data, null)
+                    _popularState.value = ApiResult(true, response.data, null)
                 }
 
             } catch (e: Exception) {
-                _popularState.value = ApiResult<List<PopularArtistEvent>>(false, null, e.message.toString())
+                _popularState.value = ApiResult(false, null, e.message.toString())
             }
         }
     }

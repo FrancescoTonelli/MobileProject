@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.hitwaves.api.getHttpTourImageUrl
 import com.hitwaves.model.Artist
 import com.hitwaves.ui.component.EventCard
 import com.hitwaves.ui.component.ShowArtistList
@@ -80,13 +81,14 @@ fun TourDetails(eventForCards: EventForCards, navController: NavController){
                 EventForCards(
                     contentId = event.concertId,
                     isTour = false,
-                    backgroundImage = event.concertImage.orEmpty(),
+                    backgroundImage = eventForCards.backgroundImage,
                     title = event.concertTitle,
                     artistName = firstArtist.artistName,
                     artistImage = firstArtist.artistImage.orEmpty(),
                     description = event.placeName,
                     date = event.concertDate,
-                    placeName = event.placeName
+                    placeName = event.placeName,
+                    isPartOfTour = true
                 )
             }
         } else if (!tour.success && tour.errorMessage != null) {
@@ -102,7 +104,7 @@ fun TourDetails(eventForCards: EventForCards, navController: NavController){
                 .size(rememberScreenDimensions().screenWidth, 150.dp)
         ){
             Image(
-                painter = rememberAsyncImagePainter(eventForCards.backgroundImage),
+                painter = rememberAsyncImagePainter(getHttpTourImageUrl(eventForCards.backgroundImage)),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()

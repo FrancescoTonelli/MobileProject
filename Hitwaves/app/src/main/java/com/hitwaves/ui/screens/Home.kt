@@ -114,7 +114,8 @@ fun Home(navController: NavHostController) {
                         artistImage = event.artistImage.orEmpty(),
                         description = "${event.placeName} - ${event.distance}km",
                         date = event.date,
-                        placeName = event.placeName
+                        placeName = event.placeName,
+                        isPartOfTour = !event.tourTitle.isNullOrEmpty()
                     )
                 }
             } else emptyList()

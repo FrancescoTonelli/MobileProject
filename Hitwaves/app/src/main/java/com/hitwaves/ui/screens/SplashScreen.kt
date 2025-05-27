@@ -41,7 +41,7 @@ private fun init(): SplashScreenViewModel = SplashScreenViewModel()
 fun SplashScreen() {
     val context = LocalContext.current
     val activity = context as Activity
-    val splashViewModel = remember { SplashScreenViewModel() }
+    val splashViewModel = remember { init() }
     val result by splashViewModel.autoLoginState
     val snackBarHostState = remember { SnackbarHostState() }
 

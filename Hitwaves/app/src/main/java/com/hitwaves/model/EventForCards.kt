@@ -17,5 +17,6 @@ data class EventForCards(
     val artistName: String,
     val artistImage: String,
     val description: String?,
-    val date: String?
+    val date: String?,
+    val isPartOfTour: Boolean = false
 ) : Parcelable
