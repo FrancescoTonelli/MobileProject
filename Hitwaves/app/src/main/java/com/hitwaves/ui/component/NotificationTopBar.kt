@@ -1,6 +1,5 @@
 package com.hitwaves.ui.component
 
-import android.graphics.drawable.VectorDrawable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,13 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.hitwaves.R
-import com.hitwaves.ui.theme.*
+import com.hitwaves.ui.theme.FgDark
+import com.hitwaves.ui.theme.Primary
+import com.hitwaves.ui.theme.Secondary
+import com.hitwaves.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

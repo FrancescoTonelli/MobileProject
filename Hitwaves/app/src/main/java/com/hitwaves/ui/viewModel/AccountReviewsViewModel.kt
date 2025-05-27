@@ -5,12 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hitwaves.api.ApiResult
-import com.hitwaves.api.LikedArtistResponse
 import com.hitwaves.api.MessageResponse
-import com.hitwaves.api.UpdateUserImageResponse
 import com.hitwaves.api.UserReviewResponses
 import com.hitwaves.api.apiDeleteUserReview
-import com.hitwaves.api.apiGetLikedArtists
 import com.hitwaves.api.apiGetUserReviews
 import kotlinx.coroutines.launch
 
@@ -34,14 +31,14 @@ class AccountReviewsViewModel : ViewModel() {
                 _isLoadingReviews.value = false
 
                 if (!response.success) {
-                    _reviewsState.value = ApiResult<List<UserReviewResponses>>(false, null, response.errorMessage)
+                    _reviewsState.value = ApiResult(false, null, response.errorMessage)
                 }
                 else {
-                    _reviewsState.value = ApiResult<List<UserReviewResponses>>(true, response.data, null)
+                    _reviewsState.value = ApiResult(true, response.data, null)
                 }
 
             } catch (e: Exception) {
-                _reviewsState.value = ApiResult<List<UserReviewResponses>>(false, null, e.message.toString())
+                _reviewsState.value = ApiResult(false, null, e.message.toString())
             }
 
 
@@ -60,14 +57,14 @@ class AccountReviewsViewModel : ViewModel() {
                 _isLoadingReviews.value = false
 
                 if (!response.success) {
-                    _deleteState.value = ApiResult<MessageResponse>(false, null, response.errorMessage)
+                    _deleteState.value = ApiResult(false, null, response.errorMessage)
                 }
                 else {
-                    _deleteState.value = ApiResult<MessageResponse>(true, response.data, null)
+                    _deleteState.value = ApiResult(true, response.data, null)
                 }
 
             } catch (e: Exception) {
-                _deleteState.value = ApiResult<MessageResponse>(false, null, e.message.toString())
+                _deleteState.value = ApiResult(false, null, e.message.toString())
             }
 
 

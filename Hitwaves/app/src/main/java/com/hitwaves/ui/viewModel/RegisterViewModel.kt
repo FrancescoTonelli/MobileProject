@@ -11,7 +11,7 @@ import com.hitwaves.api.apiRegisterUser
 import kotlinx.coroutines.launch
 
 class RegisterViewModel : ViewModel(){
-    private val _registerState = mutableStateOf<ApiResult<TokenResponse>>(ApiResult<TokenResponse>(false, null, null))
+    private val _registerState = mutableStateOf(ApiResult<TokenResponse>(false, null, null))
     val registerState: State<ApiResult<TokenResponse>> = _registerState
     private val _isLoading = mutableStateOf(false)
     val isLoading : State<Boolean> = _isLoading
@@ -48,14 +48,14 @@ class RegisterViewModel : ViewModel(){
                 _isLoading.value = false
 
                 if (!response.success) {
-                    _registerState.value = ApiResult<TokenResponse>(false, null, response.errorMessage)
+                    _registerState.value = ApiResult(false, null, response.errorMessage)
                 }
                 else {
-                    _registerState.value = ApiResult<TokenResponse>(true, response.data, null)
+                    _registerState.value = ApiResult(true, response.data, null)
                 }
 
             } catch (e: Exception) {
-                _registerState.value = ApiResult<TokenResponse>(false, null, e.message.toString())
+                _registerState.value = ApiResult(false, null, e.message.toString())
             }
 
 

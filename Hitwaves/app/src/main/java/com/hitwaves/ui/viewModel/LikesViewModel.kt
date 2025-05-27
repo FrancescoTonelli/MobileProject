@@ -11,9 +11,9 @@ import com.hitwaves.api.apiLikeOrUnlikeArtist
 import kotlinx.coroutines.launch
 
 class LikesViewModel : ViewModel(){
-    private val _likedArtistsState = mutableStateOf<ApiResult<List<LikedArtistResponse>>>(ApiResult<List<LikedArtistResponse>>(false, null, null))
+    private val _likedArtistsState = mutableStateOf(ApiResult<List<LikedArtistResponse>>(false, null, null))
     val likedArtistsState: State<ApiResult<List<LikedArtistResponse>>> = _likedArtistsState
-    private val _toggleState = mutableStateOf<ApiResult<String>>(ApiResult<String>(false, null, null))
+    private val _toggleState = mutableStateOf(ApiResult<String>(false, null, null))
     val toggleState: State<ApiResult<String>> = _toggleState
     private val _isLikesLoading = mutableStateOf(false)
     val isLikesLoading : State<Boolean> = _isLikesLoading
@@ -31,14 +31,14 @@ class LikesViewModel : ViewModel(){
                 _isLikesLoading.value = false
 
                 if (!response.success) {
-                    _likedArtistsState.value = ApiResult<List<LikedArtistResponse>>(false, null, response.errorMessage)
+                    _likedArtistsState.value = ApiResult(false, null, response.errorMessage)
                 }
                 else {
-                    _likedArtistsState.value = ApiResult<List<LikedArtistResponse>>(true, response.data, null)
+                    _likedArtistsState.value = ApiResult(true, response.data, null)
                 }
 
             } catch (e: Exception) {
-                _likedArtistsState.value = ApiResult<List<LikedArtistResponse>>(false, null, e.message.toString())
+                _likedArtistsState.value = ApiResult(false, null, e.message.toString())
             }
 
 
@@ -55,13 +55,13 @@ class LikesViewModel : ViewModel(){
                 _isLikesLoading.value = false
 
                 if (!response.success) {
-                    _toggleState.value = ApiResult<String>(false, null, response.errorMessage)
+                    _toggleState.value = ApiResult(false, null, response.errorMessage)
                 }
                 else {
-                    _toggleState.value = ApiResult<String>(true, response.data, null)
+                    _toggleState.value = ApiResult(true, response.data, null)
                 }
             } catch (e: Exception) {
-                _toggleState.value = ApiResult<String>(false, null, e.message.toString())
+                _toggleState.value = ApiResult(false, null, e.message.toString())
             }
         }
     }

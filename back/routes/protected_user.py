@@ -865,47 +865,84 @@ def protected_user_artist_details(artist_id):
     finally:
         conn.close()
 
-# Buy ticket by id
-@protected_user_bp.route('/protected_user/ticket/purchase/<int:ticket_id>', methods=['POST'])
-def protected_user_purchase_ticket(ticket_id):
+# Buy tickets by id
+@protected_user_bp.route('/protected_user/ticket/purchase', methods=['POST'])
+def protected_user_purchase_tickets():
     auth_header = request.headers.get('Authorization')
     if not auth_header:
         return jsonify({'message': 'Token is missing'}), 401
-    
+
     try:
         user_id = verify_token()[0]
-    except Exception as e:
+    except Exception:
         return jsonify({'message': 'Invalid token'}), 401
+
+    data = request.get_json()
+    ticket_ids = data.get('ticket_ids', [])
+
+    if not ticket_ids or not isinstance(ticket_ids, list):
+        return jsonify({'message': 'ticket_ids must be a list of integers'}), 400
 
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
 
     try:
-        cursor.execute("""
-            SELECT id FROM ticket 
-            WHERE id = %s 
-            AND user_id IS NULL 
-            AND validated = 0
-        """, (ticket_id,))
-        
-        if not cursor.fetchone():
-            return jsonify({'message': 'Ticket not available'}), 400
+        format_strings = ','.join(['%s'] * len(ticket_ids))
+        cursor.execute(f"""
+            SELECT 
+                t.id, t.price, t.user_id, t.validated,
+                s.name AS sector_name,
+                st.description AS seat_description
+            FROM ticket t
+            JOIN seat st ON t.seat_id = st.id
+            JOIN sector s ON st.sector_id = s.id
+            WHERE t.id IN ({format_strings})
+        """, tuple(ticket_ids))
+
+        tickets = cursor.fetchall()
+
+        if len(tickets) != len(ticket_ids):
+            return jsonify({'message': 'One or more tickets not found'}), 400
+
+        unavailable = [
+            f"{t['sector_name']} - {t['seat_description']}"
+            for t in tickets if t['user_id'] is not None or t['validated']
+        ]
+
+        if unavailable:
+            return jsonify({
+                'message': f"Some tickets are not available: {', '.join(unavailable)}"
+            }), 400
+
+        total_price = sum(t['price'] for t in tickets)
+
+        cursor.execute("SELECT refunds FROM user WHERE id = %s", (user_id,))
+        user = cursor.fetchone()
+        if not user:
+            return jsonify({'message': 'User not found'}), 404
+
+        current_refunds = user['refunds']
+        new_refunds = max(current_refunds - total_price, 0)
 
         cursor.execute("""
-            UPDATE ticket 
-            SET user_id = %s 
+            UPDATE user 
+            SET refunds = %s 
             WHERE id = %s
-        """, (user_id, ticket_id))
-        
+        """, (new_refunds, user_id))
+
+        cursor.execute(f"""
+            UPDATE ticket
+            SET user_id = %s
+            WHERE id IN ({format_strings})
+        """, tuple([user_id] + ticket_ids))
+
         conn.commit()
 
-        return jsonify({
-            'message': 'Purchase successful',
-        }), 200
+        return jsonify({'message': 'Tickets purchased successfully'}), 200
 
     except Exception as e:
         conn.rollback()
-        return jsonify({'message': f'Error during purchase: {str(e)}'}), 500
+        return jsonify({'message': e}), 500
     finally:
         conn.close()
 

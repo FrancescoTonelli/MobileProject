@@ -6,9 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hitwaves.api.ApiResult
 import com.hitwaves.api.MapConcertResponse
-import com.hitwaves.api.UserDetailsResponse
 import com.hitwaves.api.apiGetMapConcerts
-import com.hitwaves.api.apiGetUserDetails
 import kotlinx.coroutines.launch
 
 class MapViewModel: ViewModel() {

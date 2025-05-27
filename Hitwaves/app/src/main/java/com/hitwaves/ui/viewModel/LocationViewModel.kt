@@ -31,7 +31,7 @@ class LocationViewModel: ViewModel() {
     private val _isLoadingLocation = mutableStateOf(false)
     val isLoadingLocation : State<Boolean> = _isLoadingLocation
 
-    private val _isGpsEnabled = MutableStateFlow<Boolean>(true)
+    private val _isGpsEnabled = MutableStateFlow(true)
     val isGpsEnabled: StateFlow<Boolean> = _isGpsEnabled
 
     private var gpsReceiver: BroadcastReceiver? = null

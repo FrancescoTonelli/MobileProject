@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -29,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,12 +34,14 @@ import androidx.navigation.NavHostController
 import com.hitwaves.api.UserUpdateRequest
 import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.component.GoBack
+import com.hitwaves.ui.component.LoadingIndicator
 import com.hitwaves.ui.component.LoginButton
 import com.hitwaves.ui.component.LoginDateField
 import com.hitwaves.ui.component.LoginInputField
 import com.hitwaves.ui.component.LoginPasswordField
-import com.hitwaves.ui.component.LoadingIndicator
-import com.hitwaves.ui.theme.*
+import com.hitwaves.ui.theme.BgDark
+import com.hitwaves.ui.theme.Secondary
+import com.hitwaves.ui.theme.Typography
 import com.hitwaves.ui.viewModel.AccountViewModel
 import kotlinx.coroutines.launch
 

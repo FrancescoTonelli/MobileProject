@@ -11,7 +11,7 @@ import com.hitwaves.api.apiLoginUser
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel(){
-    private val _loginState = mutableStateOf<ApiResult<TokenResponse>>(ApiResult<TokenResponse>(false, null, null))
+    private val _loginState = mutableStateOf(ApiResult<TokenResponse>(false, null, null))
     val loginState: State<ApiResult<TokenResponse>> = _loginState
     private val _isLoading = mutableStateOf(false)
     val isLoading : State<Boolean> = _isLoading
@@ -35,14 +35,14 @@ class LoginViewModel : ViewModel(){
                 _isLoading.value = false
 
                 if (!response.success) {
-                    _loginState.value = ApiResult<TokenResponse>(false, null, response.errorMessage)
+                    _loginState.value = ApiResult(false, null, response.errorMessage)
                 }
                 else {
-                    _loginState.value = ApiResult<TokenResponse>(true, response.data, null)
+                    _loginState.value = ApiResult(true, response.data, null)
                 }
 
             } catch (e: Exception) {
-                _loginState.value = ApiResult<TokenResponse>(false, null, e.message.toString())
+                _loginState.value = ApiResult(false, null, e.message.toString())
             }
 
 

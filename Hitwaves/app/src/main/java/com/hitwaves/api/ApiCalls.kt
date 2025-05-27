@@ -138,15 +138,15 @@ suspend fun apiGetArtistDetails(artistId: Int): ApiResult<ArtistDetailsResponse>
     )
 }
 
-//suspend fun apiPurchaseTicket(ticketId: Int): Pair<Boolean, Any?> {
-//    val url = "ticket/purchase/$ticketId"
-//    return HttpHelper.postRequestAsync<MessageResponse>(
-//        requestData = Unit,
-//        endpoint = url,
-//        withAuth = true
-//    )
-//}
-//
+suspend fun apiPurchaseTicket(ticketIds: TicketPurchaseRequest): ApiResult<MessageResponse> {
+    val url = "ticket/purchase"
+    return ApiGenericCalls.postRequestAsync<MessageResponse>(
+        requestData = ticketIds,
+        endpoint = url,
+        withAuth = true
+    )
+}
+
 suspend fun apiGetLikedArtists(): ApiResult<List<LikedArtistResponse>> {
     val url = "liked_artists"
     return ApiGenericCalls.getRequestAsync<List<LikedArtistResponse>>(

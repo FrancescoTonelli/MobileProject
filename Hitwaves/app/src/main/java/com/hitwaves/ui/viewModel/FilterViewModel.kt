@@ -5,8 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hitwaves.api.ApiResult
-import com.hitwaves.model.Artist
-import com.hitwaves.model.EventForCards
 import com.hitwaves.api.ArtistResponse
 import com.hitwaves.api.ConcertNoTourResponse
 import com.hitwaves.api.TourResponse

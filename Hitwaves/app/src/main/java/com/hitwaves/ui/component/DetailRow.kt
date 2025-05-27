@@ -19,7 +19,6 @@ import com.hitwaves.ui.theme.Secondary
 import com.hitwaves.ui.theme.Typography
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign

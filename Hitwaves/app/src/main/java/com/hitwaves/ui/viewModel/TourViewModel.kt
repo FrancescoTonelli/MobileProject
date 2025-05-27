@@ -8,8 +8,6 @@ import com.hitwaves.api.ApiResult
 import com.hitwaves.api.TourDetailsResponse
 import com.hitwaves.api.apiGetTourDetails
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class TourViewModel : ViewModel(){
     private val _tourState = mutableStateOf(ApiResult<TourDetailsResponse>(false, null, null))

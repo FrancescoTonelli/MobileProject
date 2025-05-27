@@ -10,11 +10,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.hitwaves.model.Artist
+import com.hitwaves.model.DataToCheckout
 import com.hitwaves.model.EventForCards
 import com.hitwaves.ui.screens.Account
 import com.hitwaves.ui.screens.AccountReviews
 import com.hitwaves.ui.screens.AccountUpdate
 import com.hitwaves.ui.screens.ArtistDetails
+import com.hitwaves.ui.screens.Checkout
 import com.hitwaves.ui.screens.ConcertDetails
 import com.hitwaves.ui.screens.ConcertMap
 import com.hitwaves.ui.screens.TourDetails
@@ -120,6 +122,20 @@ fun NavGraph(navController: NavHostController, innerPadding: PaddingValues) {
                 ConcertCanvas(navController = navController, concertId = concertId)
             } else {
                 Text("Canvas not available")
+            }
+        }
+
+        composable("checkout") {
+            val checkoutData = remember {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.get<DataToCheckout>("checkoutData")
+            }
+
+            if (checkoutData != null) {
+                Checkout(navController = navController, checkoutData = checkoutData, innerPadding = innerPadding)
+            } else {
+                Text("Event not available")
             }
         }
 

@@ -26,7 +26,8 @@ fun ButtonWithIcons(
     startIcon: ImageVector? = null,
     textBtn: String,
     endIcon: ImageVector? = null,
-    onClickAction: () -> Unit
+    onClickAction: () -> Unit,
+    modifier: Modifier = Modifier.padding(vertical = 8.dp)
 ) {
     Button(
         onClick = onClickAction,
@@ -36,7 +37,7 @@ fun ButtonWithIcons(
             disabledContentColor = Color.Transparent,
             disabledContainerColor = Color.Transparent
         ),
-        modifier = Modifier.padding(vertical = 8.dp)
+        modifier = modifier
     ) {
         Row(
             modifier = Modifier.height(30.dp),

@@ -15,17 +15,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.hitwaves.model.Artist
 import com.hitwaves.ui.component.ArtistCard
 import com.hitwaves.ui.component.CustomSnackBar
-import com.hitwaves.ui.component.Title
 import com.hitwaves.ui.component.LoadingIndicator
+import com.hitwaves.ui.component.Title
+import com.hitwaves.ui.theme.Secondary
+import com.hitwaves.ui.theme.Typography
 import com.hitwaves.ui.viewModel.LikesViewModel
-import com.hitwaves.ui.theme.*
 
 private fun init() : LikesViewModel {
     return LikesViewModel()
@@ -40,7 +40,6 @@ fun Likes(navController: NavHostController) {
     val isLoading by likesViewModel.isLikesLoading
     val toggleState by likesViewModel.toggleState
     val errorMsg = remember { mutableStateOf("") }
-    val context = LocalContext.current
     val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
