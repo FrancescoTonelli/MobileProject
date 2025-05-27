@@ -92,7 +92,12 @@ fun Checkout(navController: NavController, checkoutData: DataToCheckout, innerPa
 
     LaunchedEffect(purchaseState) {
         if (purchaseState.success && !isLoading) {
-            navController.navigate("tickets")
+            navController.navigate("tickets") {
+                popUpTo("checkout") {
+                    inclusive = true
+                }
+
+            }
         } else if (!purchaseState.success && !isLoading) {
             coroutineScope.launch {
                 snackBarHostState.showSnackbar(purchaseState.errorMessage ?: "An error occurred while purchasing tickets.")
