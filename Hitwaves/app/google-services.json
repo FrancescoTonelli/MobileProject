@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "99061998054",
+    "project_id": "hitwaves-5f936",
+    "storage_bucket": "hitwaves-5f936.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:99061998054:android:31988eceab033492e5f627",
+        "android_client_info": {
+          "package_name": "com.hitwaves"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDY7LmBHio_pY-UDgMNeC466rPMxm1iL70"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

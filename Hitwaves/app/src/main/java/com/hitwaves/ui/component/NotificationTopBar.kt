@@ -18,6 +18,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -51,7 +52,7 @@ fun NotificationTopBar(navController: NavHostController, item: IconData){
     val notificationViewModel = remember { init() }
     val notifs by notificationViewModel.notificationState
     val isLoading by notificationViewModel.isNotificationLoading
-    val unreadNotificationCount = remember { mutableStateOf(0) }
+    val unreadNotificationCount = remember { mutableIntStateOf(0) }
 
 
     LaunchedEffect(Unit) {
