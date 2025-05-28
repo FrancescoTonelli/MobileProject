@@ -29,7 +29,8 @@ import com.hitwaves.R
 fun NotificationCard(
     title: String,
     isRead: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDelete: () -> Unit
 ) {
     val readColor = if (isRead) Secondary else Primary
     Column(
@@ -77,6 +78,7 @@ fun NotificationCard(
             }
             IconButton(
                 onClick = {
+                    onDelete()
                 }
             ) {
                 Icon(

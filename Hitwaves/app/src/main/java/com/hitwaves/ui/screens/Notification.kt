@@ -45,6 +45,7 @@ fun Notification(navController: NavHostController) {
     val notificationState by notificationViewModel.notificationState
     val isLoading by notificationViewModel.isNotificationLoading
     val readState by notificationViewModel.readState
+    val deleteState by notificationViewModel.deleteState
     val snackBarHostState = remember { SnackbarHostState() }
 
     val context = LocalContext.current
@@ -64,6 +65,16 @@ fun Notification(navController: NavHostController) {
             snackBarHostState.showSnackbar(readState.errorMessage!!)
         }
         else if (readState.success) {
+            UnreadBadge.update()
+        }
+    }
+
+    LaunchedEffect(deleteState) {
+        if (!deleteState.success && deleteState.errorMessage != null) {
+            snackBarHostState.showSnackbar(deleteState.errorMessage!!)
+        }
+        else if (deleteState.success) {
+            notificationViewModel.getNotifications()
             UnreadBadge.update()
         }
     }
@@ -100,7 +111,9 @@ fun Notification(navController: NavHostController) {
                             val encodedDescription = Uri.encode(notification.description)
 
                             navController.navigate("notificationDetails/$encodedTitle/$encodedDescription")
-
+                        },
+                        onDelete = {
+                            notificationViewModel.deleteNotification(notification.id)
                         }
                     )
                 }
