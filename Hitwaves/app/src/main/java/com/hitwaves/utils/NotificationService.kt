@@ -26,20 +26,6 @@ const val channelName = "com.hitwaves.utils.notification"
 
 class NotificationService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
-
-        Log.d("FCM", "New token: $token")
-
-        CoroutineScope(Dispatchers.IO).launch {
-            while(TokenManager.getToken() == null) {
-                delay(100)
-            }
-            val result = apiSendFcmToken(token)
-            withContext(Dispatchers.Main) {
-                if(!result.success){
-                    Log.e("FCM", "Errore registrazione token: ${result.errorMessage}")
-                }
-            }
-        }
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
