@@ -7,15 +7,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.hitwaves.AppActivity
 import com.hitwaves.R
-import com.hitwaves.api.ApiResult
 import com.hitwaves.api.TokenManager
 import com.hitwaves.api.apiSendFcmToken
 import kotlinx.coroutines.CoroutineScope

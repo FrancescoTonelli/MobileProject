@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,12 +30,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.hitwaves.R
-import com.hitwaves.ui.theme.FgDark
-import com.hitwaves.ui.theme.Primary
-import com.hitwaves.ui.theme.Secondary
-import com.hitwaves.ui.theme.Typography
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.viewModel.NotificationViewModel
+import kotlinx.coroutines.delay
 
 private fun init() : NotificationViewModel {
     return NotificationViewModel()
@@ -56,12 +52,15 @@ fun NotificationTopBar(navController: NavHostController, item: IconData){
 
 
     LaunchedEffect(Unit) {
-        notificationViewModel.getNotifications()
+        while(true){
+            notificationViewModel.getNotifications()
+            delay(10000)
+        }
     }
 
     LaunchedEffect(notifs) {
         if (notifs.success && notifs.data != null) {
-            unreadNotificationCount.value = notifs.data?.count { it.isRead == 0 } ?: 0
+            unreadNotificationCount.intValue = notifs.data?.count { it.isRead == 0 } ?: 0
         }
     }
 
@@ -125,13 +124,13 @@ fun NotificationTopBar(navController: NavHostController, item: IconData){
                     ) {
                         BadgedBox(
                             badge = {
-                                if (unreadNotificationCount.value > 0) {
+                                if (unreadNotificationCount.intValue > 0) {
                                     Badge (
                                         containerColor = Primary,
                                         contentColor = Secondary
                                     ){
                                         Text(
-                                            text = "${unreadNotificationCount.value}",
+                                            text = "${unreadNotificationCount.intValue}",
                                             style = Typography.bodyLarge.copy(
                                                 fontSize = 11.sp,
                                                 color = Secondary
