@@ -306,6 +306,9 @@ fun ConcertDetails(eventForCards: EventForCards, navController: NavController) {
                     val ticketPrice = if (concertTickets[selectedSector?.id] != null) {
                         "€ ${ String.format(Locale.US, "%.2f", concertTickets[selectedSector?.id]?.firstOrNull()?.ticketPrice) }"
                     }
+                    else if (selectedSector != null) {
+                        "No tickets for this sector"
+                    }
                     else {
                         "Select a sector"
                     }
