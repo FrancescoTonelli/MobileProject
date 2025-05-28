@@ -29,7 +29,7 @@ fun CustomSnackBar(snackBarHostState: SnackbarHostState) {
     ) {
         SnackbarHost(
             hostState = snackBarHostState,
-            snackbar = { snackbarData: SnackbarData ->
+            snackbar = { snackBarData: SnackbarData ->
                 Box(
                     modifier = Modifier
                         .padding(16.dp)
@@ -37,7 +37,7 @@ fun CustomSnackBar(snackBarHostState: SnackbarHostState) {
                         .background(color = Primary, shape = RoundedCornerShape(12.dp))
                 ) {
                     Text(
-                        text = snackbarData.visuals.message,
+                        text = snackBarData.visuals.message,
                         style = Typography.labelSmall.copy(
                             fontSize = 18.sp,
                             color = Secondary

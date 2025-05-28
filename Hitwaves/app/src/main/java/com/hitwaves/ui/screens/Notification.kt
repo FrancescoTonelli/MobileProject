@@ -31,6 +31,7 @@ import com.hitwaves.ui.component.NotificationCard
 import com.hitwaves.ui.component.LoadingIndicator
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.viewModel.NotificationViewModel
+import com.hitwaves.utils.UnreadBadge
 
 private fun init() : NotificationViewModel {
     return NotificationViewModel()
@@ -61,6 +62,9 @@ fun Notification(navController: NavHostController) {
     LaunchedEffect(readState) {
         if (!readState.success && readState.errorMessage != null) {
             snackBarHostState.showSnackbar(readState.errorMessage!!)
+        }
+        else if (readState.success) {
+            UnreadBadge.update()
         }
     }
 

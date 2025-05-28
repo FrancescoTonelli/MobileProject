@@ -12,24 +12,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
-import com.hitwaves.ui.component.IconData
-import com.hitwaves.ui.component.getBottomNavItems
-import com.hitwaves.utils.NavGraph
-import com.hitwaves.ui.theme.*
-import com.hitwaves.ui.component.NotificationTopBar
-import com.hitwaves.ui.component.BottomNavigationBar
-import androidx.compose.runtime.Composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.hitwaves.ui.component.BottomNavigationBar
+import com.hitwaves.ui.component.IconData
+import com.hitwaves.ui.component.NotificationTopBar
+import com.hitwaves.ui.component.getBottomNavItems
+import com.hitwaves.ui.theme.BgDark
+import com.hitwaves.ui.theme.HitwavesTheme
+import com.hitwaves.ui.theme.Primary
+import com.hitwaves.ui.viewModel.NotificationViewModel
+import com.hitwaves.utils.NavGraph
+import com.hitwaves.utils.UnreadBadge
 
 class AppActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        UnreadBadge.init(this)
 
         enableEdgeToEdge()
         setContent {
@@ -58,6 +66,12 @@ fun MainContent(){
     val currentRoute = navBackStackEntry.value?.destination?.route
 
     val showBars = currentRoute != "map"
+
+    remember { NotificationViewModel() }
+
+    LaunchedEffect(Unit) {
+        UnreadBadge.update()
+    }
 
     Scaffold(
         bottomBar = {

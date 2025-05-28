@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -25,6 +24,7 @@ const val channelID = "notification_channel"
 const val channelName = "com.hitwaves.utils.notification"
 
 class NotificationService : FirebaseMessagingService() {
+
     override fun onNewToken(token: String) {
 
         Log.d("FCM", "New token: $token")
@@ -36,7 +36,7 @@ class NotificationService : FirebaseMessagingService() {
             val result = apiSendFcmToken(token)
             withContext(Dispatchers.Main) {
                 if(!result.success){
-                    Log.e("FCM", "Errore registrazione token: ${result.errorMessage}")
+                    Log.e("FCM", "Token registration error: ${result.errorMessage}")
                 }
             }
         }
@@ -45,6 +45,9 @@ class NotificationService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         if(remoteMessage.notification != null){
             generateNotification(remoteMessage.notification!!.title!!, remoteMessage.notification!!.body!!)
+            CoroutineScope(Dispatchers.IO).launch {
+                UnreadBadge.update()
+            }
         }
     }
 
@@ -66,10 +69,8 @@ class NotificationService : FirebaseMessagingService() {
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_DEFAULT)
-            notificationManager.createNotificationChannel(channel)
-        }
+        val channel = NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_DEFAULT)
+        notificationManager.createNotificationChannel(channel)
 
         notificationManager.notify(0, builder.build())
     }

@@ -1,6 +1,7 @@
 package com.hitwaves.ui.screens
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
@@ -24,7 +25,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,7 +51,6 @@ import com.hitwaves.ui.theme.Typography
 import com.hitwaves.ui.viewModel.HomeViewModel
 import com.hitwaves.ui.viewModel.LocationViewModel
 import com.hitwaves.utils.NotificationAsker
-import kotlinx.coroutines.launch
 
 
 fun goToMap(navController: NavHostController) {
@@ -68,6 +67,7 @@ private fun initLocation(): LocationViewModel {
 
 
 
+@SuppressLint("InlinedApi")
 @Composable
 fun Home(navController: NavHostController) {
     val context = LocalContext.current
