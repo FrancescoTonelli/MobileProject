@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from db import get_db
+from ..protected_fcm import send_push_notification
 
 notification_bp = Blueprint('notification', __name__)
 
@@ -9,6 +10,13 @@ def admin_send_notification_user():
     required = ['title', 'description', 'user_id']
     if not all(k in data for k in required):
         return jsonify({'message': 'Missing fields'}), 400
+
+    send_push_notification(
+        dest_id=data['user_id'],
+        is_user=True,
+        title = data["title"],
+        body=data['description']
+    )
 
     conn = get_db()
     cursor = conn.cursor()

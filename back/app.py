@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
+import firebase_admin
+from firebase_admin import credentials
 from routes.admin.admin_routes import admin_bp
 from routes.admin.user_routes import user_bp
 from routes.admin.notification_routes import notification_bp
@@ -24,6 +26,10 @@ app.register_blueprint(concert_bp)
 app.register_blueprint(tour_bp)
 app.register_blueprint(protected_user_bp)
 app.register_blueprint(protected_record_bp)
+
+if not firebase_admin._apps:
+    cred = credentials.Certificate("hitwaves-5f936-firebase-adminsdk-fbsvc-38770ae9f4.json")
+    firebase_admin.initialize_app(cred)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

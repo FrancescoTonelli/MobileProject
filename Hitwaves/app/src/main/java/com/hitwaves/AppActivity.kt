@@ -25,10 +25,14 @@ import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.component.NotificationTopBar
 import com.hitwaves.ui.component.BottomNavigationBar
 import androidx.compose.runtime.Composable
+import androidx.media3.common.util.Log
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AppActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,6 +42,8 @@ class AppActivity : ComponentActivity() {
                 MainContent()
             }
         }
+
+
     }
 }
 
