@@ -50,6 +50,7 @@ import com.hitwaves.ui.theme.Secondary
 import com.hitwaves.ui.theme.Typography
 import com.hitwaves.ui.viewModel.HomeViewModel
 import com.hitwaves.ui.viewModel.LocationViewModel
+import com.hitwaves.utils.NotificationAsker
 import kotlinx.coroutines.launch
 
 
@@ -91,7 +92,6 @@ fun Home(navController: NavHostController) {
     var nearestShow by remember { mutableStateOf(emptyList<EventForCards>()) }
     var popularShow by remember { mutableStateOf(emptyList<EventForCards>()) }
 
-    var hasRequestedNotificationPermission by rememberSaveable { mutableStateOf(false) }
     var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
 
 
@@ -100,22 +100,23 @@ fun Home(navController: NavHostController) {
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (!isGranted) {
-            val shouldShow = shouldShowRequestPermissionRationale(activity, Manifest.permission.POST_NOTIFICATIONS)
-            showSettingsDialog = shouldShow
+            showSettingsDialog = true
+        }
+        else {
+            NotificationAsker.blockPermissionRequest()
         }
     }
 
     LaunchedEffect(Unit) {
-        if (!hasRequestedNotificationPermission && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            hasRequestedNotificationPermission = true
-
-            val permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
-            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                if (shouldShowRequestPermissionRationale(activity, Manifest.permission.POST_NOTIFICATIONS)) {
-                    showSettingsDialog = true
-                } else {
-                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+            if (shouldShowRequestPermissionRationale(activity, Manifest.permission.POST_NOTIFICATIONS)) {
+                showSettingsDialog = true
+            } else {
+                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                NotificationAsker.incrementRequestCount()
             }
         }
     }
@@ -271,15 +272,17 @@ fun Home(navController: NavHostController) {
             }
         }
     }
-    if (showSettingsDialog) {
+    if (showSettingsDialog && !NotificationAsker.isBlocked()) {
         CustomMessageBox(
             title = "Permission denied",
             message = "To stay up to date with important updates, we recommend enabling notifications.\nDo you want to enable notifications?",
             onConfirm = {
+                NotificationAsker.incrementRequestCount()
                 permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 showSettingsDialog = false
             },
             onDismiss = {
+                NotificationAsker.blockPermissionRequest()
                 showSettingsDialog = false
             }
         )
