@@ -1,6 +1,7 @@
 package com.hitwaves.ui.component
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,34 +39,56 @@ fun NotificationCard(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(vertical = 24.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Box(
+            Row(
                 modifier = Modifier
-                    .size(40.dp),
-                contentAlignment = Alignment.Center
+                    .fillMaxWidth(0.7f),
+                verticalAlignment = Alignment.CenterVertically,
+            ){
+                Box(
+                    modifier = Modifier
+                        .size(40.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        ImageVector.vectorResource(if (isRead) R.drawable.notification_open else R.drawable.notification_closed),
+                        tint = readColor,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(30.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Text(
+                    text = title,
+                    style = Typography.bodyLarge.copy(
+                        fontSize = 18.sp,
+                        color = readColor,
+                        fontWeight = if (isRead) FontWeight.Normal else FontWeight.Bold
+                    )
+                )
+            }
+            IconButton(
+                onClick = {
+                }
             ) {
                 Icon(
-                    ImageVector.vectorResource(if(isRead) R.drawable.notification_open else R.drawable.notification_closed),
-                    tint = readColor,
+                    imageVector = ImageVector.vectorResource(R.drawable.delete),
                     contentDescription = null,
+                    tint = Primary,
                     modifier = Modifier
-                        .size(30.dp)
+                        .size(24.dp)
                 )
             }
 
-            Spacer(modifier = Modifier.width(12.dp))
 
-            Text(
-                text = title,
-                style = Typography.bodyLarge.copy(
-                    fontSize = 18.sp,
-                    color = readColor,
-                    fontWeight = if(isRead) FontWeight.Normal else FontWeight.Bold
-                )
-            )
         }
 
 
