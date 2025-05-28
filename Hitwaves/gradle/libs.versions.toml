@@ -29,6 +29,7 @@ navigationComposeAndroid = "2.9.0"
 appcompat = "1.7.0"
 foundationLayoutAndroid = "1.8.1"
 firebaseMessagingKtx = "24.1.1"
+media3CommonKtx = "1.7.1"
 
 [libraries]
 accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimation" }
@@ -68,6 +69,7 @@ zxing-core = "com.google.zxing:core:3.5.1"
 compose-ui-graphics = "androidx.compose.ui:ui-graphics:1.8.2"
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
+androidx-media3-common-ktx = { group = "androidx.media3", name = "media3-common-ktx", version.ref = "media3CommonKtx" }
 
 
 [plugins]

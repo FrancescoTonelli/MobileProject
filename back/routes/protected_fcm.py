@@ -2,13 +2,13 @@ from firebase_admin import messaging
 from flask import current_app
 from db import get_db 
 
-def send_push_notification_to_user(dest_id: int, is_user: bool, title: str, body: str):
+def send_push_notification(dest_id: int, is_user: bool, title: str, body: str):
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
 
-    table_name = 'USER' if is_user else 'RECORD_COMPANY'
+    table_name = "USER" if is_user else "RECORD_COMPANY"
 
-    cursor.execute("SELECT fcm_token FROM %s WHERE id = %s", (table_name, dest_id))
+    cursor.execute(f"SELECT fcm_token FROM {table_name} WHERE id = %s", (dest_id,))
     result = cursor.fetchone()
 
     if not result or not result['fcm_token']:

@@ -73,6 +73,8 @@ dependencies {
     implementation(libs.compose.ui.graphics)
     implementation(libs.androidx.foundation.layout.android)
     implementation(libs.firebase.messaging.ktx)
+    implementation(libs.androidx.media3.common.ktx)
+    implementation(libs.firebase.messaging)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

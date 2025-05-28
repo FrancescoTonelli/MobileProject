@@ -224,6 +224,7 @@ def protected_user_automatic_login():
 # Register FCM Token
 @protected_user_bp.route('/protected_user/register_fcm_token', methods=['POST'])
 def protected_user_register_fcm_token():
+
     auth_header = request.headers.get('Authorization')
     if not auth_header:
         return jsonify({'message': 'Token is missing'}), 401
@@ -245,7 +246,7 @@ def protected_user_register_fcm_token():
 
     try:
         cursor.execute("""
-            UPDATE USER SET fcm_token = %s WHERE id = %s"
+            UPDATE USER SET fcm_token = %s WHERE id = %s
         """, (fcm_token, user_id))
         conn.commit()
         return jsonify({'message': 'FCM token registered successfully'}), 200
