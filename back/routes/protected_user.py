@@ -1678,3 +1678,35 @@ def protected_user_read_notification(notification_id):
     conn.close()
 
     return jsonify({'message': 'Notification marked as read'}), 200
+
+# Delete notification
+@protected_user_bp.route('/protected_user/notification/delete/<int:notification_id>', methods=['DELETE'])
+def protected_user_delete_notification(notification_id):
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return jsonify({'message': 'Token is missing'}), 401
+    
+    try:
+        user_id = verify_token()[0]
+    except Exception:
+        return jsonify({'message': 'Invalid token'}), 401
+
+    try:
+        conn = get_db()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("""
+            DELETE FROM notification 
+            WHERE id = %s AND user_id = %s
+        """, (notification_id, user_id))
+
+        if cursor.rowcount == 0:
+            return jsonify({'message': 'Notification not found or not owned by user'}), 404
+
+        conn.commit()
+        return jsonify({'message': 'Notification deleted successfully'}), 200
+    except Exception as e:
+        conn.rollback()
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
+    finally:
+        conn.close()

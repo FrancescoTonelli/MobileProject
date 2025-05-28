@@ -313,6 +313,14 @@ suspend fun apiReadNotification(notificationId: Int): ApiResult<MessageResponse>
     )
 }
 
+suspend fun apiDeleteNotification(notificationId: Int): ApiResult<MessageResponse> {
+    val endpoint = "notification/delete/$notificationId"
+    return ApiGenericCalls.deleteRequestAsync<MessageResponse>(
+        endpoint = endpoint,
+        withAuth = true
+    )
+}
+
 suspend fun apiSendFcmToken(token: String): ApiResult<MessageResponse> {
     val requestBody = FcmTokenRequest(fcmToken = token)
     return ApiGenericCalls.postRequestAsync<MessageResponse>(

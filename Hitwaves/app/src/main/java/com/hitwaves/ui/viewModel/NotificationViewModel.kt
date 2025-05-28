@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.hitwaves.api.ApiResult
 import com.hitwaves.api.MessageResponse
 import com.hitwaves.api.NotificationResponse
+import com.hitwaves.api.apiDeleteNotification
 import com.hitwaves.api.apiGetAllNotifications
 import com.hitwaves.api.apiReadNotification
 import kotlinx.coroutines.launch
@@ -16,6 +17,8 @@ class NotificationViewModel : ViewModel(){
     val notificationState: State<ApiResult<List<NotificationResponse>>> = _notificationState
     private val _readState = mutableStateOf(ApiResult<MessageResponse>(false, null, null))
     val readState: State<ApiResult<MessageResponse>> = _readState
+    private val _deleteState = mutableStateOf(ApiResult<MessageResponse>(false, null, null))
+    val deleteState: State<ApiResult<MessageResponse>> = _deleteState
     private val _isNotificationLoading = mutableStateOf(false)
     val isNotificationLoading : State<Boolean> = _isNotificationLoading
 
@@ -71,6 +74,30 @@ class NotificationViewModel : ViewModel(){
             }
 
 
+        }
+    }
+
+    fun deleteNotification(id: Int) {
+
+        viewModelScope.launch {
+
+            _isNotificationLoading.value = true
+
+            try {
+
+                val response = apiDeleteNotification(id)
+
+                _isNotificationLoading.value = false
+
+                if (!response.success) {
+                    _deleteState.value = ApiResult(false, null, response.errorMessage)
+                } else {
+                    _deleteState.value = ApiResult(true, response.data, null)
+                }
+
+            } catch (e: Exception) {
+                _deleteState.value = ApiResult(false, null, e.message.toString())
+            }
         }
     }
 }
