@@ -1,6 +1,7 @@
 package com.hitwaves
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -32,6 +33,11 @@ import com.hitwaves.ui.theme.Primary
 import com.hitwaves.ui.viewModel.NotificationViewModel
 import com.hitwaves.utils.NavGraph
 import com.hitwaves.utils.UnreadBadge
+import com.google.firebase.messaging.FirebaseMessaging
+import com.hitwaves.api.apiSendFcmToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AppActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +52,17 @@ class AppActivity : ComponentActivity() {
             }
         }
 
-
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                CoroutineScope(Dispatchers.IO).launch {
+                    val result = apiSendFcmToken(token)
+                    if (!result.success) {
+                        Log.e("FCM", "Send error token: ${result.errorMessage}")
+                    }
+                }
+            }
+        }
     }
 }
 

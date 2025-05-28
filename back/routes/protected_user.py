@@ -147,7 +147,8 @@ def protected_user_logout():
     try:
         cursor.execute("""
             UPDATE user 
-            SET session_token = NULL 
+            SET session_token = NULL,
+                       fcm_token = NULL
             WHERE id = %s
         """, (user_id,))
         conn.commit()
