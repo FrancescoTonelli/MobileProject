@@ -17,10 +17,6 @@
   -moz-osx-font-smoothing: grayscale !important;
 }
 
-/* * {
-  outline: 1px solid red;
-} */
-
 body {
   margin: 0 !important;
   padding: 0 !important;
@@ -320,4 +316,146 @@ h1 {
 
 .li-no-dot {
   list-style-type: none !important;
+}
+
+.video-wrapper {
+  position: relative !important; 
+  z-index: 0 !important; 
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 400px;
+  max-height: 300px;
+  display: block !important;
+}
+
+.video, .canvas {
+  width: 100%;
+  display: block !important;
+  border-radius: 8px;
+  position: relative !important;
+  z-index: -1 !important;
+}
+
+.qr-message-box {
+  display: inline-block;
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  margin-top: 0.5em;
+}
+
+.qr-message-info {
+  background-color: var(--primary);
+  color: var(--bg);
+}
+.qr-message-success {
+  background-color: green;
+  color: var(--secondary);
+}
+
+.qr-message-error {
+  background-color: red;
+  color: var(--bg);
+}
+
+.qr-select {
+  background-color: var(--primary);
+  color: var(--bg);
+  border-radius: 0.25rem;
+  padding: 0.5em 1em;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.qr-select:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.qr-select option {
+  background-color: var(--primary);
+  color: var(--bg);
+}
+
+.qr-select option::after,
+.qr-select option:checked{
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.validation {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  margin: 20px;
+  background-color: var(--bg) !important;
+}
+
+.concert-view{
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-color: var(--bg) !important;
+  gap: 20px !important;
+}
+
+.concert-view-div {
+  width: 70% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  padding-bottom: 30px !important;
+  border-bottom: 1px solid var(--secondary) !important;
+}
+
+.concert-view div input {
+  width: 40% !important;
+  border: 1px solid var(--primary) !important;
+  color: var(--bg) !important;
+  font-size: 1em !important;
+  font-family: 'Rubik', sans-serif !important;
+}
+
+.artist-selector{
+  overflow-y: scroll !important;
+  padding: 10px !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 200px !important;
+  height: 250px !important;
+  border: 1px solid var(--primary) !important;
+  border-radius: 4px !important;
+
+}
+
+.artist-selector-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: left !important;
+  width: 90% !important;
+  padding: 10px !important;
+  border-bottom: 1px solid var(--primary) !important;
+}
+
+.sector-prices-column {
+  align-items: center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.sector-price-item {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  padding: 10px !important;
 }

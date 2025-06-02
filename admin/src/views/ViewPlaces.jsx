@@ -11,10 +11,11 @@ const ViewPlaces = () => {
     telephone: '',
   });
   const [selectedPlace, setSelectedPlace] = useState(null);
-  const [placeName, setPlaceName] = useState("");
+  const [placeName, setPlaceName] = useState('');
 
   const fetchPlaces = () => {
     setLoading(true);
+
     fetch('http://localhost:5000/admin/places')
       .then((res) => res.json())
       .then((data) => {
@@ -27,7 +28,26 @@ const ViewPlaces = () => {
       });
   };
 
-  const deletePlace = (id) => {
+  const checkPlaceFree = (id) => {
+    return fetch(`http://localhost:5000/experimental/place/is_free/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Availability check failed');
+        return res.json();
+      })
+      .then((json) => json.is_free)
+      .catch((err) => {
+        console.error(`Error checking availability for place ${id}:`, err);
+        return false;
+      });
+  };
+
+  const deletePlace = async (id) => {
+    const isFree = await checkPlaceFree(id);
+    if (!isFree) {
+      alert('You cannot delete this place: there is at least one concert at this place.');
+      return;
+    }
+
     if (window.confirm('Are you sure you want to delete this place?')) {
       fetch(`http://localhost:5000/admin/places/${id}`, {
         method: 'DELETE',
@@ -49,7 +69,12 @@ const ViewPlaces = () => {
     }
   };
 
-  const openEditor = (id, name) => {
+  const openEditor = async (id, name) => {
+    const isFree = await checkPlaceFree(id);
+    if (!isFree) {
+      alert('You cannot edit the map: there is at least one concert at this place.');
+      return;
+    }
     setSelectedPlace(id);
     setPlaceName(name);
   };
@@ -112,8 +137,8 @@ const ViewPlaces = () => {
             <th>ID</th>
             <th>Name</th>
             <th>Address</th>
-            <th>Latitude</th> {/* Aggiunto */}
-            <th>Longitude</th> {/* Aggiunto */}
+            <th>Latitude</th>
+            <th>Longitude</th>
             <th>Email</th>
             <th>Telephone</th>
             <th>Actions</th>
@@ -125,8 +150,8 @@ const ViewPlaces = () => {
               <td>{place.id}</td>
               <td>{place.name}</td>
               <td>{place.address}</td>
-              <td>{place.latitude ?? '-'}</td> {/* Aggiunto */}
-              <td>{place.longitude ?? '-'}</td> {/* Aggiunto */}
+              <td>{place.latitude ?? '-'}</td>
+              <td>{place.longitude ?? '-'}</td>
               <td>{place.email}</td>
               <td>{place.telephone}</td>
               <td>
@@ -148,7 +173,9 @@ const ViewPlaces = () => {
         </tbody>
       </table>
 
-      {selectedPlace && <EditorPlace placeId={selectedPlace} placeName={placeName} />}
+      {selectedPlace && (
+        <EditorPlace placeId={selectedPlace} placeName={placeName} />
+      )}
 
       <div className="notification-form" style={{ marginTop: '30px' }}>
         <h4>Create Place</h4>

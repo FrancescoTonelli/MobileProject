@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify
 from db import get_db
 from datetime import timedelta
+from ..protected_record import handle_concert_deletion
+from ..protected_fcm import send_push_notification
 
 concert_bp = Blueprint('concert', __name__)
 
@@ -69,17 +71,50 @@ def get_concert_details(concert_id):
 
 @concert_bp.route('/admin/concerts/<int:concert_id>', methods=['DELETE'])
 def delete_concert(concert_id):
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
     try:
-        conn = get_db()
-        cursor = conn.cursor()
-        cursor.execute("SELECT id FROM concert WHERE id = %s", (concert_id,))
-        if not cursor.fetchone():
-            conn.close()
+        cursor.execute(
+            "SELECT id FROM concert WHERE id = %s",
+            (concert_id,)
+        )
+        if cursor.fetchone() is None:
             return jsonify({'message': 'Concert not found'}), 404
-        cursor.execute("DELETE FROM artist_concert WHERE concert_id = %s", (concert_id,))
-        cursor.execute("DELETE FROM concert WHERE id = %s", (concert_id,))
+
+        cursor.execute("""
+            SELECT DISTINCT u.id AS user_id
+            FROM ticket t
+            JOIN user u ON u.id = t.user_id
+            WHERE t.concert_id = %s AND t.user_id IS NOT NULL
+        """, (concert_id,))
+        users = cursor.fetchall()
+
+        success, message = handle_concert_deletion(concert_id)
+        if not success:
+            raise Exception(f"Failed to delete concert {concert_id}: {message}")
+
+        for user in users:
+            notification_title = "Concert Canceled"
+            notification_message = (
+                "The concert you had a ticket for has been canceled. "
+                "A refund has been issued to your account."
+            )
+            cursor.execute("""
+                INSERT INTO notification (title, description, is_read, user_id)
+                VALUES (%s, %s, 0, %s)
+            """, (notification_title, notification_message, user['user_id']))
+
+            send_push_notification(
+                user['user_id'], True, notification_title, notification_message
+            )
+
         conn.commit()
-        conn.close()
-        return jsonify({'message': f'Concert {concert_id} deleted successfully'}), 200
+        return jsonify({'message': 'Concert deleted and users notified successfully'}), 200
+
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        conn.rollback()
+        return jsonify({'message': f'Error deleting concert: {str(e)}'}), 500
+
+    finally:
+        conn.close()

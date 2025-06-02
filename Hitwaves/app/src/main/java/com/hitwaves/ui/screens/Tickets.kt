@@ -75,8 +75,10 @@ fun Tickets(navController: NavHostController) {
             ) {
                 if (displayIndex == 0) {
                     if (tickets.success && tickets.data != null) {
-                        for( ticket in tickets.data!!) {
-                            if (ticketViewModel.isFutureOrToday(ticket.concertDate)) {
+
+                        val futureTickets = tickets.data!!.filter { ticketViewModel.isFutureOrToday(it.concertDate) }
+                        if (futureTickets.isNotEmpty()) {
+                            for( ticket in tickets.data!!.filter { ticketViewModel.isFutureOrToday(it.concertDate) }) {
                                 item {
                                     val event = EventForCards(
                                         contentId = ticket.ticketId,
@@ -98,23 +100,25 @@ fun Tickets(navController: NavHostController) {
                                 }
                             }
                         }
-                    }
-                    else {
-                        item {
-                            Text(
-                                text = "No Upcoming Events",
-                                style = Typography.bodyLarge.copy(
-                                    color = Secondary,
-                                    fontWeight = FontWeight.Normal,
-                                    fontSize = 18.sp
+                        else {
+                            item {
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Text(
+                                    text = "No Upcoming Events",
+                                    style = Typography.bodyLarge.copy(
+                                        color = Secondary,
+                                        fontWeight = FontWeight.Normal,
+                                        fontSize = 18.sp
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
                 } else if (displayIndex == 1) {
                     if (tickets.success && tickets.data != null) {
-                        for( ticket in tickets.data!!) {
-                            if (!ticketViewModel.isFutureOrToday(ticket.concertDate)) {
+                        val pastTickets = tickets.data!!.filter { !ticketViewModel.isFutureOrToday(it.concertDate) }
+                        if (pastTickets.isNotEmpty()) {
+                            for( ticket in tickets.data!!) {
                                 item {
                                     val event = EventForCards(
                                         contentId = ticket.ticketId,
@@ -137,17 +141,18 @@ fun Tickets(navController: NavHostController) {
                                 }
                             }
                         }
-                    }
-                    else {
-                        item {
-                            Text(
-                                text = "No Upcoming Events",
-                                style = Typography.bodyLarge.copy(
-                                    color = Secondary,
-                                    fontWeight = FontWeight.Normal,
-                                    fontSize = 18.sp
+                        else {
+                            item {
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Text(
+                                    text = "No Past Tickets",
+                                    style = Typography.bodyLarge.copy(
+                                        color = Secondary,
+                                        fontWeight = FontWeight.Normal,
+                                        fontSize = 18.sp
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
                 }

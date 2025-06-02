@@ -160,8 +160,20 @@ fun ArtistDetails(artist: Artist, navController: NavController){
                     Title("Next Event")
                 }
 
-                items(nextEvent) { event ->
-                    EventCard(event = event, navController)
+                if(nextEvent.isEmpty()){
+                    item {
+                        Text(
+                            text = "No future events",
+                            style = Typography.bodyLarge.copy(
+                                fontSize = 16.sp,
+                                color = Secondary
+                            )
+                        )
+                    }
+                }else {
+                    items(nextEvent) { event ->
+                        EventCard(event = event, navController)
+                    }
                 }
 
                 item {

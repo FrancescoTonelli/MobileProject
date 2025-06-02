@@ -220,7 +220,10 @@ fun Checkout(navController: NavController, checkoutData: DataToCheckout, innerPa
 
                 CheckoutRow(
                     title = "Refunds",
-                    value = (checkoutDisplay.data?.refunds ?: 0.0) * -1.0
+                    value = if (subtotal < (checkoutDisplay.data?.refunds ?: 0.0))
+                        -subtotal
+                    else
+                            (checkoutDisplay.data?.refunds ?: 0.0) * -1.0
                 )
 
                 HorizontalDivider(

@@ -10,6 +10,9 @@ import ViewArtists from "./views/ViewArtists";
 import ViewPlaces from "./views/ViewPlaces";
 import ViewConcerts from "./views/ViewConcerts";
 import ViewTours from "./views/ViewTours";
+import ViewExpQr from "./views/ViewExpQr";
+import ViewExpConcert from "./views/ViewExpConcert";
+import ViewExpTour from "./views/ViewExpTour";
 import {
   USER,
   CONCERTS,
@@ -17,12 +20,16 @@ import {
   RECORD_COMPANIES,
   PLACES,
   ARTISTS,
+  EXP_QR,
+  EXP_CONCERT,
+  EXP_TOUR,
   DEFAULT
 } from "./views/ViewsIndex"; 
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
   const [view, setView] = useState(DEFAULT);
+  const [isNavbarOpen, setIsNavbarOpen] = useState(false);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -42,6 +49,12 @@ function App() {
         return <ViewPlaces />;
       case ARTISTS:
         return <ViewArtists />;
+      case EXP_QR:
+        return <ViewExpQr isNavbarOpen={isNavbarOpen} />;
+      case EXP_CONCERT:
+        return <ViewExpConcert />;
+      case EXP_TOUR:
+        return <ViewExpTour />;
       default:
         return <ViewDefault />;
     }
@@ -55,7 +68,7 @@ function App() {
         <>
           <header className="header">
             <div className="header-content">
-              <Navbar setView={setView} />
+              <Navbar setView={setView} setIsNavbarOpen={setIsNavbarOpen} />
             </div>
             <div className="header-content">
               <p className="bold-text purple-text">Admin Panel</p>

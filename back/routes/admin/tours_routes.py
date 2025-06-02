@@ -19,7 +19,6 @@ def get_all_tours():
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT id, title, image FROM tour")
         tours = cursor.fetchall()
-        print(tours)
         conn.close()
         return jsonify(tours), 200
     except Exception as e:

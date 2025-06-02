@@ -12,6 +12,8 @@
   "dependencies": {
     "admin": "file:",
     "bootstrap": "^5.3.5",
+    "html5-qrcode": "^2.3.8",
+    "jsqr": "^1.4.0",
     "konva": "^9.3.20",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

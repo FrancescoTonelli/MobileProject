@@ -158,7 +158,7 @@ def handle_concert_creation(record_company_id, title, image_file, date, time, ar
 
         tickets_created = 0
         for seat in seats:
-            price = sector_prices[str(seat['sector_id'])] if str(seat['sector_id']) in sector_prices else 0
+            price = float(sector_prices[str(seat['sector_id'])]) if str(seat['sector_id']) in sector_prices else float(0)
             if price <= 0:
                 raise ValueError(f"Invalid price for sector {seat['sector_id']}")
             cursor.execute("""

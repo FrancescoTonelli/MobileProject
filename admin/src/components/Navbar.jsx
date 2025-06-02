@@ -1,18 +1,41 @@
 import React, { useEffect, useRef } from "react";
 import NavButton from "./NavButton";
 import {
+    DEFAULT,
     USER,
     CONCERTS,
     TOURS,
     RECORD_COMPANIES,
     PLACES,
     ARTISTS,
-    DEFAULT
+    EXP_QR,
+    EXP_CONCERT,
+    EXP_TOUR
   } from "../views/ViewsIndex"; 
 
-function Navbar( {setView} ) {
+function Navbar( {setView, setIsNavbarOpen } ) {
 
     const offcanvasRef = useRef(null);
+
+    useEffect(() => {
+        const offcanvasElement = offcanvasRef.current;
+
+        const handleShow = () => setIsNavbarOpen(true);
+        const handleHide = () => setIsNavbarOpen(false);
+
+        if (offcanvasElement) {
+        offcanvasElement.addEventListener("show.bs.offcanvas", handleShow);
+        offcanvasElement.addEventListener("hide.bs.offcanvas", handleHide);
+        }
+
+        return () => {
+        if (offcanvasElement) {
+            offcanvasElement.removeEventListener("show.bs.offcanvas", handleShow);
+            offcanvasElement.removeEventListener("hide.bs.offcanvas", handleHide);
+        }
+        };
+    }, [setIsNavbarOpen]);
+
 
     const closeOffcanvas = () => {
         const offcanvasElement = offcanvasRef.current;
@@ -29,7 +52,7 @@ function Navbar( {setView} ) {
     };
 
     return (
-        <div>
+        <div style={{ zIndex: 1000 }}>
             <button
                 className="btn btn-primary nav-button"
                 type="button"
@@ -64,12 +87,19 @@ function Navbar( {setView} ) {
                     </button>
                 </div>
                 <div className="offcanvas-body d-flex flex-column align-items-center"> 
-                    <NavButton title={"User"} onClick={() => handleNavClick(USER)}/> {/* possibilità di inviare le notifiche agli user */}
-                    <NavButton title={"Concerts"} onClick={() => handleNavClick(CONCERTS)}/> {/* l'admin non può inserire un nuovo concerto*/}
-                    <NavButton title={"Tours"} onClick={() => handleNavClick(TOURS)} /> {/* l'admin non può inserire un nuovo tour*/}
-                    <NavButton title={"Record Companies"} onClick={() => handleNavClick(RECORD_COMPANIES)} /> {/* possibilità di inviare le notifiche, creare e cancellare */}
-                    <NavButton title={"Places"} onClick={() => handleNavClick(PLACES)} /> {/* creazione, mappa e distruzione */}
-                    <NavButton title={"Artists"} onClick={() => handleNavClick(ARTISTS)} /> {/* possibilità di visualizzazione e eliminazione delle recensioni */}
+                    <NavButton title={"User"} onClick={() => handleNavClick(USER)}/>
+                    <NavButton title={"Concerts"} onClick={() => handleNavClick(CONCERTS)}/>
+                    <NavButton title={"Tours"} onClick={() => handleNavClick(TOURS)} /> 
+                    <NavButton title={"Record Companies"} onClick={() => handleNavClick(RECORD_COMPANIES)} /> 
+                    <NavButton title={"Places"} onClick={() => handleNavClick(PLACES)} />
+                    <NavButton title={"Artists"} onClick={() => handleNavClick(ARTISTS)} />
+
+                    <br className="w-100 my-3" />
+                    <p className="white-text thin-text text-center">⚠ Experimental Section ⚠</p>
+                    
+                    <NavButton title={"Experimental QR"} onClick={() => handleNavClick(EXP_QR)} />
+                    <NavButton title={"Experimental Concert"} onClick={() => handleNavClick(EXP_CONCERT)} />
+                    <NavButton title={"Experimental Tour"} onClick={() => handleNavClick(EXP_TOUR)} />
                 </div>
             </div>
         </div>

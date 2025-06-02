@@ -5,3 +5,6 @@ export const TOURS = 3;
 export const RECORD_COMPANIES = 4;
 export const PLACES = 5;
 export const ARTISTS = 6;
+export const EXP_QR = 7;
+export const EXP_CONCERT = 8;
+export const EXP_TOUR = 9;
