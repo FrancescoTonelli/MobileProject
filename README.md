@@ -1,79 +1,82 @@
 # HitWaves
 
-# Argomento
+## Argomento
 
-Lo scopo di HitWaves è quello di fornire a case discografiche la possibilità di pubblicare concerti e/o eventi relativi agli artisti che curano, mettendo a disposizione una serie di locali convenzionati. La casa discografica potrà pubblicizzare i suoi artisti e vendere i relativi biglietti.
+Lo scopo di HitWaves è quello di offrire una piattaforma per la promozione e la gestione di tour e concerti musicali legati a case discografiche.
 
-Gli utenti fruiranno dell’applicativo per acquistare i biglietti e lasciare recensioni ad eventi e luoghi. Sarà data la possibilità di sfruttare un sistema di mappe per individuare i concerti nella zona di interesse.
+Gli utenti possono utilizzare l’app per acquistare biglietti, lasciare recensioni agli eventi a cui hanno preso parte, e individuare i concerti di proprio interesse.
 
-Case discografiche e utenti avranno anche a disposizione un sistema di notifiche in base a biglietti venduti, artisti preferiti, nuovi eventi in zona…
+Un sistema di notifiche personalizzate consente di tenere aggiornati gli utenti in base ai nuovi eventi legati agli artisti di loro interesse.
 
-# Funzionalità minime
+Al momento, il progetto si compone delle seguenti parti:
+- Server Python Flask per la gestione backend
+- Dashboard React Node.js per la gestione delle funzioni admin
+- Applicativo Kotlin per l'interazione utente
+- Script Python interattivo per la creazione delle planimetrie dei palazzetti
 
-## Case Discografiche
+## Funzionalità
 
-- visualizzazione, modifica e inserimento di artisti
-    - visualizzare recensioni
-- visualizzazione dei palazzetti convenzionati (ricerca e disponibilità) e relative recensioni
-- visualizzazione, modifica e inserimento di nuovi eventi o tour (collezioni di eventi)
-    - in caso di aggiunta di un evento, arriverà una notifica agli utenti con almeno un artista interessato tra i preferiti, e comparirà nel carosello degli utenti ad una distanza in km (specificata dall’utente) dal luogo in questione.
-    - in caso di cancellazione di un evento, agli utenti che avevano acquistato un biglietto arriva il rimborso sul portafoglio in-app
-- visualizzazione e cancellazione di notifiche relative a sold out eventi.
-- visualizzare pagina account con infografiche e modifica dettagli.
-- possibilità di aprire un ticket all’admin per problematiche.
+### Utenti
 
-## Utenti
+- visualizzare la lista di eventi e tour, con possibilità di ricerca su titolo, artista e luogo, con la possibilità di visualizzare quelli vicini a sé e quelli dei migliori artisti.
+- visualizzare una mappa con le icone degli eventi.
+- visualizzare i dettagli degli eventi e degli artisti
+- acquistare biglietti (appuntando l'evento nel calendario del dispositivo) tramite selezione rapida o scegliendo i posti sulla planimetria interagibile del palazzetto.
+- visualizzare, aggiungere e rimuovere artisti preferiti, per i quali vengono ricevute delle notifiche se questi appaiono in nuovi eventi.
+- lasciare recensioni su un evento a cui è stato
+- visualizzare e modificare la propria pagina utente: foto profilo, dati personali, elenco delle recensioni lasciate e ammontare del portafoglio dei rimborsi
+- visualizzare l'elenco dei biglietti acquistati
+- visualizzare e eliminare le proprie notifiche (che verranno ricevute anche tramite push)
 
-- visualizzare lista di eventi e tour, con possibilità di filtro in base a tipologia e ricerca su nome e artista.
-    - visualizzare mappa con icone di eventi.
-    - visualizzare dettagli di evento (recensioni palazzetto) e artista (con recensioni)
-    - visualizzare eventuale planimetria del palazzetto dell’evento per selezione posto
-- acquistare biglietti (segnando la data nel calendario del device) tramite portafoglio ricaricabile e visualizzare carrello.
-- visualizzare, aggiungere e rimuovere artisti preferiti.
-- lasciare recensioni su evento e/o palazzetto in cui è già stato (biglietto acquistato e datetime evento passato), deciso tramite combo box
-- visualizzazione e modifiche pagina utente: foto profilo, bio, dati personali (in scuro), ricarica portafoglio
-- visualizzazione elenco dei biglietti acquistati
-- visualizzazione e eliminazione notifiche (reminder evento)
-- visualizzazione e modifica proprie recensioni
-- visualizzazione del carosello per gli eventi in [specificare distanza] km
+### Amministratori
 
-## Amministratori
+- visualizzare l'elenco degli utenti e i loro dettagli, con possibilità di cancellare gli account e inviare notifiche personalizzate
+- visualizzare l'elenco dei concerti e i loro dettagli, con la possibilità di cancellarli
+- visualizzare l'elenco dei tour, dei concerti che li compongono e i loro dettagli, con la possibilità di cancellarli
+- visualizzare l'elenco delle case discografiche e i loro dettagli, con possibilità di creare e cancellare gli account, e inviare notifiche personalizzate
+- visualizzare l'elenco dei palazzetti, con possibilità di crearne di nuovi, cancellarli e modificarne la planimetria (i file per questa funzionalità devono essere creati con l'applicazione specifica `seat_chart_editor`)
+- visualizzare l'elenco degli artisti, con possibilità di cancellarli
 
-- visualizzare il dettaglio di ogni profilo, casa discografica o utente, con possibilità di eliminare qualsiasi cosa.
-    - Partendo dalla casa discografica, possono avere accesso ai concerti, tour e artisti
-- visualizzazione, aggiunta e rimozione di luoghi convenzionati, con relativi dettagli
-    - statistiche delle recensioni
-    - planimetria posti
-- visualizzazione dei ticket delle case discografiche (pannello simile alle notifiche)
-- possibilità di inviare notifiche ad hoc agli utenti (per ragioni puramente di avviso)
+> la cancellazione di un concerto o di un tour aggiorna il portafoglio dei rimborsi di tutti gli utenti che hanno acquistato un biglietto, restituendo loro l'importo dello stesso
 
-# Funzionalità aggiuntive
+#### Funzioni in fase sperimentale
 
-- effettiva funzionalità dei qr
+Per "fase sperimentale" si intende che le funzioni qui elencate dovrebbero trovarsi nel portale applicativo destinato alle case discografiche. Queste sono, però, già stabili e funzionanti. Vedi "Sviluppi futuri" per ulteriori chiarimenti.
 
-# Istruzioni per l'uso
+- validare i biglietti degli utenti (per esempio, all'ingresso di un concerto) tramite un lettore di codici QR, utilizzando quelli generati automaticamente dall'applicazione per gli utenti
+- creazione di nuovi concerti
+- creazione di nuovi tour
 
-## Montare il Database (Solo primo avvio)
+## Sviluppi futuri
+
+Le "Funzioni in fase sperimentale" descritte sopra dovrebbero trovarsi in un applicativo Kotlin dedicato alle case discografiche. Design e API sono già pronti e funzionanti.
+
+## Istruzioni per l'uso
+
+### Montare il Database (Solo primo avvio)
 1. Tramite XAMPP, avviare Apache e MySQL (quest'ultimo sulla porta 3306, che dovrebbe essere di default)
 2. Cliccare sul pulsante "Admin" sulla riga di MySQL: si aprirà phpmyadmin
 3. Creare un database vuoto chiamandolo "hitwaves", e popolarlo utilizzando il codice SQL contenuto in "generator.sql"
 
-## Avviare il backend
+### Avviare il backend
 1. Entrare nella cartella "back"
 2. Lanciare `start.bat`
 3. Memorizzare per il frontend Kotlin l'indirizzo IP su cui il server è in esecuzione
 
-## Avviare il pannello Admin
+### Avviare il pannello Admin
 1. Entrare nella cartella "admin"
 2. Se non presenti, installare Node.js (versione 22.x) e vite
 3. Lanciare il comando `npm install` (solo al primo avvio)
 4. Lanciare il comando `npm run dev`
 5. Il terminale indicherà a che porta del localhost è esposto il pannello per l'admin
+6. Una volta nel pannello, entrare con le seguenti credenziali: 
+    - Email: `admin@example.com`
+    - Password: `admin123`
 
-## Avviare l'editor per la creazione delle piantine
+### Avviare l'editor per la creazione delle piantine
 1. Entrare nella cartella "seat_chart_editor"
 2. Doppio click su "start.bat"
  
-## Avviare l'applicazione in Kotlin
-
-
+## Avviare l'applicazione Kotlin
+1. Avviare Android Studio
+2. Prima di lanciare l'applicazione su dispositivo/emulatore, nel file `api\ApiGenericCall.kt`, aggiornare l'indirizzo IP nella costante `serverIp` con l'indirizzo ottenuto all'avvio del back, al punto 3
