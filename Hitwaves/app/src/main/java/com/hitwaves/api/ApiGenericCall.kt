@@ -94,7 +94,6 @@ object ApiGenericCalls {
         withAuth: Boolean = false
     ): ApiResult<T> = makeRequest("DELETE", endpoint, null, withAuth)
 
-    // ✅ Common internal request method
     suspend inline fun <reified T : Any> makeRequest(
         method: String,
         endpoint: String,

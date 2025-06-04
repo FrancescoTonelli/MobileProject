@@ -459,3 +459,29 @@ h1 {
   align-items: flex-end !important;
   padding: 10px !important;
 }
+
+.inner-concert-view{
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 60% !important;
+  background-color: var(--bg) !important;
+  gap: 20px !important;
+}
+
+.inner-concert-view div {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+}
+
+.concert-view-single{
+  width: 70% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  padding-bottom: 30px !important;
+  border-bottom: 1px solid var(--secondary) !important;
+}

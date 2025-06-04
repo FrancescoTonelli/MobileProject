@@ -235,8 +235,6 @@ fun ReviewCard(review : ReviewArtistDetailsResponse){
         contentAlignment = Alignment.Center
     ) {
         Column(
-            //horizontalAlignment = Alignment.CenterHorizontally,
-            //verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .fillMaxSize(0.9f)
                 .padding(vertical = 24.dp, horizontal = 15.dp)

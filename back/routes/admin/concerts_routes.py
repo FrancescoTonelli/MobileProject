@@ -86,7 +86,10 @@ def delete_concert(concert_id):
             SELECT DISTINCT u.id AS user_id
             FROM ticket t
             JOIN user u ON u.id = t.user_id
-            WHERE t.concert_id = %s AND t.user_id IS NOT NULL
+            JOIN concert c ON c.id = t.concert_id
+            WHERE t.user_id IS NOT NULL
+            AND c.date >= CURRENT_DATE
+            AND t.concert_id = %s
         """, (concert_id,))
         users = cursor.fetchall()
 

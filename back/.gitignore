@@ -1,3 +1,2 @@
-# Escludi la cartella __pycache__ e file .pyc
 __pycache__/
 *.pyc

@@ -20,7 +20,6 @@ fun Title(title: String){
     Column (
         modifier = Modifier
             .fillMaxSize(),
-            //.padding(top=8.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
@@ -35,7 +34,6 @@ fun Title(title: String){
             modifier = Modifier
                 .padding(top = 8.dp)
                 .width(180.dp),
-                //.width(with(LocalDensity.current) { (textWidth + 40).toDp() }),
             thickness = 1.dp,
             color = Secondary
         )

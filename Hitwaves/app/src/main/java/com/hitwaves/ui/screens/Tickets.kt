@@ -78,7 +78,7 @@ fun Tickets(navController: NavHostController) {
 
                         val futureTickets = tickets.data!!.filter { ticketViewModel.isFutureOrToday(it.concertDate) }
                         if (futureTickets.isNotEmpty()) {
-                            for( ticket in tickets.data!!.filter { ticketViewModel.isFutureOrToday(it.concertDate) }) {
+                            for( ticket in futureTickets) {
                                 item {
                                     val event = EventForCards(
                                         contentId = ticket.ticketId,
@@ -118,7 +118,7 @@ fun Tickets(navController: NavHostController) {
                     if (tickets.success && tickets.data != null) {
                         val pastTickets = tickets.data!!.filter { !ticketViewModel.isFutureOrToday(it.concertDate) }
                         if (pastTickets.isNotEmpty()) {
-                            for( ticket in tickets.data!!) {
+                            for( ticket in pastTickets) {
                                 item {
                                     val event = EventForCards(
                                         contentId = ticket.ticketId,

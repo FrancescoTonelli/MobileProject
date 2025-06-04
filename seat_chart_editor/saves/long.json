@@ -1,0 +1,2296 @@
+[
+    {
+        "name": "Stage",
+        "x_sx": 186,
+        "y_sx": 131,
+        "x_dx": 487,
+        "y_dx": 221,
+        "is_stage": true,
+        "seats": []
+    },
+    {
+        "name": "Parterre",
+        "x_sx": 186,
+        "y_sx": 233,
+        "x_dx": 486,
+        "y_dx": 325,
+        "is_stage": false,
+        "seats": [
+            {
+                "description": "Unnumbered",
+                "x": 201,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 211,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 221,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 231,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 241,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 251,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 261,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 271,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 281,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 291,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 301,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 311,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 321,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 331,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 341,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 351,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 361,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 371,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 381,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 391,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 401,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 411,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 421,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 431,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 441,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 451,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 461,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 471,
+                "y": 248
+            },
+            {
+                "description": "Unnumbered",
+                "x": 201,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 211,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 221,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 231,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 241,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 251,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 261,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 271,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 281,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 291,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 301,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 311,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 321,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 331,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 341,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 351,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 361,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 371,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 381,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 391,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 401,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 411,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 421,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 431,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 441,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 451,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 461,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 471,
+                "y": 258
+            },
+            {
+                "description": "Unnumbered",
+                "x": 201,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 211,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 221,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 231,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 241,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 251,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 261,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 271,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 281,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 291,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 301,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 311,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 321,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 331,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 341,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 351,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 361,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 371,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 381,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 391,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 401,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 411,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 421,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 431,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 441,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 451,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 461,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 471,
+                "y": 268
+            },
+            {
+                "description": "Unnumbered",
+                "x": 201,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 211,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 221,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 231,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 241,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 251,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 261,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 271,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 281,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 291,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 301,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 311,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 321,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 331,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 341,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 351,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 361,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 371,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 381,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 391,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 401,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 411,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 421,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 431,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 441,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 451,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 461,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 471,
+                "y": 278
+            },
+            {
+                "description": "Unnumbered",
+                "x": 201,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 211,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 221,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 231,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 241,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 251,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 261,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 271,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 281,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 291,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 301,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 311,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 321,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 331,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 341,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 351,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 361,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 371,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 381,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 391,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 401,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 411,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 421,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 431,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 441,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 451,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 461,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 471,
+                "y": 288
+            },
+            {
+                "description": "Unnumbered",
+                "x": 201,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 211,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 221,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 231,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 241,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 251,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 261,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 271,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 281,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 291,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 301,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 311,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 321,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 331,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 341,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 351,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 361,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 371,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 381,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 391,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 401,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 411,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 421,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 431,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 441,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 451,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 461,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 471,
+                "y": 298
+            },
+            {
+                "description": "Unnumbered",
+                "x": 201,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 211,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 221,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 231,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 241,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 251,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 261,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 271,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 281,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 291,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 301,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 311,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 321,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 331,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 341,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 351,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 361,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 371,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 381,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 391,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 401,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 411,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 421,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 431,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 441,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 451,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 461,
+                "y": 308
+            },
+            {
+                "description": "Unnumbered",
+                "x": 471,
+                "y": 308
+            }
+        ]
+    },
+    {
+        "name": "Middle",
+        "x_sx": 186,
+        "y_sx": 337,
+        "x_dx": 486,
+        "y_dx": 420,
+        "is_stage": false,
+        "seats": [
+            {
+                "description": "Seat 1",
+                "x": 201,
+                "y": 352
+            },
+            {
+                "description": "Seat 2",
+                "x": 211,
+                "y": 352
+            },
+            {
+                "description": "Seat 3",
+                "x": 221,
+                "y": 352
+            },
+            {
+                "description": "Seat 4",
+                "x": 231,
+                "y": 352
+            },
+            {
+                "description": "Seat 5",
+                "x": 241,
+                "y": 352
+            },
+            {
+                "description": "Seat 6",
+                "x": 251,
+                "y": 352
+            },
+            {
+                "description": "Seat 7",
+                "x": 261,
+                "y": 352
+            },
+            {
+                "description": "Seat 8",
+                "x": 271,
+                "y": 352
+            },
+            {
+                "description": "Seat 9",
+                "x": 281,
+                "y": 352
+            },
+            {
+                "description": "Seat 10",
+                "x": 291,
+                "y": 352
+            },
+            {
+                "description": "Seat 11",
+                "x": 301,
+                "y": 352
+            },
+            {
+                "description": "Seat 12",
+                "x": 311,
+                "y": 352
+            },
+            {
+                "description": "Seat 13",
+                "x": 321,
+                "y": 352
+            },
+            {
+                "description": "Seat 14",
+                "x": 331,
+                "y": 352
+            },
+            {
+                "description": "Seat 15",
+                "x": 341,
+                "y": 352
+            },
+            {
+                "description": "Seat 16",
+                "x": 351,
+                "y": 352
+            },
+            {
+                "description": "Seat 17",
+                "x": 361,
+                "y": 352
+            },
+            {
+                "description": "Seat 18",
+                "x": 371,
+                "y": 352
+            },
+            {
+                "description": "Seat 19",
+                "x": 381,
+                "y": 352
+            },
+            {
+                "description": "Seat 20",
+                "x": 391,
+                "y": 352
+            },
+            {
+                "description": "Seat 21",
+                "x": 401,
+                "y": 352
+            },
+            {
+                "description": "Seat 22",
+                "x": 411,
+                "y": 352
+            },
+            {
+                "description": "Seat 23",
+                "x": 421,
+                "y": 352
+            },
+            {
+                "description": "Seat 24",
+                "x": 431,
+                "y": 352
+            },
+            {
+                "description": "Seat 25",
+                "x": 441,
+                "y": 352
+            },
+            {
+                "description": "Seat 26",
+                "x": 451,
+                "y": 352
+            },
+            {
+                "description": "Seat 27",
+                "x": 461,
+                "y": 352
+            },
+            {
+                "description": "Seat 28",
+                "x": 471,
+                "y": 352
+            },
+            {
+                "description": "Seat 29",
+                "x": 201,
+                "y": 362
+            },
+            {
+                "description": "Seat 30",
+                "x": 211,
+                "y": 362
+            },
+            {
+                "description": "Seat 31",
+                "x": 221,
+                "y": 362
+            },
+            {
+                "description": "Seat 32",
+                "x": 231,
+                "y": 362
+            },
+            {
+                "description": "Seat 33",
+                "x": 241,
+                "y": 362
+            },
+            {
+                "description": "Seat 34",
+                "x": 251,
+                "y": 362
+            },
+            {
+                "description": "Seat 35",
+                "x": 261,
+                "y": 362
+            },
+            {
+                "description": "Seat 36",
+                "x": 271,
+                "y": 362
+            },
+            {
+                "description": "Seat 37",
+                "x": 281,
+                "y": 362
+            },
+            {
+                "description": "Seat 38",
+                "x": 291,
+                "y": 362
+            },
+            {
+                "description": "Seat 39",
+                "x": 301,
+                "y": 362
+            },
+            {
+                "description": "Seat 40",
+                "x": 311,
+                "y": 362
+            },
+            {
+                "description": "Seat 41",
+                "x": 321,
+                "y": 362
+            },
+            {
+                "description": "Seat 42",
+                "x": 331,
+                "y": 362
+            },
+            {
+                "description": "Seat 43",
+                "x": 341,
+                "y": 362
+            },
+            {
+                "description": "Seat 44",
+                "x": 351,
+                "y": 362
+            },
+            {
+                "description": "Seat 45",
+                "x": 361,
+                "y": 362
+            },
+            {
+                "description": "Seat 46",
+                "x": 371,
+                "y": 362
+            },
+            {
+                "description": "Seat 47",
+                "x": 381,
+                "y": 362
+            },
+            {
+                "description": "Seat 48",
+                "x": 391,
+                "y": 362
+            },
+            {
+                "description": "Seat 49",
+                "x": 401,
+                "y": 362
+            },
+            {
+                "description": "Seat 50",
+                "x": 411,
+                "y": 362
+            },
+            {
+                "description": "Seat 51",
+                "x": 421,
+                "y": 362
+            },
+            {
+                "description": "Seat 52",
+                "x": 431,
+                "y": 362
+            },
+            {
+                "description": "Seat 53",
+                "x": 441,
+                "y": 362
+            },
+            {
+                "description": "Seat 54",
+                "x": 451,
+                "y": 362
+            },
+            {
+                "description": "Seat 55",
+                "x": 461,
+                "y": 362
+            },
+            {
+                "description": "Seat 56",
+                "x": 471,
+                "y": 362
+            },
+            {
+                "description": "Seat 57",
+                "x": 201,
+                "y": 372
+            },
+            {
+                "description": "Seat 58",
+                "x": 211,
+                "y": 372
+            },
+            {
+                "description": "Seat 59",
+                "x": 221,
+                "y": 372
+            },
+            {
+                "description": "Seat 60",
+                "x": 231,
+                "y": 372
+            },
+            {
+                "description": "Seat 61",
+                "x": 241,
+                "y": 372
+            },
+            {
+                "description": "Seat 62",
+                "x": 251,
+                "y": 372
+            },
+            {
+                "description": "Seat 63",
+                "x": 261,
+                "y": 372
+            },
+            {
+                "description": "Seat 64",
+                "x": 271,
+                "y": 372
+            },
+            {
+                "description": "Seat 65",
+                "x": 281,
+                "y": 372
+            },
+            {
+                "description": "Seat 66",
+                "x": 291,
+                "y": 372
+            },
+            {
+                "description": "Seat 67",
+                "x": 301,
+                "y": 372
+            },
+            {
+                "description": "Seat 68",
+                "x": 311,
+                "y": 372
+            },
+            {
+                "description": "Seat 69",
+                "x": 321,
+                "y": 372
+            },
+            {
+                "description": "Seat 70",
+                "x": 331,
+                "y": 372
+            },
+            {
+                "description": "Seat 71",
+                "x": 341,
+                "y": 372
+            },
+            {
+                "description": "Seat 72",
+                "x": 351,
+                "y": 372
+            },
+            {
+                "description": "Seat 73",
+                "x": 361,
+                "y": 372
+            },
+            {
+                "description": "Seat 74",
+                "x": 371,
+                "y": 372
+            },
+            {
+                "description": "Seat 75",
+                "x": 381,
+                "y": 372
+            },
+            {
+                "description": "Seat 76",
+                "x": 391,
+                "y": 372
+            },
+            {
+                "description": "Seat 77",
+                "x": 401,
+                "y": 372
+            },
+            {
+                "description": "Seat 78",
+                "x": 411,
+                "y": 372
+            },
+            {
+                "description": "Seat 79",
+                "x": 421,
+                "y": 372
+            },
+            {
+                "description": "Seat 80",
+                "x": 431,
+                "y": 372
+            },
+            {
+                "description": "Seat 81",
+                "x": 441,
+                "y": 372
+            },
+            {
+                "description": "Seat 82",
+                "x": 451,
+                "y": 372
+            },
+            {
+                "description": "Seat 83",
+                "x": 461,
+                "y": 372
+            },
+            {
+                "description": "Seat 84",
+                "x": 471,
+                "y": 372
+            },
+            {
+                "description": "Seat 85",
+                "x": 201,
+                "y": 382
+            },
+            {
+                "description": "Seat 86",
+                "x": 211,
+                "y": 382
+            },
+            {
+                "description": "Seat 87",
+                "x": 221,
+                "y": 382
+            },
+            {
+                "description": "Seat 88",
+                "x": 231,
+                "y": 382
+            },
+            {
+                "description": "Seat 89",
+                "x": 241,
+                "y": 382
+            },
+            {
+                "description": "Seat 90",
+                "x": 251,
+                "y": 382
+            },
+            {
+                "description": "Seat 91",
+                "x": 261,
+                "y": 382
+            },
+            {
+                "description": "Seat 92",
+                "x": 271,
+                "y": 382
+            },
+            {
+                "description": "Seat 93",
+                "x": 281,
+                "y": 382
+            },
+            {
+                "description": "Seat 94",
+                "x": 291,
+                "y": 382
+            },
+            {
+                "description": "Seat 95",
+                "x": 301,
+                "y": 382
+            },
+            {
+                "description": "Seat 96",
+                "x": 311,
+                "y": 382
+            },
+            {
+                "description": "Seat 97",
+                "x": 321,
+                "y": 382
+            },
+            {
+                "description": "Seat 98",
+                "x": 331,
+                "y": 382
+            },
+            {
+                "description": "Seat 99",
+                "x": 341,
+                "y": 382
+            },
+            {
+                "description": "Seat 100",
+                "x": 351,
+                "y": 382
+            },
+            {
+                "description": "Seat 101",
+                "x": 361,
+                "y": 382
+            },
+            {
+                "description": "Seat 102",
+                "x": 371,
+                "y": 382
+            },
+            {
+                "description": "Seat 103",
+                "x": 381,
+                "y": 382
+            },
+            {
+                "description": "Seat 104",
+                "x": 391,
+                "y": 382
+            },
+            {
+                "description": "Seat 105",
+                "x": 401,
+                "y": 382
+            },
+            {
+                "description": "Seat 106",
+                "x": 411,
+                "y": 382
+            },
+            {
+                "description": "Seat 107",
+                "x": 421,
+                "y": 382
+            },
+            {
+                "description": "Seat 108",
+                "x": 431,
+                "y": 382
+            },
+            {
+                "description": "Seat 109",
+                "x": 441,
+                "y": 382
+            },
+            {
+                "description": "Seat 110",
+                "x": 451,
+                "y": 382
+            },
+            {
+                "description": "Seat 111",
+                "x": 461,
+                "y": 382
+            },
+            {
+                "description": "Seat 112",
+                "x": 471,
+                "y": 382
+            },
+            {
+                "description": "Seat 113",
+                "x": 201,
+                "y": 392
+            },
+            {
+                "description": "Seat 114",
+                "x": 211,
+                "y": 392
+            },
+            {
+                "description": "Seat 115",
+                "x": 221,
+                "y": 392
+            },
+            {
+                "description": "Seat 116",
+                "x": 231,
+                "y": 392
+            },
+            {
+                "description": "Seat 117",
+                "x": 241,
+                "y": 392
+            },
+            {
+                "description": "Seat 118",
+                "x": 251,
+                "y": 392
+            },
+            {
+                "description": "Seat 119",
+                "x": 261,
+                "y": 392
+            },
+            {
+                "description": "Seat 120",
+                "x": 271,
+                "y": 392
+            }
+        ]
+    },
+    {
+        "name": "FarAway",
+        "x_sx": 187,
+        "y_sx": 433,
+        "x_dx": 486,
+        "y_dx": 505,
+        "is_stage": false,
+        "seats": [
+            {
+                "description": "Seat 1",
+                "x": 202,
+                "y": 448
+            },
+            {
+                "description": "Seat 2",
+                "x": 212,
+                "y": 448
+            },
+            {
+                "description": "Seat 3",
+                "x": 222,
+                "y": 448
+            },
+            {
+                "description": "Seat 4",
+                "x": 232,
+                "y": 448
+            },
+            {
+                "description": "Seat 5",
+                "x": 242,
+                "y": 448
+            },
+            {
+                "description": "Seat 6",
+                "x": 252,
+                "y": 448
+            },
+            {
+                "description": "Seat 7",
+                "x": 262,
+                "y": 448
+            },
+            {
+                "description": "Seat 8",
+                "x": 272,
+                "y": 448
+            },
+            {
+                "description": "Seat 9",
+                "x": 282,
+                "y": 448
+            },
+            {
+                "description": "Seat 10",
+                "x": 292,
+                "y": 448
+            },
+            {
+                "description": "Seat 11",
+                "x": 302,
+                "y": 448
+            },
+            {
+                "description": "Seat 12",
+                "x": 312,
+                "y": 448
+            },
+            {
+                "description": "Seat 13",
+                "x": 322,
+                "y": 448
+            },
+            {
+                "description": "Seat 14",
+                "x": 332,
+                "y": 448
+            },
+            {
+                "description": "Seat 15",
+                "x": 342,
+                "y": 448
+            },
+            {
+                "description": "Seat 16",
+                "x": 352,
+                "y": 448
+            },
+            {
+                "description": "Seat 17",
+                "x": 362,
+                "y": 448
+            },
+            {
+                "description": "Seat 18",
+                "x": 372,
+                "y": 448
+            },
+            {
+                "description": "Seat 19",
+                "x": 382,
+                "y": 448
+            },
+            {
+                "description": "Seat 20",
+                "x": 392,
+                "y": 448
+            },
+            {
+                "description": "Seat 21",
+                "x": 402,
+                "y": 448
+            },
+            {
+                "description": "Seat 22",
+                "x": 412,
+                "y": 448
+            },
+            {
+                "description": "Seat 23",
+                "x": 422,
+                "y": 448
+            },
+            {
+                "description": "Seat 24",
+                "x": 432,
+                "y": 448
+            },
+            {
+                "description": "Seat 25",
+                "x": 442,
+                "y": 448
+            },
+            {
+                "description": "Seat 26",
+                "x": 452,
+                "y": 448
+            },
+            {
+                "description": "Seat 27",
+                "x": 462,
+                "y": 448
+            },
+            {
+                "description": "Seat 28",
+                "x": 202,
+                "y": 458
+            },
+            {
+                "description": "Seat 29",
+                "x": 212,
+                "y": 458
+            },
+            {
+                "description": "Seat 30",
+                "x": 222,
+                "y": 458
+            },
+            {
+                "description": "Seat 31",
+                "x": 232,
+                "y": 458
+            },
+            {
+                "description": "Seat 32",
+                "x": 242,
+                "y": 458
+            },
+            {
+                "description": "Seat 33",
+                "x": 252,
+                "y": 458
+            },
+            {
+                "description": "Seat 34",
+                "x": 262,
+                "y": 458
+            },
+            {
+                "description": "Seat 35",
+                "x": 272,
+                "y": 458
+            },
+            {
+                "description": "Seat 36",
+                "x": 282,
+                "y": 458
+            },
+            {
+                "description": "Seat 37",
+                "x": 292,
+                "y": 458
+            },
+            {
+                "description": "Seat 38",
+                "x": 302,
+                "y": 458
+            },
+            {
+                "description": "Seat 39",
+                "x": 312,
+                "y": 458
+            },
+            {
+                "description": "Seat 40",
+                "x": 322,
+                "y": 458
+            },
+            {
+                "description": "Seat 41",
+                "x": 332,
+                "y": 458
+            },
+            {
+                "description": "Seat 42",
+                "x": 342,
+                "y": 458
+            },
+            {
+                "description": "Seat 43",
+                "x": 352,
+                "y": 458
+            },
+            {
+                "description": "Seat 44",
+                "x": 362,
+                "y": 458
+            },
+            {
+                "description": "Seat 45",
+                "x": 372,
+                "y": 458
+            },
+            {
+                "description": "Seat 46",
+                "x": 382,
+                "y": 458
+            },
+            {
+                "description": "Seat 47",
+                "x": 392,
+                "y": 458
+            },
+            {
+                "description": "Seat 48",
+                "x": 402,
+                "y": 458
+            },
+            {
+                "description": "Seat 49",
+                "x": 412,
+                "y": 458
+            },
+            {
+                "description": "Seat 50",
+                "x": 422,
+                "y": 458
+            },
+            {
+                "description": "Seat 51",
+                "x": 432,
+                "y": 458
+            },
+            {
+                "description": "Seat 52",
+                "x": 442,
+                "y": 458
+            },
+            {
+                "description": "Seat 53",
+                "x": 452,
+                "y": 458
+            },
+            {
+                "description": "Seat 54",
+                "x": 462,
+                "y": 458
+            },
+            {
+                "description": "Seat 55",
+                "x": 202,
+                "y": 468
+            },
+            {
+                "description": "Seat 56",
+                "x": 212,
+                "y": 468
+            },
+            {
+                "description": "Seat 57",
+                "x": 222,
+                "y": 468
+            },
+            {
+                "description": "Seat 58",
+                "x": 232,
+                "y": 468
+            },
+            {
+                "description": "Seat 59",
+                "x": 242,
+                "y": 468
+            },
+            {
+                "description": "Seat 60",
+                "x": 252,
+                "y": 468
+            },
+            {
+                "description": "Seat 61",
+                "x": 262,
+                "y": 468
+            },
+            {
+                "description": "Seat 62",
+                "x": 272,
+                "y": 468
+            },
+            {
+                "description": "Seat 63",
+                "x": 282,
+                "y": 468
+            },
+            {
+                "description": "Seat 64",
+                "x": 292,
+                "y": 468
+            },
+            {
+                "description": "Seat 65",
+                "x": 302,
+                "y": 468
+            },
+            {
+                "description": "Seat 66",
+                "x": 312,
+                "y": 468
+            },
+            {
+                "description": "Seat 67",
+                "x": 322,
+                "y": 468
+            },
+            {
+                "description": "Seat 68",
+                "x": 332,
+                "y": 468
+            },
+            {
+                "description": "Seat 69",
+                "x": 342,
+                "y": 468
+            },
+            {
+                "description": "Seat 70",
+                "x": 352,
+                "y": 468
+            },
+            {
+                "description": "Seat 71",
+                "x": 362,
+                "y": 468
+            },
+            {
+                "description": "Seat 72",
+                "x": 372,
+                "y": 468
+            },
+            {
+                "description": "Seat 73",
+                "x": 382,
+                "y": 468
+            },
+            {
+                "description": "Seat 74",
+                "x": 392,
+                "y": 468
+            },
+            {
+                "description": "Seat 75",
+                "x": 402,
+                "y": 468
+            },
+            {
+                "description": "Seat 76",
+                "x": 412,
+                "y": 468
+            },
+            {
+                "description": "Seat 77",
+                "x": 422,
+                "y": 468
+            },
+            {
+                "description": "Seat 78",
+                "x": 432,
+                "y": 468
+            },
+            {
+                "description": "Seat 79",
+                "x": 442,
+                "y": 468
+            },
+            {
+                "description": "Seat 80",
+                "x": 452,
+                "y": 468
+            },
+            {
+                "description": "Seat 81",
+                "x": 462,
+                "y": 468
+            },
+            {
+                "description": "Seat 82",
+                "x": 202,
+                "y": 478
+            },
+            {
+                "description": "Seat 83",
+                "x": 212,
+                "y": 478
+            },
+            {
+                "description": "Seat 84",
+                "x": 222,
+                "y": 478
+            },
+            {
+                "description": "Seat 85",
+                "x": 232,
+                "y": 478
+            },
+            {
+                "description": "Seat 86",
+                "x": 242,
+                "y": 478
+            },
+            {
+                "description": "Seat 87",
+                "x": 252,
+                "y": 478
+            },
+            {
+                "description": "Seat 88",
+                "x": 262,
+                "y": 478
+            },
+            {
+                "description": "Seat 89",
+                "x": 272,
+                "y": 478
+            },
+            {
+                "description": "Seat 90",
+                "x": 282,
+                "y": 478
+            },
+            {
+                "description": "Seat 91",
+                "x": 292,
+                "y": 478
+            },
+            {
+                "description": "Seat 92",
+                "x": 302,
+                "y": 478
+            },
+            {
+                "description": "Seat 93",
+                "x": 312,
+                "y": 478
+            },
+            {
+                "description": "Seat 94",
+                "x": 322,
+                "y": 478
+            },
+            {
+                "description": "Seat 95",
+                "x": 332,
+                "y": 478
+            },
+            {
+                "description": "Seat 96",
+                "x": 342,
+                "y": 478
+            },
+            {
+                "description": "Seat 97",
+                "x": 352,
+                "y": 478
+            },
+            {
+                "description": "Seat 98",
+                "x": 362,
+                "y": 478
+            },
+            {
+                "description": "Seat 99",
+                "x": 372,
+                "y": 478
+            },
+            {
+                "description": "Seat 100",
+                "x": 382,
+                "y": 478
+            },
+            {
+                "description": "Seat 101",
+                "x": 392,
+                "y": 478
+            },
+            {
+                "description": "Seat 102",
+                "x": 402,
+                "y": 478
+            },
+            {
+                "description": "Seat 103",
+                "x": 412,
+                "y": 478
+            },
+            {
+                "description": "Seat 104",
+                "x": 422,
+                "y": 478
+            },
+            {
+                "description": "Seat 105",
+                "x": 432,
+                "y": 478
+            },
+            {
+                "description": "Seat 106",
+                "x": 442,
+                "y": 478
+            },
+            {
+                "description": "Seat 107",
+                "x": 452,
+                "y": 478
+            },
+            {
+                "description": "Seat 108",
+                "x": 462,
+                "y": 478
+            },
+            {
+                "description": "Seat 109",
+                "x": 202,
+                "y": 488
+            },
+            {
+                "description": "Seat 110",
+                "x": 212,
+                "y": 488
+            },
+            {
+                "description": "Seat 111",
+                "x": 222,
+                "y": 488
+            },
+            {
+                "description": "Seat 112",
+                "x": 232,
+                "y": 488
+            },
+            {
+                "description": "Seat 113",
+                "x": 242,
+                "y": 488
+            },
+            {
+                "description": "Seat 114",
+                "x": 252,
+                "y": 488
+            },
+            {
+                "description": "Seat 115",
+                "x": 262,
+                "y": 488
+            },
+            {
+                "description": "Seat 116",
+                "x": 272,
+                "y": 488
+            },
+            {
+                "description": "Seat 117",
+                "x": 282,
+                "y": 488
+            },
+            {
+                "description": "Seat 118",
+                "x": 292,
+                "y": 488
+            },
+            {
+                "description": "Seat 119",
+                "x": 302,
+                "y": 488
+            },
+            {
+                "description": "Seat 120",
+                "x": 312,
+                "y": 488
+            },
+            {
+                "description": "Seat 121",
+                "x": 322,
+                "y": 488
+            },
+            {
+                "description": "Seat 122",
+                "x": 332,
+                "y": 488
+            },
+            {
+                "description": "Seat 123",
+                "x": 342,
+                "y": 488
+            },
+            {
+                "description": "Seat 124",
+                "x": 352,
+                "y": 488
+            },
+            {
+                "description": "Seat 125",
+                "x": 362,
+                "y": 488
+            },
+            {
+                "description": "Seat 126",
+                "x": 372,
+                "y": 488
+            },
+            {
+                "description": "Seat 127",
+                "x": 382,
+                "y": 488
+            },
+            {
+                "description": "Seat 128",
+                "x": 392,
+                "y": 488
+            },
+            {
+                "description": "Seat 129",
+                "x": 402,
+                "y": 488
+            },
+            {
+                "description": "Seat 130",
+                "x": 412,
+                "y": 488
+            },
+            {
+                "description": "Seat 131",
+                "x": 422,
+                "y": 488
+            },
+            {
+                "description": "Seat 132",
+                "x": 432,
+                "y": 488
+            },
+            {
+                "description": "Seat 133",
+                "x": 442,
+                "y": 488
+            },
+            {
+                "description": "Seat 134",
+                "x": 452,
+                "y": 488
+            },
+            {
+                "description": "Seat 135",
+                "x": 462,
+                "y": 488
+            }
+        ]
+    }
+]

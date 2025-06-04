@@ -4,6 +4,7 @@ from db import get_db
 from ..protected_record import handle_concert_creation
 import json
 from ..protected_fcm import send_push_notification
+import os
 
 experimental_bp = Blueprint('experimental', __name__)
 
@@ -47,7 +48,17 @@ def experimental_validate_ticket():
             SET validated = 1 
             WHERE id = %s
         """, (ticket_id,))
+
+        cursor.execute("""
+            INSERT INTO notification (title, description, user_id)
+            VALUES (%s, %s, %s)
+        """, ("Ticket Validated", "Your ticket has been successfully validated.", user_id))
+
         conn.commit()
+
+        send_push_notification(
+            user_id, True, "Ticket Validated", "Your ticket has been successfully validated."
+        )
 
         return jsonify({'message': 'Ticket validated successfully'}), 200
 
@@ -127,6 +138,92 @@ def experimental_create_concert():
     except Exception as e:
         current_app.logger.error(f"API concert creation error: {str(e)}")
         return jsonify({'error': str(e)}), 500
+    
+@experimental_bp.route('/experimental/tour/create', methods=['POST'])
+def experimental_create_tour():
+
+    try:
+        data = request.form
+        record_company_id = data.get('record_company_id')
+        title = data.get('title')
+        image_file = request.files.get('image')
+        artist_ids = request.form.getlist('artist_ids') 
+        concerts_json = data.get('concerts')  
+
+        if not title or not image_file or not artist_ids or not concerts_json:
+            return jsonify({'message': 'Missing required fields'}), 400
+
+        artist_ids = [int(aid) for aid in artist_ids]
+        concerts = json.loads(concerts_json)
+
+        conn = get_db()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("""
+            INSERT INTO tour (title, record_company_id)
+            VALUES (%s, %s)
+        """, (title, record_company_id))
+        tour_id = cursor.lastrowid
+
+        file_ext = os.path.splitext(image_file.filename)[1].lower()
+        image_filename = f"{tour_id}{file_ext}"
+        save_path = os.path.join(current_app.root_path, 'static', 'images', 'tours', image_filename)
+        image_file.save(save_path)
+
+        cursor.execute("""
+            UPDATE tour SET image = %s WHERE id = %s
+        """, (image_filename, tour_id))
+
+        conn.commit() 
+
+        for concert in concerts:
+            success, result = handle_concert_creation(
+                record_company_id=record_company_id,
+                title=concert['title'],
+                image_file=None,
+                date=concert['date'],
+                time=concert['time'],
+                artist_ids=artist_ids,
+                place_id=concert['place_id'],
+                sector_prices=concert['sector_prices'],
+                tour_id=tour_id
+            )
+            if not success:
+                return jsonify({'error': f"Failed to create concert: {result}"}), 400
+
+        placeholders = ','.join(['%s'] * len(artist_ids))
+        cursor.execute(f"""
+            SELECT DISTINCT u.id AS user_id
+            FROM user u
+            JOIN likes l ON l.user_id = u.id
+            WHERE l.artist_id IN ({placeholders})
+        """, tuple(artist_ids))
+        users_to_notify = cursor.fetchall()
+
+        for user in users_to_notify:
+            cursor.execute("""
+                INSERT INTO notification (title, description, user_id)
+                VALUES (%s, %s, %s)
+            """, (
+                "New Tour!",
+                f"A new tour has been created that might interest you: {title}",
+                user['user_id']
+            ))
+
+            send_push_notification(
+                user['user_id'], True, "New Tour!", f"A new tour has been created that might interest you: {title}"
+            )
+
+        conn.commit()
+
+        return jsonify({'message': 'Tour and concerts created successfully', 'tour_id': tour_id}), 201
+
+    except Exception as e:
+        conn.rollback()
+        current_app.logger.error(f"Error creating tour: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+    finally:
+        conn.close()
     
 
 @experimental_bp.route('/experimental/record_company/artists', methods=['POST'])

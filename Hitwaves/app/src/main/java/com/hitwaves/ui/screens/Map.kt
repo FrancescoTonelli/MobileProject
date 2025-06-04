@@ -156,14 +156,6 @@ fun ConcertMap(navController: NavController) {
                 painter = painterResource(R.drawable.custom_location_puck)
             )
 
-            userLocation.first?.let { lat ->
-                userLocation.second?.let { lon ->
-                    PointAnnotation(Point.fromLngLat(lon, lat)) {
-                        iconImage = userMarker
-                    }
-                }
-            }
-
             val imageLoader = remember { ImageLoader(context) }
 
             poiList.forEach { concertPOI ->
@@ -227,6 +219,14 @@ fun ConcertMap(navController: NavController) {
                     mapView.logo.enabled = false
                     mapView.scalebar.enabled = false
                 } catch (_: Exception) {
+                }
+            }
+
+            userLocation.first?.let { lat ->
+                userLocation.second?.let { lon ->
+                    PointAnnotation(Point.fromLngLat(lon, lat)) {
+                        iconImage = userMarker
+                    }
                 }
             }
 

@@ -708,7 +708,7 @@ def protected_record_concert_details(concert_id):
                 concert c
             JOIN 
                 place p ON c.place_id = p.id
-            LEFT JOIN  -- Usiamo LEFT JOIN per includere concerti senza tour
+            LEFT JOIN 
                 tour t ON c.tour_id = t.id
             WHERE 
                 c.id = %s

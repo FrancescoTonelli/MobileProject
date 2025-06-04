@@ -1,0 +1,441 @@
+[
+    {
+        "name": "Stage",
+        "x_sx": 215,
+        "y_sx": 137,
+        "x_dx": 474,
+        "y_dx": 210,
+        "is_stage": true,
+        "seats": []
+    },
+    {
+        "name": "Parterre",
+        "x_sx": 193,
+        "y_sx": 238,
+        "x_dx": 496,
+        "y_dx": 292,
+        "is_stage": false,
+        "seats": [
+            {
+                "description": "Unnumbered",
+                "x": 208,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 218,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 228,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 238,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 248,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 258,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 268,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 278,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 288,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 298,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 308,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 318,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 328,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 338,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 348,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 358,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 368,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 378,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 388,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 398,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 408,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 418,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 428,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 438,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 448,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 458,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 468,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 478,
+                "y": 253
+            },
+            {
+                "description": "Unnumbered",
+                "x": 208,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 218,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 228,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 238,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 248,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 258,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 268,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 278,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 288,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 298,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 308,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 318,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 328,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 338,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 348,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 358,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 368,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 378,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 388,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 398,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 408,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 418,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 428,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 438,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 448,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 458,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 468,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 478,
+                "y": 264
+            },
+            {
+                "description": "Unnumbered",
+                "x": 208,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 218,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 228,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 238,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 248,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 258,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 268,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 278,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 288,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 298,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 308,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 318,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 328,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 338,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 348,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 358,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 368,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 378,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 388,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 398,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 408,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 418,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 428,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 438,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 448,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 458,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 468,
+                "y": 275
+            },
+            {
+                "description": "Unnumbered",
+                "x": 478,
+                "y": 275
+            }
+        ]
+    }
+]

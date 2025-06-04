@@ -42,6 +42,7 @@ def create_place():
         return jsonify({'message': 'Missing required fields'}), 400
 
     latitude, longitude = geocode_address(address)
+    print(f"Geocoding address: {address} -> Latitude: {latitude}, Longitude: {longitude}")
     if latitude is None or longitude is None:
         return jsonify({'message': 'Failed to geocode address'}), 400
 
