@@ -55,11 +55,9 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.coil.compose)
     implementation(libs.material3)
     implementation(libs.androidx.navigation.compose.android)
-    implementation(libs.accompanist.navigation.animation)
     implementation(libs.play.services.location)
 
     implementation(libs.android.v11120)

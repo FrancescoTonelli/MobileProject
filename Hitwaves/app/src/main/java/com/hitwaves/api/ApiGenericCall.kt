@@ -10,7 +10,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 
-const val serverIp = "192.168.33.52"
+const val serverIp = "192.168.20.95"
 const val baseUrl = "http://${serverIp}:5000/"
 const val baseApiUrl = "${baseUrl}protected_user/"
 const val artistImageUrl = "${baseUrl}static/images/artists/"

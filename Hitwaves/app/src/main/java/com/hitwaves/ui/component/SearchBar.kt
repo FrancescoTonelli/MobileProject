@@ -128,7 +128,7 @@ fun SearchWave(
                     title = event.tourTitle,
                     artistName = event.artistName,
                     artistImage = event.artistImage.orEmpty(),
-                    description = "Tour - ${event.concertCount} shows",
+                    description = "Tour - ${event.upcomingConcerts} shows",
                     date = null,
                     placeName = null
                 )

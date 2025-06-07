@@ -172,7 +172,39 @@ fun ConcertMap(navController: NavController) {
 
                     val result = imageLoader.execute(request)
                     val drawable = result.drawable
-                    value = drawable?.toBitmap(imageSize, imageSize)?.asImageBitmap()?.let { BitmapPainter(it) }
+                    val originalBitmap = drawable?.toBitmap(imageSize, imageSize)
+
+                    value = originalBitmap?.let { bitmap ->
+                        val borderSizePx = 6f
+                        val borderColor = android.graphics.Color.BLACK
+
+                        val outputBitmap = android.graphics.Bitmap.createBitmap(
+                            bitmap.width,
+                            bitmap.height,
+                            android.graphics.Bitmap.Config.ARGB_8888
+                        )
+
+                        val canvas = android.graphics.Canvas(outputBitmap)
+
+                        canvas.drawBitmap(bitmap, 0f, 0f, null)
+
+                        val paint = android.graphics.Paint().apply {
+                            color = borderColor
+                            style = android.graphics.Paint.Style.STROKE
+                            isAntiAlias = true
+                            strokeWidth = borderSizePx
+                        }
+
+                        val radius = (bitmap.width / 2f) - (borderSizePx / 2f)
+                        canvas.drawCircle(
+                            bitmap.width / 2f,
+                            bitmap.height / 2f,
+                            radius,
+                            paint
+                        )
+
+                        BitmapPainter(outputBitmap.asImageBitmap())
+                    }
                 }.value
 
                 val markerImage = if (painterState != null) {

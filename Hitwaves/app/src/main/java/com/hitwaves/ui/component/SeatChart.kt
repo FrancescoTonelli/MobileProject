@@ -64,7 +64,7 @@ fun SeatChart(
     var scale by remember { mutableFloatStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
     var isInitialized by remember { mutableStateOf(false) }
-
+    var minScale by remember { mutableFloatStateOf(1f) }
     val paint = rememberRubikPaint()
 
     val allPoints = remember(sectors, tickets) {
@@ -89,8 +89,23 @@ fun SeatChart(
             .background(MapBackground)
             .pointerInput(Unit) {
                 detectTransformGestures { _, pan, zoom, _ ->
-                    scale *= zoom
-                    offset += pan
+                    val newScale = scale * zoom
+                    scale = maxOf(minScale, newScale)
+
+                    val contentWidth = (maxX - minX) * scale
+                    val contentHeight = (maxY - minY) * scale
+                    val canvasWidth = size.width
+                    val canvasHeight = size.height
+
+                    val maxPanX = (contentWidth - canvasWidth) / 2f
+                    val maxPanY = (contentHeight - canvasHeight) / 2f
+
+                    val newOffset = offset + pan
+
+                    val clampedX = if (maxPanX >= 0f) newOffset.x.coerceIn(-maxPanX, maxPanX) else 0f
+                    val clampedY = if (maxPanY >= 0f) newOffset.y.coerceIn(-maxPanY, maxPanY) else 0f
+
+                    offset = Offset(clampedX, clampedY)
                 }
             }
             .pointerInput(tickets, scale, offset) {
@@ -118,6 +133,7 @@ fun SeatChart(
                 val scaleX = size.width / contentWidth
                 val scaleY = size.height / contentHeight
                 scale = minOf(scaleX, scaleY) * 0.8f
+                minScale = scale
                 isInitialized = true
             }
 
@@ -136,7 +152,6 @@ fun SeatChart(
                         topLeft = topLeft,
                         size = rect.size
                     )
-
 
                     drawContext.canvas.nativeCanvas.drawText(
                         sector.name,

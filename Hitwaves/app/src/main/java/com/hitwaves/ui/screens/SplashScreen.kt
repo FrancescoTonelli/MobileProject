@@ -34,8 +34,17 @@ import com.hitwaves.ui.component.CustomSnackBar
 import com.hitwaves.ui.component.IconData
 import com.hitwaves.ui.theme.*
 import com.hitwaves.ui.viewModel.SplashScreenViewModel
+import kotlinx.coroutines.delay
 
 private fun init(): SplashScreenViewModel = SplashScreenViewModel()
+
+sealed class LocationPermissionState {
+    object Unknown : LocationPermissionState()
+    object Requesting : LocationPermissionState()
+    object NeedsRationale : LocationPermissionState()
+    object DeniedPermanently : LocationPermissionState()
+    object Granted : LocationPermissionState()
+}
 
 @Composable
 fun SplashScreen() {
@@ -45,111 +54,107 @@ fun SplashScreen() {
     val result by splashViewModel.autoLoginState
     val snackBarHostState = remember { SnackbarHostState() }
 
-    var permissionChecked by remember { mutableStateOf(false) }
+    var permissionState by remember { mutableStateOf<LocationPermissionState>(LocationPermissionState.Unknown) }
     var showSettingsDialog by remember { mutableStateOf(false) }
-
-    val pendingPermissionRequest = remember { mutableStateOf(false) }
+    var comingFromSettings by remember { mutableStateOf(false) }
     val lifecycleOwner = LocalLifecycleOwner.current
-    val hasResumedOnce = remember { mutableStateOf(false) }
-
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        val granted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
-
-        permissionChecked = true
-        if (!granted) {
+        val hasFine = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
+        val hasCoarse = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        if (hasFine || hasCoarse) {
+            permissionState = LocationPermissionState.Granted
+        } else {
             val showRationaleFine = ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)
             val showRationaleCoarse = ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
             if (!showRationaleFine && !showRationaleCoarse) {
-                showSettingsDialog = true
+                permissionState = LocationPermissionState.DeniedPermanently
             } else {
-                pendingPermissionRequest.value = true
+                permissionState = LocationPermissionState.NeedsRationale
             }
-        } else {
-            if (TokenManager.getToken().isNullOrEmpty()) {
-                context.startActivity(Intent(context, LoginActivity::class.java))
-                activity.finish()
-            } else {
-                splashViewModel.handleSplash()
-            }
-        }
-    }
-
-    LaunchedEffect(pendingPermissionRequest.value) {
-        if (pendingPermissionRequest.value) {
-            pendingPermissionRequest.value = false
-            permissionLauncher.launch(arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ))
         }
     }
 
     LaunchedEffect(Unit) {
-        val hasFine = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        val hasCoarse = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-
-        if (hasFine || hasCoarse) {
-            if (TokenManager.getToken().isNullOrEmpty()) {
-                context.startActivity(Intent(context, LoginActivity::class.java))
-                activity.finish()
-            } else {
-                permissionChecked = true
-                splashViewModel.handleSplash()
-            }
+        val hasFineNow = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val hasCoarseNow = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        if (hasFineNow || hasCoarseNow) {
+            permissionState = LocationPermissionState.Granted
         } else {
+            permissionState = LocationPermissionState.Requesting
             permissionLauncher.launch(arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ))
+        }
+    }
+
+    LaunchedEffect(permissionState) {
+        when (permissionState) {
+            is LocationPermissionState.Granted -> {
+                if (TokenManager.getToken().isNullOrEmpty()) {
+                    context.startActivity(Intent(context, LoginActivity::class.java))
+                    activity.finish()
+                } else {
+                    splashViewModel.handleSplash()
+                }
+            }
+            is LocationPermissionState.NeedsRationale -> {
+                delay(300)
+                permissionState = LocationPermissionState.Requesting
+                permissionLauncher.launch(arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ))
+            }
+            is LocationPermissionState.DeniedPermanently -> {
+                showSettingsDialog = true
+            }
+            else -> { }
         }
     }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                if (hasResumedOnce.value) {
-                    if (!permissionChecked) {
-                        val hasFine = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                        val hasCoarse = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-
-                        if (hasFine || hasCoarse) {
-                            if (TokenManager.getToken().isNullOrEmpty()) {
-                                context.startActivity(Intent(context, LoginActivity::class.java))
-                                activity.finish()
-                            } else {
-                                permissionChecked = true
-                                splashViewModel.handleSplash()
-                            }
+                if (comingFromSettings) {
+                    comingFromSettings = false
+                    permissionState = LocationPermissionState.Requesting
+                    permissionLauncher.launch(arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ))
+                } else {
+                    val hasFineNow = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    val hasCoarseNow = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    if (hasFineNow || hasCoarseNow) {
+                        permissionState = LocationPermissionState.Granted
+                    } else {
+                        val showRationaleFine = ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+                        val showRationaleCoarse = ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        permissionState = if (showRationaleFine || showRationaleCoarse) {
+                            LocationPermissionState.NeedsRationale
                         } else {
-                            pendingPermissionRequest.value = true
+                            LocationPermissionState.DeniedPermanently
                         }
                     }
-                } else {
-                    hasResumedOnce.value = true
                 }
             }
         }
-
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 
-
-    LaunchedEffect(result, permissionChecked) {
-        if (!permissionChecked) return@LaunchedEffect
-
-        if(TokenManager.getToken().isNullOrEmpty()) {
+    LaunchedEffect(result) {
+        if (permissionState !is LocationPermissionState.Granted) return@LaunchedEffect
+        if (TokenManager.getToken().isNullOrEmpty()) {
             context.startActivity(Intent(context, LoginActivity::class.java))
             activity.finish()
-        }
-
-        if (result.success && result.data != null) {
+        } else if (result.success && result.data != null) {
             TokenManager.saveToken(result.data!!.token)
             context.startActivity(Intent(context, AppActivity::class.java))
             activity.finish()
@@ -172,16 +177,13 @@ fun SplashScreen() {
                 label = "Logo",
                 icon = ImageVector.vectorResource(id = R.drawable.logo)
             )
-
             Icon(
                 imageVector = logo.icon,
                 contentDescription = "Logo",
                 modifier = Modifier.size(140.dp),
                 tint = Color.White
             )
-
-            Spacer(modifier = Modifier.size(28.dp))
-
+            Spacer(modifier = Modifier.height(28.dp))
             Text(
                 text = "Hitwaves",
                 style = Typography.titleLarge.copy(
@@ -190,9 +192,7 @@ fun SplashScreen() {
                     drawStyle = Stroke(width = 4f)
                 )
             )
-
-            Spacer(modifier = Modifier.size(8.dp))
-
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Find your perfect wave!",
                 style = Typography.labelSmall.copy(
@@ -201,7 +201,6 @@ fun SplashScreen() {
                 ),
                 modifier = Modifier.padding(bottom = 40.dp)
             )
-
             CircularProgressIndicator(
                 color = Primary,
                 strokeWidth = 4.dp
@@ -215,7 +214,7 @@ fun SplashScreen() {
             message = "To use the app, you must allow location access. Do you want to open the app settings?",
             onConfirm = {
                 showSettingsDialog = false
-                permissionChecked = false
+                comingFromSettings = true
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                     data = Uri.fromParts("package", context.packageName, null)
                 }

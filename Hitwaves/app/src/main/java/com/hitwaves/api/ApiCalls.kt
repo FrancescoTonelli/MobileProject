@@ -7,7 +7,6 @@ import okhttp3.MultipartBody
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 
-
 suspend fun apiAutomaticLogin(): ApiResult<TokenResponse> {
     val url = "automatic_login"
     return ApiGenericCalls.postRequestAsync<TokenResponse>(

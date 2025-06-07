@@ -385,7 +385,10 @@ def protected_user_popular_artists_events():
             if concert['tour_id']:
                 cursor.execute("""
                     SELECT t.id, t.title, t.image,
-                           (SELECT COUNT(*) FROM concert WHERE tour_id = t.id) AS concert_count
+                           (SELECT COUNT(*) 
+                               FROM concert 
+                               WHERE tour_id = t.id 
+                                AND concert.date >= CURDATE() ) AS concert_count
                     FROM tour t
                     WHERE t.id = %s;
                 """, (concert['tour_id'],))
