@@ -1,5 +1,9 @@
 # HitWaves
 
+## Autori
+- Montalti Elena - 0001089638 - elena.montalti5@studio.unibo.it
+- Tonelli Francesco - 0001071531 - francesco.tonelli9@studio.unibo.it
+
 ## Argomento
 
 Lo scopo di HitWaves è quello di offrire una piattaforma per la promozione e la gestione di tour e concerti musicali legati a case discografiche.
