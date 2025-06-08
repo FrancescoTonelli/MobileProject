@@ -13,10 +13,10 @@ Gli utenti possono utilizzare l’app per acquistare biglietti, lasciare recensi
 Un sistema di notifiche personalizzate consente di tenere aggiornati gli utenti in base ai nuovi eventi legati agli artisti di loro interesse.
 
 Al momento, il progetto si compone delle seguenti parti:
-- Server Python Flask per la gestione backend
-- Dashboard React Node.js per la gestione delle funzioni admin
-- Applicativo Kotlin per l'interazione utente
-- Script Python interattivo per la creazione delle planimetrie dei palazzetti
+- cartella `back`: Server Python Flask per la gestione backend
+- cartella `front`: Dashboard React Node.js per la gestione delle funzioni admin
+- cartella `Hitwaves`: Applicativo Kotlin per l'interazione utente
+- cartella `seat_chart_editor`: Script Python interattivo per la creazione delle planimetrie dei palazzetti
 
 ## Funzionalità
 
