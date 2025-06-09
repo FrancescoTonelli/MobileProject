@@ -64,18 +64,11 @@ fun Notification(navController: NavHostController) {
         if (!readState.success && readState.errorMessage != null) {
             snackBarHostState.showSnackbar(readState.errorMessage!!)
         }
-        else if (readState.success) {
-            UnreadBadge.update()
-        }
     }
 
     LaunchedEffect(deleteState) {
         if (!deleteState.success && deleteState.errorMessage != null) {
             snackBarHostState.showSnackbar(deleteState.errorMessage!!)
-        }
-        else if (deleteState.success) {
-            notificationViewModel.getNotifications()
-            UnreadBadge.update()
         }
     }
 

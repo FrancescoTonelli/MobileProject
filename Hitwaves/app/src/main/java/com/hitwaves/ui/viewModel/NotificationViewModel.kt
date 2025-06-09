@@ -10,6 +10,7 @@ import com.hitwaves.api.NotificationResponse
 import com.hitwaves.api.apiDeleteNotification
 import com.hitwaves.api.apiGetAllNotifications
 import com.hitwaves.api.apiReadNotification
+import com.hitwaves.utils.UnreadBadge
 import kotlinx.coroutines.launch
 
 class NotificationViewModel : ViewModel(){
@@ -40,6 +41,7 @@ class NotificationViewModel : ViewModel(){
                 }
                 else {
                     _notificationState.value = ApiResult(true, response.data, null)
+                    UnreadBadge.update()
                 }
 
             } catch (e: Exception) {
@@ -67,6 +69,7 @@ class NotificationViewModel : ViewModel(){
                 }
                 else {
                     _readState.value = ApiResult(true, response.data, null)
+                    UnreadBadge.update()
                 }
 
             } catch (e: Exception) {
@@ -87,16 +90,24 @@ class NotificationViewModel : ViewModel(){
 
                 val response = apiDeleteNotification(id)
 
-                _isNotificationLoading.value = false
-
                 if (!response.success) {
                     _deleteState.value = ApiResult(false, null, response.errorMessage)
                 } else {
                     _deleteState.value = ApiResult(true, response.data, null)
+                    val notificationResponse = apiGetAllNotifications()
+                    if (!notificationResponse.success) {
+                        _notificationState.value = ApiResult(false, null, notificationResponse.errorMessage)
+                    }
+                    else {
+                        _notificationState.value = ApiResult(true, notificationResponse.data, null)
+                        UnreadBadge.update()
+                    }
                 }
 
             } catch (e: Exception) {
                 _deleteState.value = ApiResult(false, null, e.message.toString())
+            } finally {
+                _isNotificationLoading.value = false
             }
         }
     }

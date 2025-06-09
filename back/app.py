@@ -30,7 +30,7 @@ app.register_blueprint(protected_user_bp)
 app.register_blueprint(protected_record_bp)
 
 if not firebase_admin._apps:
-    cred = credentials.Certificate("hitwaves-5f936-firebase-adminsdk-fbsvc-38770ae9f4.json")
+    cred = credentials.Certificate("hitwaves-8bedd-firebase-adminsdk-fbsvc-fecc0d9fbb.json")
     firebase_admin.initialize_app(cred)
 
 if __name__ == '__main__':

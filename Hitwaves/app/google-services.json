@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "99061998054",
-    "project_id": "hitwaves-5f936",
-    "storage_bucket": "hitwaves-5f936.firebasestorage.app"
+    "project_number": "213001153269",
+    "project_id": "hitwaves-8bedd",
+    "storage_bucket": "hitwaves-8bedd.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:99061998054:android:31988eceab033492e5f627",
+        "mobilesdk_app_id": "1:213001153269:android:d03a1324f5e6c41fe033bc",
         "android_client_info": {
           "package_name": "com.hitwaves"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDY7LmBHio_pY-UDgMNeC466rPMxm1iL70"
+          "current_key": "AIzaSyDxWvACg5o38qoL4iVLZr_i0p3cupg0sRM"
         }
       ],
       "services": {
