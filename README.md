@@ -53,9 +53,11 @@ Per "fase sperimentale" si intende che le funzioni qui elencate dovrebbero trova
 
 ## Sviluppi futuri
 
-Le "Funzioni in fase sperimentale" descritte sopra dovrebbero trovarsi in un applicativo Kotlin dedicato alle case discografiche. Design e API sono già pronti e funzionanti.
+Le "Funzioni in fase sperimentale" descritte sopra sono state preparate in vista di un futuro applicativo Kotlin dedicato alle case discografiche. Design e API sono già pronti e funzionanti.
 
 ## Istruzioni per l'uso
+
+> Nota: le chiavi per l'utilizzo di Firebase devono rimanere private, quindi non sono inserite all'interno del progetto. Per utilizzare le notifiche push, creare un nuovo progetto su Firebase e seguire le istruzioni per creare un nuovo set di chiavi private.
 
 ### Montare il Database (Solo primo avvio)
 1. Tramite XAMPP, avviare Apache e MySQL (quest'ultimo sulla porta 3306, che dovrebbe essere di default)
